@@ -369,6 +369,54 @@ ul {
     margin-bottom: 1rem;
 }
 
+/* Hachiman Philosophy Quote Box */
+.philosophy-quote-box {
+    margin-top: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    background-color: #f8fafc;
+    border-left: 4px solid #4f46e5;
+    border-radius: var(--radius-sm);
+    border-top: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.philosophy-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #4f46e5;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.65rem;
+}
+
+.hachiman-quote {
+    font-size: 0.96rem;
+    font-style: italic;
+    color: #334155;
+    line-height: 1.65;
+    margin-bottom: 0.5rem;
+}
+
+.quote-author {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 0.75rem;
+    font-style: normal;
+}
+
+.philosophy-desc {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    margin-bottom: 0;
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 0.65rem;
+}
+
 .facts-list li {
     padding: 0.6rem 0;
     border-bottom: 1px solid #f1f5f9;
