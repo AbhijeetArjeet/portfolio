@@ -70,6 +70,8 @@ const FALLBACK_PROJECTS = [
     }
 ];
 
+const DEFAULT_LINKEDIN_URL = "https://www.linkedin.com/in/abhijeetarjeet";
+
 // Global state for projects
 let allProjects = [];
 
@@ -79,6 +81,9 @@ let allProjects = [];
 document.addEventListener("DOMContentLoaded", () => {
     console.log("Portfolio application initialized. Executing CO-1 & CO-2 syllabus scripts...");
     
+    // Initialize LinkedIn Profile Links (from LocalStorage or Default)
+    initLinkedIn();
+
     // Load Peer Portfolios from LocalStorage
     initPeerPortfolios();
     
@@ -94,6 +99,51 @@ document.addEventListener("DOMContentLoaded", () => {
     // Check LocalStorage status
     updateLocalStorageCount();
 });
+
+// ----------------------------------------------------------------------------
+// LINKEDIN PROFILE INTEGRATION & LOCALSTORAGE
+// ----------------------------------------------------------------------------
+function initLinkedIn() {
+    const savedUrl = localStorage.getItem("portfolio_linkedin") || DEFAULT_LINKEDIN_URL;
+    updateLinkedInLinks(savedUrl);
+}
+
+function updateLinkedInLinks(url) {
+    const linkIds = [
+        "nav-linkedin-link",
+        "hero-linkedin-btn",
+        "quickfacts-linkedin-link",
+        "linkedin-display-link",
+        "linkedin-cta-btn",
+        "contact-linkedin-link",
+        "footer-linkedin-link"
+    ];
+
+    linkIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.href = url;
+            if (id === "quickfacts-linkedin-link" || id === "linkedin-display-link" || id === "contact-linkedin-link") {
+                el.textContent = url.replace(/^https?:\/\/(www\.)?/, "");
+            }
+        }
+    });
+}
+
+/**
+ * Allows the user to dynamically edit/verify their LinkedIn profile URL.
+ * Saved in LocalStorage so it persists across refreshes.
+ */
+window.editLinkedInUrl = function() {
+    const current = localStorage.getItem("portfolio_linkedin") || DEFAULT_LINKEDIN_URL;
+    const newUrl = prompt("Enter your LinkedIn Profile URL:", current);
+    if (!newUrl || !newUrl.trim()) return;
+
+    const cleanUrl = newUrl.trim();
+    localStorage.setItem("portfolio_linkedin", cleanUrl);
+    updateLinkedInLinks(cleanUrl);
+    alert("LinkedIn profile URL updated successfully!");
+};
 
 // ----------------------------------------------------------------------------
 // 3. FETCH API & ASYNC/AWAIT (GitHub Data Loading)

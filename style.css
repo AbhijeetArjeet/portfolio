@@ -196,6 +196,19 @@ ul {
     color: var(--primary-hover);
 }
 
+.btn-linkedin {
+    background-color: #0a66c2;
+    color: #ffffff;
+    border-color: #0a66c2;
+}
+
+.btn-linkedin:hover {
+    background-color: #004182;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
 .btn-sm {
     padding: 0.45rem 0.85rem;
     font-size: 0.85rem;
@@ -525,7 +538,173 @@ ul {
 }
 
 /* --------------------------------------------------------------------------
-   10. PEER PORTFOLIOS SECTION (CONNECT WITH 2 FRIENDS)
+   10. LINKEDIN PROFILE & EXPERIENCE / EDUCATION (CSS GRID + BOX MODEL)
+   -------------------------------------------------------------------------- */
+.linkedin-banner-card {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-top: 4px solid #0a66c2;
+    border-radius: var(--radius-md);
+    padding: 1.75rem 2rem;
+    margin-bottom: 2.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.linkedin-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.linkedin-badge-icon {
+    width: 60px;
+    height: 60px;
+    background-color: #0a66c2;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    letter-spacing: -1px;
+}
+
+.linkedin-profile-details {
+    flex: 1;
+    min-width: 280px;
+}
+
+.linkedin-name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.25rem;
+}
+
+.linkedin-name-row h3 {
+    font-size: 1.35rem;
+}
+
+.linkedin-verified-badge {
+    background-color: #dbeafe;
+    color: #1e40af;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
+}
+
+.linkedin-headline {
+    font-size: 0.95rem;
+    color: #334155;
+    margin-bottom: 0.4rem;
+}
+
+.linkedin-meta {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.meta-sep {
+    color: #cbd5e1;
+}
+
+.linkedin-header-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Experience & Education Grid */
+.experience-education-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 2rem;
+}
+
+.timeline-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.column-heading {
+    font-size: 1.2rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.timeline-card {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--primary-color);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.timeline-card:hover {
+    border-left-color: #0a66c2;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.timeline-header h4 {
+    font-size: 1.05rem;
+    color: var(--secondary-color);
+}
+
+.institution-name {
+    display: block;
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.timeline-date {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #0284c7;
+    background-color: #e0f2fe;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.timeline-body {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.timeline-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+/* --------------------------------------------------------------------------
+   11. PEER PORTFOLIOS SECTION (CONNECT WITH 2 FRIENDS)
    -------------------------------------------------------------------------- */
 .peers-intro-banner {
     background-color: #e0f2fe;

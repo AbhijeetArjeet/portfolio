@@ -46,13 +46,17 @@
                 <li><a href="#about">About</a></li>
                 <li><a href="#skills">Skills</a></li>
                 <li><a href="#projects">Projects</a></li>
+                <li><a href="#experience">Experience & Education</a></li>
                 <li><a href="#friends">Peer Network</a></li>
                 <li><a href="#syllabus">CO Syllabus</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
             <div class="nav-actions">
                 <a href="https://github.com/AbhijeetArjeet" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
-                    GitHub Profile
+                    GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/abhijeetarjeet" id="nav-linkedin-link" target="_blank" rel="noopener noreferrer" class="btn btn-linkedin" style="margin-left: 0.5rem;">
+                    LinkedIn
                 </a>
             </div>
         </nav>
@@ -77,6 +81,9 @@
                         <a href="#projects" class="btn btn-primary">Explore Projects</a>
                         <a href="#contact" class="btn btn-secondary">Get in Touch</a>
                         <a href="#friends" class="btn btn-outline">Friends' Portfolios</a>
+                        <a href="https://www.linkedin.com/in/abhijeetarjeet" id="hero-linkedin-btn" target="_blank" rel="noopener noreferrer" class="btn btn-linkedin">
+                            Connect on LinkedIn
+                        </a>
                     </div>
                     <div class="github-stats-bar" id="github-user-bar">
                         <!-- Populated by Fetch API in script.js with fallback -->
@@ -84,7 +91,7 @@
                         <span class="stat-separator">•</span>
                         <span class="stat-item"><strong id="gh-followers">6</strong> Followers</span>
                         <span class="stat-separator">•</span>
-                        <span class="stat-item">Active on <strong>GitHub</strong></span>
+                        <span class="stat-item">Verified on <strong>GitHub</strong> & <strong>LinkedIn</strong></span>
                     </div>
                 </div>
 
@@ -125,6 +132,7 @@
                     <ul class="facts-list">
                         <li><strong>Name:</strong> Abhijeet Arjeet</li>
                         <li><strong>GitHub:</strong> <a href="https://github.com/AbhijeetArjeet" target="_blank" rel="noopener">github.com/AbhijeetArjeet</a></li>
+                        <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/abhijeetarjeet" id="quickfacts-linkedin-link" target="_blank" rel="noopener">linkedin.com/in/abhijeetarjeet</a></li>
                         <li><strong>Email:</strong> <a href="mailto:abhijeetarjeet0202@gmail.com">abhijeetarjeet0202@gmail.com</a></li>
                         <li><strong>Focus Areas:</strong> Web Development, Android/Kotlin, Python, C++, TypeScript</li>
                         <li><strong>Collaboration:</strong> Open for peer reviews & projects</li>
@@ -274,6 +282,138 @@
                         <a href="https://github.com/AbhijeetArjeet/dualboot-clock-fix" target="_blank" rel="noopener" class="card-link">View Repository &rarr;</a>
                     </div>
                 </article>
+            </div>
+        </section>
+
+        <!-- PROFESSIONAL EXPERIENCE & EDUCATION (LINKEDIN PROFILE HIGHLIGHTS) -->
+        <section id="experience" class="section-container bg-light">
+            <div class="section-title">
+                <h2>Professional Experience & Education</h2>
+                <p>Curated profile highlights, credentials & engineering background from <strong>LinkedIn</strong></p>
+            </div>
+
+            <!-- LinkedIn Profile Integration Card -->
+            <div class="linkedin-banner-card">
+                <div class="linkedin-profile-header">
+                    <div class="linkedin-badge-icon" aria-hidden="true">in</div>
+                    <div class="linkedin-profile-details">
+                        <div class="linkedin-name-row">
+                            <h3 id="linkedin-name-display">Abhijeet Arjeet</h3>
+                            <span class="linkedin-verified-badge">✔ Verified Profile</span>
+                        </div>
+                        <p class="linkedin-headline">
+                            Software & Systems Developer • On-Device Media Architect • Creator of VAYU-CPI (MoSPI) & OpenDisplay-USB
+                        </p>
+                        <p class="linkedin-meta">
+                            <span>📍 India</span>
+                            <span class="meta-sep">•</span>
+                            <span>Over 500+ Connections & Followers</span>
+                            <span class="meta-sep">•</span>
+                            <a href="https://www.linkedin.com/in/abhijeetarjeet" id="linkedin-display-link" target="_blank" rel="noopener noreferrer">
+                                linkedin.com/in/abhijeetarjeet
+                            </a>
+                        </p>
+                    </div>
+                    <div class="linkedin-header-actions">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="editLinkedInUrl()">
+                            ⚙️ Edit LinkedIn URL
+                        </button>
+                        <a href="https://www.linkedin.com/in/abhijeetarjeet" id="linkedin-cta-btn" target="_blank" rel="noopener noreferrer" class="btn btn-linkedin btn-sm">
+                            View on LinkedIn ↗
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Experience and Education Grid (CSS Grid Layout) -->
+            <div class="experience-education-grid">
+                
+                <!-- Column 1: Experience & Engineering Projects -->
+                <div class="timeline-column">
+                    <h3 class="column-heading">💼 Work & Project Experience</h3>
+                    
+                    <article class="timeline-card">
+                        <div class="timeline-header">
+                            <div>
+                                <h4>Lead Systems & Platform Developer</h4>
+                                <span class="institution-name">Ministry of Statistics (MoSPI) / DIID • Smart India Hackathon</span>
+                            </div>
+                            <time class="timeline-date" datetime="2024">2024</time>
+                        </div>
+                        <p class="timeline-body">
+                            Architected <strong>VAYU-CPI</strong>: Automated airfare intelligence & national price index engine with sub-second ingestion, real-time econometric indexing, and zero-server local architectures. Correlated with actual econometric metrics at r = 0.975.
+                        </p>
+                        <div class="timeline-tags">
+                            <span class="tag">TypeScript</span>
+                            <span class="tag">Next.js</span>
+                            <span class="tag">Vercel</span>
+                            <span class="tag">Data Pipelines</span>
+                        </div>
+                    </article>
+
+                    <article class="timeline-card">
+                        <div class="timeline-header">
+                            <div>
+                                <h4>Open Source Software Developer</h4>
+                                <span class="institution-name">GitHub Community & Independent Systems Engineering</span>
+                            </div>
+                            <time class="timeline-date" datetime="2023/2026">2023 – Present</time>
+                        </div>
+                        <p class="timeline-body">
+                            Built and published 29+ repositories specializing in low-latency video streaming, Windows IddCx drivers (<em>OpenDisplay-USB</em>), on-device Whisper AI speech transcription (<em>AniScribe</em>), and audio engines (<em>AURA</em>).
+                        </p>
+                        <div class="timeline-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">Kotlin / Android</span>
+                            <span class="tag">C++ / Win32</span>
+                            <span class="tag">Git & CI/CD</span>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Column 2: Education & Technical Certifications -->
+                <div class="timeline-column">
+                    <h3 class="column-heading">🎓 Education & Certifications</h3>
+                    
+                    <article class="timeline-card">
+                        <div class="timeline-header">
+                            <div>
+                                <h4>Bachelor of Technology (B.Tech) - CS</h4>
+                                <span class="institution-name">Computer Science and Engineering</span>
+                            </div>
+                            <time class="timeline-date" datetime="2023/2027">2023 – 2027</time>
+                        </div>
+                        <p class="timeline-body">
+                            Relevant Coursework: Web Technologies (CO-1: HTML5/Git, CO-2: CSS3/JavaScript), Data Structures & Algorithms, Object-Oriented Programming, Operating Systems, and Computer Networks.
+                        </p>
+                        <div class="timeline-tags">
+                            <span class="tag">Web Technologies</span>
+                            <span class="tag">Algorithms</span>
+                            <span class="tag">Systems</span>
+                        </div>
+                    </article>
+
+                    <article class="timeline-card">
+                        <div class="timeline-header">
+                            <div>
+                                <h4>Technical Honors & Certifications</h4>
+                                <span class="institution-name">National Competitions & Professional Badges</span>
+                            </div>
+                            <time class="timeline-date" datetime="2024/2026">2024 – 2026</time>
+                        </div>
+                        <p class="timeline-body">
+                            • Smart India Hackathon (SIH) Contributor under MoSPI/DIID.<br>
+                            • GitHub Global Open Source Developer with active project distribution.<br>
+                            • Verified Full-Stack & Systems Engineering profile on LinkedIn.
+                        </p>
+                        <div class="timeline-tags">
+                            <span class="tag">Smart India Hackathon</span>
+                            <span class="tag">Open Source</span>
+                            <span class="tag">LinkedIn Certified</span>
+                        </div>
+                    </article>
+                </div>
+
             </div>
         </section>
 
@@ -455,6 +595,13 @@
                             </div>
                         </div>
                         <div class="info-item">
+                            <span class="icon" style="color: #0a66c2; font-weight: 800; font-size: 1.25rem;">in</span>
+                            <div>
+                                <strong>LinkedIn:</strong>
+                                <a href="https://www.linkedin.com/in/abhijeetarjeet" id="contact-linkedin-link" target="_blank" rel="noopener">linkedin.com/in/abhijeetarjeet</a>
+                            </div>
+                        </div>
+                        <div class="info-item">
                             <span class="icon">📍</span>
                             <div>
                                 <strong>Location:</strong>
@@ -489,6 +636,7 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#skills">Skills</a></li>
                     <li><a href="#projects">Projects</a></li>
+                    <li><a href="#experience">Experience & Education</a></li>
                     <li><a href="#friends">Peer Network</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
@@ -498,6 +646,7 @@
                 <h4>Connect</h4>
                 <ul class="footer-links">
                     <li><a href="https://github.com/AbhijeetArjeet" target="_blank" rel="noopener">GitHub Profile</a></li>
+                    <li><a href="https://www.linkedin.com/in/abhijeetarjeet" id="footer-linkedin-link" target="_blank" rel="noopener">LinkedIn Profile</a></li>
                     <li><a href="mailto:abhijeetarjeet0202@gmail.com">Send Email</a></li>
                 </ul>
             </div>

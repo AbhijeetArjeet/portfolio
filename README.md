@@ -49,6 +49,17 @@ A clean, responsive, and curriculum-compliant personal portfolio website created
 - **LocalStorage API**:
   - Stores submitted contact form inquiries so messages persist across browser reloads.
   - Stores **Peer Portfolio Links** (Friends' Portfolios) allowing dynamic updates to classmates' websites.
+  - Stores and syncs **LinkedIn Profile URL** across all buttons and references.
+
+---
+
+## 💼 LinkedIn & Professional Experience Integration
+- Dedicated **Professional Experience & Education** section highlighting:
+  - Smart India Hackathon (SIH) under MoSPI / DIID for **VAYU-CPI**.
+  - Open Source Systems Architecture & 29+ GitHub repositories.
+  - B.Tech in Computer Science & Engineering with curriculum alignment.
+- **LinkedIn Connect Buttons** present in the Navigation Bar, Hero Section, Quick Facts, Experience Banner, Contact Panel, and Footer.
+- Interactive **"Edit LinkedIn URL"** tool to update or fine-tune your LinkedIn handle on the fly (persisted in `localStorage`).
 
 ---
 
