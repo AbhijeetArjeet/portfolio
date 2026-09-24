@@ -1,0 +1,927 @@
+/* ==========================================================================
+   PORTFOLIO STYLESHEET - Abhijeet Arjeet
+   Compliant with Course Syllabus CO-1 & CO-2:
+   - Universal, Element, Class, ID, Group, Descendant & Pseudo Selectors
+   - CSS Box Model (Margins, Borders, Padding, Content)
+   - Layouts: CSS Flexbox & CSS Grid Layouts (As requested by Mam)
+   - Positioning Techniques (sticky, relative, absolute)
+   - Responsive Web Design & Media Queries
+   - Transitions, Transformations & Keyframe Animations
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. UNIVERSAL SELECTOR (*) & CSS VARIABLES (ROOT)
+   -------------------------------------------------------------------------- */
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #0f172a;
+    --accent-color: #3b82f6;
+    --text-color: #1e293b;
+    --text-muted: #64748b;
+    --bg-color: #ffffff;
+    --bg-light: #f8fafc;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --border-hover: #cbd5e1;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 24px rgba(0,0,0,0.12);
+    --transition: all 0.25s ease-in-out;
+}
+
+/* Universal selector ensuring standardized box-model across elements */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   2. ELEMENT SELECTORS & BASE TYPOGRAPHY
+   -------------------------------------------------------------------------- */
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Group Selector (h1, h2, h3, h4) */
+h1, h2, h3, h4 {
+    color: var(--secondary-color);
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+p {
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+ul {
+    list-style: none;
+}
+
+/* --------------------------------------------------------------------------
+   3. POSITIONING & NAVIGATION (Sticky Navigation + Flexbox)
+   -------------------------------------------------------------------------- */
+#main-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Flexbox Layout for Header Navigation */
+.navbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand a {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--secondary-color);
+    letter-spacing: -0.5px;
+}
+
+.nav-brand span {
+    color: var(--primary-color);
+}
+
+/* Descendant Selector: .nav-links li a */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-links li a {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-color);
+    padding: 0.4rem 0.2rem;
+    position: relative;
+}
+
+/* Pseudo-Class Selector (:hover) */
+.nav-links li a:hover {
+    color: var(--primary-color);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+}
+
+/* --------------------------------------------------------------------------
+   4. BUTTONS & UI COMPONENTS
+   -------------------------------------------------------------------------- */
+.btn {
+    display: inline-block;
+    padding: 0.65rem 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary {
+    background-color: #f1f5f9;
+    color: var(--secondary-color);
+    border-color: #e2e8f0;
+}
+
+.btn-secondary:hover {
+    background-color: #e2e8f0;
+    color: var(--secondary-color);
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline:hover {
+    background-color: #eff6ff;
+    color: var(--primary-hover);
+}
+
+.btn-sm {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.85rem;
+}
+
+.btn-block {
+    width: 100%;
+    display: block;
+}
+
+/* --------------------------------------------------------------------------
+   5. HERO / ABOUT SECTION (CSS Flexbox Layout)
+   -------------------------------------------------------------------------- */
+.hero-section {
+    padding: 4rem 1.5rem 3rem 1.5rem;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3rem;
+}
+
+.hero-content {
+    flex: 1;
+}
+
+.hero-content h1 {
+    font-size: 2.8rem;
+    margin: 0.75rem 0 1rem 0;
+}
+
+.hero-tagline {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+}
+
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-bottom: 1.75rem;
+}
+
+.github-stats-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    padding: 0.75rem 1rem;
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    width: fit-content;
+}
+
+.stat-separator {
+    color: #cbd5e1;
+}
+
+.hero-image-wrapper {
+    position: relative;
+}
+
+.profile-avatar {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #ffffff;
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition);
+}
+
+.profile-avatar:hover {
+    transform: scale(1.02);
+}
+
+/* --------------------------------------------------------------------------
+   6. SECTIONS & LAYOUT CONTAINERS
+   -------------------------------------------------------------------------- */
+.section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+    width: 100%;
+}
+
+.bg-light {
+    background-color: var(--bg-light);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.section-title h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.section-title p {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   7. ABOUT GRID & ASIDE (CSS Box Model + Flex/Grid)
+   -------------------------------------------------------------------------- */
+.about-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+.about-card, .quick-facts-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.about-card h3, .quick-facts-card h3 {
+    margin-bottom: 1rem;
+}
+
+.facts-list li {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.95rem;
+}
+
+.facts-list li:last-child {
+    border-bottom: none;
+}
+
+/* --------------------------------------------------------------------------
+   8. SKILLS SECTION (CSS Grid)
+   -------------------------------------------------------------------------- */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.skill-category {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.skill-category h3 {
+    font-size: 1.15rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #eff6ff;
+}
+
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tag {
+    background-color: #f1f5f9;
+    color: #334155;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid #e2e8f0;
+}
+
+/* --------------------------------------------------------------------------
+   9. PROJECTS SECTION (CSS GRID LAYOUT - MAM'S CORE REQUIREMENT)
+   -------------------------------------------------------------------------- */
+.projects-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    max-width: 350px;
+    flex: 1;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    padding: 0.45rem 0.9rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.filter-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.filter-btn.active {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border-color: var(--primary-color);
+}
+
+.loading-status {
+    text-align: center;
+    padding: 0.75rem;
+    background-color: #eff6ff;
+    color: #1e40af;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+/* KEY REQUIREMENT: CSS Grid Layout for Projects */
+.projects-css-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Project Card Box Model & Transformations */
+.project-card {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    position: relative;
+}
+
+/* Transformation on Hover (CO-2 CSS Transformation) */
+.project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-hover);
+}
+
+.project-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.project-lang-pill {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+.project-lang-pill.python { background-color: #fef3c7; color: #92400e; }
+.project-lang-pill.typescript { background-color: #dbeafe; color: #1e40af; }
+.project-lang-pill.kotlin { background-color: #fce7f3; color: #9d174d; }
+.project-lang-pill.powershell { background-color: #e0e7ff; color: #3730a3; }
+.project-lang-pill.javascript { background-color: #fef08a; color: #854d0e; }
+.project-lang-pill.general { background-color: #f1f5f9; color: #475569; }
+
+.project-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.project-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--secondary-color);
+}
+
+.project-card p {
+    font-size: 0.92rem;
+    line-height: 1.5;
+    flex-grow: 1;
+    margin-bottom: 1.25rem;
+}
+
+.project-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.card-link {
+    font-weight: 600;
+    font-size: 0.88rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   10. PEER PORTFOLIOS SECTION (CONNECT WITH 2 FRIENDS)
+   -------------------------------------------------------------------------- */
+.peers-intro-banner {
+    background-color: #e0f2fe;
+    border-left: 4px solid #0284c7;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+    color: #0369a1;
+}
+
+.peers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 1.5rem;
+}
+
+.peer-card {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.peer-card:hover {
+    border-color: #93c5fd;
+    box-shadow: var(--shadow-md);
+}
+
+.peer-avatar {
+    font-size: 2.2rem;
+}
+
+.peer-info h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
+}
+
+.peer-info p {
+    font-size: 0.92rem;
+    margin-bottom: 0.8rem;
+}
+
+.peer-link-box {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.85rem;
+    font-size: 0.85rem;
+    word-break: break-all;
+}
+
+.link-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.peer-url-text {
+    color: var(--primary-color);
+    font-family: monospace;
+}
+
+.peer-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: auto;
+}
+
+/* --------------------------------------------------------------------------
+   11. SYLLABUS ACCORDION (HTML5 <details> & <summary>)
+   -------------------------------------------------------------------------- */
+.syllabus-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.syllabus-item {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.syllabus-item summary {
+    padding: 1.2rem 1.5rem;
+    cursor: pointer;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+    background-color: #ffffff;
+    outline: none;
+    user-select: none;
+}
+
+.syllabus-item summary:hover {
+    background-color: #f8fafc;
+}
+
+.syllabus-content {
+    padding: 1.25rem 1.75rem;
+    background-color: #f8fafc;
+    border-top: 1px solid var(--border-color);
+}
+
+.syllabus-content ul li {
+    padding: 0.4rem 0;
+    font-size: 0.95rem;
+    color: #334155;
+}
+
+/* --------------------------------------------------------------------------
+   12. CONTACT FORM & VALIDATION (HTML5 Form Tag & Enhancements)
+   -------------------------------------------------------------------------- */
+.contact-wrapper {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 2.5rem;
+}
+
+.contact-form {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.form-fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.form-legend {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+    color: var(--secondary-color);
+}
+
+.required-star {
+    color: #ef4444;
+}
+
+.form-control-input {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background-color: #ffffff;
+    color: var(--text-color);
+    transition: var(--transition);
+}
+
+/* Pseudo-Class Selector (:focus) */
+.form-control-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.hint-text {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.error-msg {
+    display: block;
+    font-size: 0.8rem;
+    color: #ef4444;
+    margin-top: 0.25rem;
+    min-height: 1.1rem;
+}
+
+.form-feedback {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    display: none;
+}
+
+.form-feedback.success {
+    display: block;
+    background-color: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.form-feedback.error {
+    display: block;
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.contact-info-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.contact-info-panel h3 {
+    margin-bottom: 0.5rem;
+}
+
+.contact-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    background-color: #ffffff;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+.info-item .icon {
+    font-size: 1.5rem;
+}
+
+.local-storage-box {
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+}
+
+.local-storage-box h4 {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+.local-storage-box p {
+    font-size: 0.88rem;
+    margin-bottom: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   13. FOOTER SECTION
+   -------------------------------------------------------------------------- */
+#main-footer {
+    background-color: #0f172a;
+    color: #94a3b8;
+    margin-top: auto;
+    border-top: 1px solid #1e293b;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 2rem 1.5rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2.5rem;
+}
+
+.footer-col h3 {
+    color: #f8fafc;
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+}
+
+.footer-col h4 {
+    color: #f8fafc;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+
+.footer-col p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+.footer-links li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-links li a {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+.footer-links li a:hover {
+    color: #ffffff;
+}
+
+.footer-bottom {
+    border-top: 1px solid #1e293b;
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+/* --------------------------------------------------------------------------
+   14. KEYFRAME ANIMATIONS (CO-2 Keyframe Animations)
+   -------------------------------------------------------------------------- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.project-card {
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* --------------------------------------------------------------------------
+   15. RESPONSIVE WEB DESIGN (MEDIA QUERIES)
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+    .hero-container {
+        flex-direction: column-reverse;
+        text-align: center;
+        gap: 2rem;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+    }
+
+    .github-stats-bar {
+        margin: 0 auto;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem 1rem;
+    }
+
+    .hero-content h1 {
+        font-size: 2.1rem;
+    }
+
+    .projects-css-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .peers-grid {
+        grid-template-columns: 1fr;
+    }
+}

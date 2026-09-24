@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- CO-1: HTML5 Basic Structure & SEO Metadata -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Personal Portfolio of Abhijeet Arjeet - Developer, Open Source Creator, and Student showcasing projects, skills, and peer portfolio network.">
+    <meta name="author" content="Abhijeet Arjeet">
+    <meta name="keywords" content="Abhijeet Arjeet, Portfolio, Web Development, HTML5, CSS3, JavaScript, Projects, GitHub">
+    
+    <title>Abhijeet Arjeet | Personal Portfolio</title>
+    
+    <!-- CO-2: External CSS (Primary Styling) -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- CO-2: Internal CSS Example (Demonstrating Types of CSS for Syllabus CO-2) -->
+    <style>
+        /* Internal CSS demonstration as per CO-2 syllabus */
+        .academic-badge {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            display: inline-block;
+            font-weight: 600;
+            border: 1px solid #bae6fd;
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-text {
+            color: #2563eb;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CO-1 Semantic HTML5: <header> and <nav> -->
+    <header id="main-header">
+        <nav class="navbar" aria-label="Main Navigation">
+            <div class="nav-brand">
+                <a href="#hero">Abhijeet<span>.dev</span></a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#friends">Peer Network</a></li>
+                <li><a href="#syllabus">CO Syllabus</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="https://github.com/AbhijeetArjeet" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+                    GitHub Profile
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- CO-1 Semantic HTML5: <main> -->
+    <main>
+
+        <!-- HERO / ABOUT SECTION (Flexbox layout) -->
+        <section id="hero" class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <span class="academic-badge">B.Tech / CS Student Portfolio</span>
+                    <!-- CO-2: Inline CSS Demonstration -->
+                    <h1 style="letter-spacing: -0.5px;">
+                        Hi, I'm <span class="highlight-text">Abhijeet Arjeet</span>
+                    </h1>
+                    <p class="hero-tagline">
+                        Full-Stack & Systems Developer • Open Source Contributor • Passionate about building high-performance software, Android tools & web apps.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#projects" class="btn btn-primary">Explore Projects</a>
+                        <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+                        <a href="#friends" class="btn btn-outline">Friends' Portfolios</a>
+                    </div>
+                    <div class="github-stats-bar" id="github-user-bar">
+                        <!-- Populated by Fetch API in script.js with fallback -->
+                        <span class="stat-item"><strong>29+</strong> Repositories</span>
+                        <span class="stat-separator">•</span>
+                        <span class="stat-item"><strong id="gh-followers">6</strong> Followers</span>
+                        <span class="stat-separator">•</span>
+                        <span class="stat-item">Active on <strong>GitHub</strong></span>
+                    </div>
+                </div>
+
+                <div class="hero-image-wrapper">
+                    <!-- Media Elements: <img> with alt for SEO & accessibility -->
+                    <img id="profile-img" src="https://avatars.githubusercontent.com/u/213563458?v=4" 
+                         alt="Profile photo of Abhijeet Arjeet from GitHub" 
+                         class="profile-avatar"
+                         onerror="this.src='https://ui-avatars.com/api/?name=Abhijeet+Arjeet&background=2563eb&color=fff&size=240';">
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT SECTION -->
+        <section id="about" class="section-container">
+            <div class="section-title">
+                <h2>About Me</h2>
+                <p>Background, interests, and engineering philosophy</p>
+            </div>
+            
+            <div class="about-grid">
+                <article class="about-card">
+                    <h3>Who I Am</h3>
+                    <p>
+                        I am Abhijeet Arjeet, a developer passionate about building tools that bridge hardware, software, and the web. 
+                        From building low-latency USB display systems (<em>OpenDisplay-USB</em>) to AI-powered transcription suites (<em>AniScribe</em>) 
+                        and modern web portals (<em>vayu-cpi</em>), I love solving practical engineering problems.
+                    </p>
+                    <p>
+                        This portfolio is built following our course syllabus for <strong>CO-1</strong> (Semantic HTML5, Git Version Control) 
+                        and <strong>CO-2</strong> (CSS3 Flexbox, CSS Grid Layout, JavaScript DOM manipulation & asynchronous Fetch API).
+                    </p>
+                </article>
+
+                <!-- CO-1 Semantic HTML5: <aside> for supplementary info -->
+                <aside class="quick-facts-card">
+                    <h3>Quick Information</h3>
+                    <ul class="facts-list">
+                        <li><strong>Name:</strong> Abhijeet Arjeet</li>
+                        <li><strong>GitHub:</strong> <a href="https://github.com/AbhijeetArjeet" target="_blank" rel="noopener">github.com/AbhijeetArjeet</a></li>
+                        <li><strong>Email:</strong> <a href="mailto:abhijeetarjeet0202@gmail.com">abhijeetarjeet0202@gmail.com</a></li>
+                        <li><strong>Focus Areas:</strong> Web Development, Android/Kotlin, Python, C++, TypeScript</li>
+                        <li><strong>Collaboration:</strong> Open for peer reviews & projects</li>
+                    </ul>
+                </aside>
+            </div>
+        </section>
+
+        <!-- SKILLS SECTION -->
+        <section id="skills" class="section-container bg-light">
+            <div class="section-title">
+                <h2>Technical Skills & Tools</h2>
+                <p>Categorized competencies based on our course curriculum</p>
+            </div>
+
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Frontend & Web (CO-1 / CO-2)</h3>
+                    <div class="skill-tags">
+                        <span class="tag">HTML5 Semantic Structure</span>
+                        <span class="tag">CSS3 (Flexbox & Grid)</span>
+                        <span class="tag">Responsive Media Queries</span>
+                        <span class="tag">JavaScript (ES6+)</span>
+                        <span class="tag">DOM Manipulation</span>
+                        <span class="tag">Async / Await & Fetch API</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Languages & Backend</h3>
+                    <div class="skill-tags">
+                        <span class="tag">TypeScript</span>
+                        <span class="tag">Python</span>
+                        <span class="tag">Kotlin / Android</span>
+                        <span class="tag">C / C++</span>
+                        <span class="tag">PowerShell / Shell</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Tools & Version Control</h3>
+                    <div class="skill-tags">
+                        <span class="tag">Git & GitHub</span>
+                        <span class="tag">Branching & Merging</span>
+                        <span class="tag">Vercel Deployment</span>
+                        <span class="tag">Local & Session Storage</span>
+                        <span class="tag">JSON Processing</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS SECTION (USING CSS GRID AS REQUESTED BY MAM) -->
+        <section id="projects" class="section-container">
+            <div class="section-title">
+                <h2>Featured Projects</h2>
+                <p>Implemented with <strong>CSS Grid Layout</strong> & dynamic GitHub REST API fetch</p>
+            </div>
+
+            <!-- Controls: Filter / Search -->
+            <div class="projects-toolbar">
+                <input type="search" id="projectSearch" placeholder="Search projects by name or language..." class="form-control-input search-input">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="TypeScript">TypeScript</button>
+                    <button class="filter-btn" data-filter="Python">Python</button>
+                    <button class="filter-btn" data-filter="Kotlin">Kotlin</button>
+                </div>
+            </div>
+
+            <!-- Status message for Fetch API (Promises/Async-Await) -->
+            <div id="loadingStatus" class="loading-status">
+                <p>⚡ Fetching live repositories from GitHub API (<code>https://api.github.com/users/AbhijeetArjeet/repos</code>)...</p>
+            </div>
+
+            <!-- THE CSS GRID CONTAINER (Mam's key requirement) -->
+            <div id="projectsGrid" class="projects-css-grid">
+                <!-- Fallback content if offline / initial render; hydrated by JavaScript -->
+                <article class="project-card">
+                    <div class="project-card-header">
+                        <span class="project-lang-pill python">Python</span>
+                        <span class="project-date">Recent</span>
+                    </div>
+                    <h3>OpenDisplay-USB</h3>
+                    <p>Turn Android devices into genuine secondary displays for Windows PCs over USB with low latency, hardware acceleration, multi-touch, and audio.</p>
+                    <div class="project-card-footer">
+                        <a href="https://github.com/AbhijeetArjeet/OpenDisplay-USB" target="_blank" rel="noopener" class="card-link">View Repository &rarr;</a>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-card-header">
+                        <span class="project-lang-pill typescript">TypeScript</span>
+                        <span class="project-date">Recent</span>
+                    </div>
+                    <h3>AniScribe</h3>
+                    <p>Production-grade offline AI subtitle engine, multilingual speech recognition (Whisper INT8), VLC-parity media player, and anime download manager.</p>
+                    <div class="project-card-footer">
+                        <a href="https://github.com/AbhijeetArjeet/AniScribe" target="_blank" rel="noopener" class="card-link">View Repository &rarr;</a>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-card-header">
+                        <span class="project-lang-pill typescript">TypeScript</span>
+                        <span class="project-date">Live</span>
+                    </div>
+                    <h3>vayu-cpi</h3>
+                    <p>Fast academic CPI calculation and student portal engine built for college courses, deployed on Vercel with responsive user experience.</p>
+                    <div class="project-card-footer">
+                        <a href="https://github.com/AbhijeetArjeet/vayu-cpi" target="_blank" rel="noopener" class="card-link">View Repository &rarr;</a>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-card-header">
+                        <span class="project-lang-pill kotlin">Kotlin</span>
+                        <span class="project-date">Recent</span>
+                    </div>
+                    <h3>AURA</h3>
+                    <p>Spotify/Winamp-Inspired Local Music Universe & DJ Suite with AutoMix, real-time Visualizers, and On-Device Media Downloader.</p>
+                    <div class="project-card-footer">
+                        <a href="https://github.com/AbhijeetArjeet/AURA" target="_blank" rel="noopener" class="card-link">View Repository &rarr;</a>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-card-header">
+                        <span class="project-lang-pill kotlin">Kotlin</span>
+                        <span class="project-date">Recent</span>
+                    </div>
+                    <h3>yt_downloader</h3>
+                    <p>Modern Android audio/video extraction application featuring background threading, audio conversion, and clean UI.</p>
+                    <div class="project-card-footer">
+                        <a href="https://github.com/AbhijeetArjeet/yt_downloader" target="_blank" rel="noopener" class="card-link">View Repository &rarr;</a>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-card-header">
+                        <span class="project-lang-pill powershell">PowerShell</span>
+                        <span class="project-date">Utility</span>
+                    </div>
+                    <h3>dualboot-clock-fix</h3>
+                    <p>Fixes Windows/Linux dual-boot clock desynchronization issues between hardware RTC local time and system UTC time.</p>
+                    <div class="project-card-footer">
+                        <a href="https://github.com/AbhijeetArjeet/dualboot-clock-fix" target="_blank" rel="noopener" class="card-link">View Repository &rarr;</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- PEER PORTFOLIOS / CONNECT WITH 2 FRIENDS (USER REQUIREMENT) -->
+        <section id="friends" class="section-container bg-light">
+            <div class="section-title">
+                <h2>Peer Portfolio Network</h2>
+                <p>Connect with fellow classmate portfolio websites (configurable & saved in LocalStorage)</p>
+            </div>
+
+            <div class="peers-intro-banner">
+                <p>
+                    💡 <strong>Peer Collaboration Feature:</strong> As part of our course collaboration, you can link your friends' portfolios below. 
+                    Click <em>"Update Link"</em> to attach their exact GitHub Pages or portfolio URLs, and they will be saved automatically in your browser's <code>localStorage</code>!
+                </p>
+            </div>
+
+            <div class="peers-grid">
+                <!-- Friend 1 Card -->
+                <article class="peer-card" id="peer-1-card">
+                    <div class="peer-avatar">👨‍💻</div>
+                    <div class="peer-info">
+                        <h3 id="peer1-name">Peer 1: Friend's Portfolio</h3>
+                        <p id="peer1-desc">Classmate & fellow developer working on web technologies and software engineering.</p>
+                        <div class="peer-link-box">
+                            <span class="link-label">Connected URL:</span>
+                            <a href="#" id="peer1-link" target="_blank" rel="noopener" class="peer-url-text">https://friend1.github.io/portfolio</a>
+                        </div>
+                    </div>
+                    <div class="peer-actions">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="editPeer(1)">Edit Details</button>
+                        <a href="#" id="peer1-visit-btn" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Visit Portfolio</a>
+                    </div>
+                </article>
+
+                <!-- Friend 2 Card -->
+                <article class="peer-card" id="peer-2-card">
+                    <div class="peer-avatar">👩‍💻</div>
+                    <div class="peer-info">
+                        <h3 id="peer2-name">Peer 2: Friend's Portfolio</h3>
+                        <p id="peer2-desc">Classmate & developer collaborating on Web Development (CO-1 & CO-2) projects.</p>
+                        <div class="peer-link-box">
+                            <span class="link-label">Connected URL:</span>
+                            <a href="#" id="peer2-link" target="_blank" rel="noopener" class="peer-url-text">https://friend2.github.io/portfolio</a>
+                        </div>
+                    </div>
+                    <div class="peer-actions">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="editPeer(2)">Edit Details</button>
+                        <a href="#" id="peer2-visit-btn" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Visit Portfolio</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- CO-1 & CO-2 CURRICULUM MAPPING ACCORDION (Semantic <details> and <summary>) -->
+        <section id="syllabus" class="section-container">
+            <div class="section-title">
+                <h2>Curriculum Compliance (CO-1 & CO-2)</h2>
+                <p>Interactive verification of topics covered across this webpage</p>
+            </div>
+
+            <div class="syllabus-accordion">
+                <details class="syllabus-item" open>
+                    <summary><strong>CO-1: Git, Version Control & Semantic HTML5 Implementation</strong></summary>
+                    <div class="syllabus-content">
+                        <ul>
+                            <li><strong>Git & Version Control:</strong> Initialized local git repo, created <code>.gitignore</code>, structured workflow with commit history and remote repository readiness for GitHub.</li>
+                            <li><strong>Semantic HTML5 Structure:</strong> Proper usage of <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;aside&gt;</code>, <code>&lt;footer&gt;</code>, <code>&lt;details&gt;</code>, and <code>&lt;summary&gt;</code>.</li>
+                            <li><strong>SEO & Metadata:</strong> Configured <code>meta charset</code>, <code>viewport</code>, <code>description</code>, <code>author</code>, and <code>keywords</code>.</li>
+                            <li><strong>Form Enhancements:</strong> Applied <code>required</code>, <code>placeholder</code>, <code>pattern</code>, <code>autofocus</code>, and proper input types in the contact section.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="syllabus-item">
+                    <summary><strong>CO-2: CSS3 Selectors, Box Model, Flexbox & CSS Grid Layout</strong></summary>
+                    <div class="syllabus-content">
+                        <ul>
+                            <li><strong>Types of CSS:</strong> External CSS in <code>style.css</code>, Internal CSS in <code>&lt;style&gt;</code>, and Inline CSS sample.</li>
+                            <li><strong>Selectors Used:</strong> Universal (<code>*</code>), Element (<code>body, h1, p</code>), Class (<code>.btn, .project-card</code>), ID (<code>#projects, #contact</code>), Group (<code>h1, h2, h3</code>), Descendant (<code>.navbar ul li a</code>), and Pseudo-classes (<code>:hover, :focus, :active, :nth-child</code>).</li>
+                            <li><strong>CSS Box Model:</strong> Explicit calculation with margins, borders, padding, and <code>box-sizing: border-box</code>.</li>
+                            <li><strong>Layout Systems:</strong> <strong>CSS Grid</strong> (<code>display: grid</code>, <code>grid-template-columns: repeat(auto-fill, minmax(280px, 1fr))</code>) for Project Gallery; <strong>Flexbox</strong> (<code>display: flex</code>) for Navigation, Hero, and Action buttons.</li>
+                            <li><strong>Transitions & Transforms:</strong> Hover lifts (<code>transform: translateY(-4px)</code>) and smooth transitions.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="syllabus-item">
+                    <summary><strong>CO-2: Core JavaScript, Fetch API, DOM & LocalStorage</strong></summary>
+                    <div class="syllabus-content">
+                        <ul>
+                            <li><strong>Async/Await & Fetch API:</strong> Asynchronously pulls real GitHub user data & repository cards from <code>https://api.github.com/users/AbhijeetArjeet/repos</code>.</li>
+                            <li><strong>DOM Manipulation:</strong> Dynamically creates, filters, and mounts cards using <code>document.getElementById</code>, <code>createElement</code>, and event listeners.</li>
+                            <li><strong>Form Validation:</strong> Validates inputs on submission, shows inline status/error messages.</li>
+                            <li><strong>Local Storage (CO-2 requirement):</strong> Persists contact form feedback and friend portfolio URLs so data stays after page reload.</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION (HTML5 FORM TAGS & ENHANCEMENTS) -->
+        <section id="contact" class="section-container bg-light">
+            <div class="section-title">
+                <h2>Contact & Inquiries</h2>
+                <p>Send a message directly or connect for academic collaboration</p>
+            </div>
+
+            <div class="contact-wrapper">
+                <!-- HTML5 Form with Semantic Tags, Fieldset, and Attributes -->
+                <form id="contactForm" class="contact-form" novalidate>
+                    <fieldset class="form-fieldset">
+                        <legend class="form-legend">Send a Message</legend>
+
+                        <div class="form-group">
+                            <label for="fullName">Full Name <span class="required-star">*</span></label>
+                            <input type="text" id="fullName" name="fullName" class="form-control-input" 
+                                   placeholder="e.g. John Doe" required minlength="3" autocomplete="name">
+                            <small class="error-msg" id="nameError"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="emailAddress">Email Address <span class="required-star">*</span></label>
+                            <input type="email" id="emailAddress" name="emailAddress" class="form-control-input" 
+                                   placeholder="e.g. name@domain.com" required autocomplete="email">
+                            <small class="error-msg" id="emailError"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactNumber">Phone Number (Optional)</label>
+                            <!-- HTML5 pattern enhancement -->
+                            <input type="tel" id="contactNumber" name="contactNumber" class="form-control-input" 
+                                   placeholder="e.g. 9876543210" pattern="[0-9]{10}">
+                            <small class="hint-text">10 digit mobile number without country code</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inquiryType">Subject / Reason</label>
+                            <select id="inquiryType" name="inquiryType" class="form-control-input">
+                                <option value="academic">Academic & Coursework Discussion</option>
+                                <option value="collaboration">Project Collaboration</option>
+                                <option value="peer-portfolio">Connect Peer Portfolio</option>
+                                <option value="other">General Inquiry</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="messageBody">Your Message <span class="required-star">*</span></label>
+                            <textarea id="messageBody" name="messageBody" rows="5" class="form-control-input" 
+                                      placeholder="Write your message or inquiry here..." required minlength="10"></textarea>
+                            <small class="error-msg" id="messageError"></small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
+                            Submit Message
+                        </button>
+
+                        <div id="formFeedback" class="form-feedback" role="alert"></div>
+                    </fieldset>
+                </form>
+
+                <div class="contact-info-panel">
+                    <h3>Direct Connect</h3>
+                    <p>Feel free to reach out via GitHub or direct email:</p>
+                    
+                    <div class="contact-info-list">
+                        <div class="info-item">
+                            <span class="icon">✉️</span>
+                            <div>
+                                <strong>Email:</strong>
+                                <a href="mailto:abhijeetarjeet0202@gmail.com">abhijeetarjeet0202@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span class="icon">🐙</span>
+                            <div>
+                                <strong>GitHub:</strong>
+                                <a href="https://github.com/AbhijeetArjeet" target="_blank" rel="noopener">github.com/AbhijeetArjeet</a>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span class="icon">📍</span>
+                            <div>
+                                <strong>Location:</strong>
+                                <span>India</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LocalStorage Status Display -->
+                    <div class="local-storage-box">
+                        <h4>Local Storage Status</h4>
+                        <p id="storageStatusText">No messages stored in this session yet.</p>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="viewSavedMessages()">Check Saved Messages</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CO-1 Semantic HTML5: <footer> -->
+    <footer id="main-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Abhijeet Arjeet</h3>
+                <p>B.Tech CS Student Portfolio • Designed using pure CSS3 & modern JavaScript according to syllabus CO-1 & CO-2 guidelines.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul class="footer-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#friends">Peer Network</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/AbhijeetArjeet" target="_blank" rel="noopener">GitHub Profile</a></li>
+                    <li><a href="mailto:abhijeetarjeet0202@gmail.com">Send Email</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; <time datetime="2026">2026</time> Abhijeet Arjeet. All rights reserved. Academic Project submission.</p>
+        </div>
+    </footer>
+
+    <!-- CO-2: External Core JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
