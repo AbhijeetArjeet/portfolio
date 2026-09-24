@@ -79,7 +79,7 @@ let allProjects = [];
 // 2. DOM CONTENT LOADED EVENT LISTENER
 // ----------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Portfolio application initialized. Executing CO-1 & CO-2 syllabus scripts...");
+    console.log("Portfolio application initialized.");
     
     // Initialize LinkedIn Profile Links (from LocalStorage or Default)
     initLinkedIn();
