@@ -109,8 +109,12 @@ document.addEventListener("DOMContentLoaded", () => {
 function initProfilePhoto() {
     const savedPhoto = localStorage.getItem("portfolio_profile_photo");
     const imgEl = document.getElementById("profile-img");
-    if (imgEl && savedPhoto) {
-        imgEl.src = savedPhoto;
+    if (imgEl) {
+        if (savedPhoto) {
+            imgEl.src = savedPhoto;
+        } else {
+            imgEl.src = "profile.jpg?v=2";
+        }
     }
 }
 
@@ -357,20 +361,32 @@ function initProjectFilters() {
  */
 const DEFAULT_PEERS = {
     peer1: {
-        name: "Peer 1: Classmate Portfolio",
-        desc: "Classmate & developer collaborating on Web Development, Git workflows, and UI layouts.",
-        url: "https://classmate1.github.io/portfolio"
+        name: "D. Sri Sarvagna",
+        desc: "Computer Science Student & Developer exploring AI/ML, algorithmic systems, and modern web technologies.",
+        url: "https://dsrisarvagna-sudo.github.io/portfolio/"
     },
     peer2: {
-        name: "Peer 2: Classmate Portfolio",
-        desc: "Fellow student building full-stack applications, algorithms, and responsive portfolios.",
-        url: "https://classmate2.github.io/portfolio"
+        name: "Peer 2: Friend's Portfolio",
+        desc: "Classmate & fellow developer collaborating on modern web applications and software engineering.",
+        url: "https://friend2.github.io/portfolio"
     }
 };
 
 function initPeerPortfolios() {
     const savedPeers = localStorage.getItem("portfolio_peers");
-    const peers = savedPeers ? JSON.parse(savedPeers) : DEFAULT_PEERS;
+    let peers = DEFAULT_PEERS;
+    if (savedPeers) {
+        try {
+            peers = JSON.parse(savedPeers);
+            // Migrate placeholder if old key was stored
+            if (peers.peer1 && (peers.peer1.url.includes("classmate1") || peers.peer1.url.includes("friend1"))) {
+                peers.peer1 = DEFAULT_PEERS.peer1;
+                localStorage.setItem("portfolio_peers", JSON.stringify(peers));
+            }
+        } catch (e) {
+            peers = DEFAULT_PEERS;
+        }
+    }
 
     // Render Peer 1
     updatePeerDisplay(1, peers.peer1);
