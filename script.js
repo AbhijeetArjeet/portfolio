@@ -70,7 +70,7 @@ const FALLBACK_PROJECTS = [
     }
 ];
 
-const DEFAULT_LINKEDIN_URL = "https://www.linkedin.com/in/abhijeetarjeet";
+const DEFAULT_LINKEDIN_URL = "https://www.linkedin.com/in/abhijeet-arjeet-1aa62b3a7/";
 
 // Global state for projects
 let allProjects = [];
@@ -81,6 +81,9 @@ let allProjects = [];
 document.addEventListener("DOMContentLoaded", () => {
     console.log("Portfolio application initialized.");
     
+    // Initialize Profile Photo (from LocalStorage or Default)
+    initProfilePhoto();
+
     // Initialize LinkedIn Profile Links (from LocalStorage or Default)
     initLinkedIn();
 
@@ -99,6 +102,38 @@ document.addEventListener("DOMContentLoaded", () => {
     // Check LocalStorage status
     updateLocalStorageCount();
 });
+
+// ----------------------------------------------------------------------------
+// PROFILE PHOTO MANAGEMENT & LOCALSTORAGE
+// ----------------------------------------------------------------------------
+function initProfilePhoto() {
+    const savedPhoto = localStorage.getItem("portfolio_profile_photo");
+    const imgEl = document.getElementById("profile-img");
+    if (imgEl && savedPhoto) {
+        imgEl.src = savedPhoto;
+    }
+}
+
+/**
+ * Allows the user to paste their direct LinkedIn image URL or custom image URL.
+ * Persists in LocalStorage.
+ */
+window.updateProfilePhotoPrompt = function() {
+    const current = localStorage.getItem("portfolio_profile_photo") || "";
+    const newPhotoUrl = prompt(
+        "Enter your LinkedIn photo image URL (Right-click your LinkedIn profile photo -> 'Copy image address') or any direct image URL:\n\n(Tip: You can also place an image file named 'profile.jpg' in your portfolio folder)",
+        current
+    );
+    if (!newPhotoUrl || !newPhotoUrl.trim()) return;
+
+    const cleanUrl = newPhotoUrl.trim();
+    localStorage.setItem("portfolio_profile_photo", cleanUrl);
+    const imgEl = document.getElementById("profile-img");
+    if (imgEl) {
+        imgEl.src = cleanUrl;
+    }
+    alert("Profile photo updated successfully!");
+};
 
 // ----------------------------------------------------------------------------
 // LINKEDIN PROFILE INTEGRATION & LOCALSTORAGE
@@ -124,7 +159,7 @@ function updateLinkedInLinks(url) {
         if (el) {
             el.href = url;
             if (id === "quickfacts-linkedin-link" || id === "linkedin-display-link" || id === "contact-linkedin-link") {
-                el.textContent = url.replace(/^https?:\/\/(www\.)?/, "");
+                el.textContent = url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
             }
         }
     });

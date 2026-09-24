@@ -295,6 +295,28 @@ ul {
     transform: scale(1.02);
 }
 
+.change-photo-badge {
+    margin-top: 0.75rem;
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 0.35rem 0.65rem;
+    border-radius: var(--radius-sm);
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.change-photo-badge:hover {
+    background-color: #eff6ff;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
 /* --------------------------------------------------------------------------
    6. SECTIONS & LAYOUT CONTAINERS
    -------------------------------------------------------------------------- */
