@@ -366,9 +366,9 @@ const DEFAULT_PEERS = {
         url: "https://dsrisarvagna-sudo.github.io/portfolio/"
     },
     peer2: {
-        name: "Peer 2: Friend's Portfolio",
-        desc: "Classmate & fellow developer collaborating on modern web applications and software engineering.",
-        url: "https://friend2.github.io/portfolio"
+        name: "Hritik Kumar",
+        desc: "B.Tech CSE Student · Web Development & Cybersecurity enthusiast.",
+        url: "https://hritikkumar-2543.github.io/Student-Portfolio/"
     }
 };
 
@@ -378,11 +378,14 @@ function initPeerPortfolios() {
     if (savedPeers) {
         try {
             peers = JSON.parse(savedPeers);
-            // Migrate placeholder if old key was stored
+            // Migrate placeholders if old keys were stored
             if (peers.peer1 && (peers.peer1.url.includes("classmate1") || peers.peer1.url.includes("friend1"))) {
                 peers.peer1 = DEFAULT_PEERS.peer1;
-                localStorage.setItem("portfolio_peers", JSON.stringify(peers));
             }
+            if (peers.peer2 && (peers.peer2.url.includes("classmate2") || peers.peer2.url.includes("friend2"))) {
+                peers.peer2 = DEFAULT_PEERS.peer2;
+            }
+            localStorage.setItem("portfolio_peers", JSON.stringify(peers));
         } catch (e) {
             peers = DEFAULT_PEERS;
         }
