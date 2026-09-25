@@ -1,432 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sign In and Sign Up page for Abhijeet Arjeet's Personal Portfolio. Evaluator credentials supported.">
-    <meta name="author" content="Abhijeet Arjeet">
-    <title>Sign In & Sign Up | Abhijeet Arjeet Portfolio</title>
-    
-    <!-- External CSS -->
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Sign Up | Abhijeet Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .auth-box { max-width: 380px; margin: 3rem auto; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; }
+    .demo-hint { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 0.6rem; border-radius: 6px; font-size: 0.85rem; margin-bottom: 1.2rem; text-align: center; }
+    .auth-toggle { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; }
+    .auth-toggle button { flex: 1; padding: 0.5rem; border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 4px; cursor: pointer; font-weight: 600; }
+    .auth-toggle button.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .form-group { margin-bottom: 0.9rem; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .form-group input { width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; }
+  </style>
 </head>
 <body>
-
-    <!-- Semantic Navigation Header -->
-    <header id="main-header">
-        <nav class="navbar" aria-label="Main Navigation">
-            <div class="nav-brand">
-                <a href="index.html">Abhijeet<span>.dev</span></a>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html#about">About</a></li>
-                <li><a href="index.html#skills">Skills</a></li>
-                <li><a href="index.html#projects">Projects</a></li>
-                <li><a href="index.html#friends">Peer Network</a></li>
-                <li><a href="index.html#contact">Contact</a></li>
-            </ul>
-            <div class="nav-actions">
-                <a href="index.html" class="btn btn-secondary btn-sm">
-                    &larr; Back to Portfolio
-                </a>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Main Authentication Container -->
-    <main class="auth-main">
-        <div class="auth-container">
-            <article class="auth-card">
-                
-                <!-- Card Header -->
-                <div class="auth-header">
-                    <a href="index.html" class="auth-logo">Abhijeet<span>.dev</span></a>
-                    <h2 id="authTitle">Sign In to Portfolio</h2>
-                    <p id="authSubtitle">Access reviewer features, peer network & project demos</p>
-                </div>
-
-                <!-- Tabs (Sign In / Sign Up) -->
-                <div class="auth-tabs" role="tablist">
-                    <button type="button" class="auth-tab-btn active" id="tabSignIn" onclick="switchAuthTab('signin')" role="tab" aria-selected="true">
-                        Sign In
-                    </button>
-                    <button type="button" class="auth-tab-btn" id="tabSignUp" onclick="switchAuthTab('signup')" role="tab" aria-selected="false">
-                        Sign Up
-                    </button>
-                </div>
-
-                <!-- Evaluator Demo Credentials Banner -->
-                <div class="evaluator-demo-box" id="evaluatorBox">
-                    <div class="demo-title">
-                        <span>🎓</span>
-                        <strong>Faculty / Evaluator Access Credentials:</strong>
-                    </div>
-                    <code class="demo-creds">Login: <strong>Suneetha</strong> &nbsp;|&nbsp; Password: <strong>Bulla</strong></code>
-                    <button type="button" class="btn-quickfill" onclick="autofillDemoCreds()">
-                        ⚡ Click to Autofill Evaluator Credentials
-                    </button>
-                </div>
-
-                <!-- Alert Messages -->
-                <div class="auth-body">
-                    <div id="authAlert" class="auth-alert" role="alert"></div>
-
-                    <!-- SIGN IN FORM -->
-                    <form id="signInForm" class="auth-form active" onsubmit="handleSignIn(event)" novalidate>
-                        <div class="form-group">
-                            <label for="loginUsername">Username or Email <span class="required-star">*</span></label>
-                            <input 
-                                type="text" 
-                                id="loginUsername" 
-                                name="username" 
-                                class="form-control-input" 
-                                placeholder="Enter 'Suneetha' or your username" 
-                                required 
-                                autocomplete="username"
-                            >
-                            <small class="error-msg" id="loginUserError"></small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="loginPassword">Password <span class="required-star">*</span></label>
-                            <div class="password-input-wrapper">
-                                <input 
-                                    type="password" 
-                                    id="loginPassword" 
-                                    name="password" 
-                                    class="form-control-input" 
-                                    placeholder="Enter 'Bulla' or your password" 
-                                    required 
-                                    autocomplete="current-password"
-                                >
-                                <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('loginPassword', this)" title="Show/Hide Password" aria-label="Toggle Password Visibility">
-                                    👁️
-                                </button>
-                            </div>
-                            <small class="error-msg" id="loginPassError"></small>
-                        </div>
-
-                        <div class="form-options-row">
-                            <label>
-                                <input type="checkbox" id="rememberMe" checked>
-                                <span>Remember me</span>
-                            </label>
-                            <a href="#evaluatorBox" style="font-size: 0.85rem;" onclick="autofillDemoCreds()">Need credentials?</a>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary btn-block" id="signInBtn">
-                            Sign In
-                        </button>
-                    </form>
-
-                    <!-- SIGN UP FORM -->
-                    <form id="signUpForm" class="auth-form" onsubmit="handleSignUp(event)" novalidate>
-                        <div class="form-group">
-                            <label for="signupFullName">Full Name <span class="required-star">*</span></label>
-                            <input 
-                                type="text" 
-                                id="signupFullName" 
-                                name="fullname" 
-                                class="form-control-input" 
-                                placeholder="e.g. Suneetha Bulla" 
-                                required 
-                                autocomplete="name"
-                            >
-                            <small class="error-msg" id="signupNameError"></small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="signupUsername">Username <span class="required-star">*</span></label>
-                            <input 
-                                type="text" 
-                                id="signupUsername" 
-                                name="username" 
-                                class="form-control-input" 
-                                placeholder="Choose a username" 
-                                required 
-                                autocomplete="username"
-                            >
-                            <small class="error-msg" id="signupUserError"></small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="signupEmail">Email Address <span class="required-star">*</span></label>
-                            <input 
-                                type="email" 
-                                id="signupEmail" 
-                                name="email" 
-                                class="form-control-input" 
-                                placeholder="e.g. user@domain.com" 
-                                required 
-                                autocomplete="email"
-                            >
-                            <small class="error-msg" id="signupEmailError"></small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="signupPassword">Password <span class="required-star">*</span></label>
-                            <div class="password-input-wrapper">
-                                <input 
-                                    type="password" 
-                                    id="signupPassword" 
-                                    name="password" 
-                                    class="form-control-input" 
-                                    placeholder="Create password (min 4 characters)" 
-                                    required 
-                                    minlength="4" 
-                                    autocomplete="new-password"
-                                >
-                                <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('signupPassword', this)" title="Show/Hide Password" aria-label="Toggle Password Visibility">
-                                    👁️
-                                </button>
-                            </div>
-                            <small class="error-msg" id="signupPassError"></small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="signupConfirmPassword">Confirm Password <span class="required-star">*</span></label>
-                            <div class="password-input-wrapper">
-                                <input 
-                                    type="password" 
-                                    id="signupConfirmPassword" 
-                                    name="confirmPassword" 
-                                    class="form-control-input" 
-                                    placeholder="Re-enter your password" 
-                                    required 
-                                    autocomplete="new-password"
-                                >
-                                <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('signupConfirmPassword', this)" title="Show/Hide Password" aria-label="Toggle Password Visibility">
-                                    👁️
-                                </button>
-                            </div>
-                            <small class="error-msg" id="signupConfirmPassError"></small>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary btn-block" id="signUpBtn">
-                            Create Account
-                        </button>
-                    </form>
-
-                    <!-- Footer link -->
-                    <div class="auth-footer-nav">
-                        <span id="authTogglePrompt">Don't have an account?</span>
-                        <a href="javascript:void(0)" id="authToggleLink" onclick="toggleAuthMode()">Sign Up now</a>
-                    </div>
-                </div>
-
-            </article>
+  <header id="main-header">
+    <nav class="navbar">
+      <div class="nav-brand"><a href="index.html">Abhijeet<span>.dev</span></a></div>
+      <div class="nav-actions"><a href="index.html" class="btn btn-secondary btn-sm">&larr; Back to Portfolio</a></div>
+    </nav>
+  </header>
+  <main>
+    <div class="auth-box">
+      <div class="auth-toggle">
+        <button type="button" id="tabIn" class="active" onclick="setMode('in')">Sign In</button>
+        <button type="button" id="tabUp" onclick="setMode('up')">Sign Up</button>
+      </div>
+      <div class="demo-hint" id="demoHint">
+        Evaluator: Login as <b>Suneetha</b> &bull; Password: <b>Bulla</b>
+      </div>
+      <form id="authForm" onsubmit="handleAuth(event)">
+        <div class="form-group" id="nameGroup" style="display:none;">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="Your Name">
         </div>
-    </main>
-
-    <!-- Semantic Footer -->
-    <footer id="main-footer">
-        <div class="footer-bottom">
-            <p>&copy; <time datetime="2026">2026</time> Abhijeet Arjeet • Personal Portfolio</p>
+        <div class="form-group">
+          <label for="user">Username</label>
+          <input type="text" id="user" placeholder="Enter username (Suneetha)" required>
         </div>
-    </footer>
-
-    <!-- Authentication JavaScript Script -->
-    <script>
-        // Preset Evaluator Credentials (Requested by Mam)
-        const PRESET_USER = "Suneetha";
-        const PRESET_PASS = "Bulla";
-
-        // Tab Switching
-        function switchAuthTab(tab) {
-            const titleEl = document.getElementById("authTitle");
-            const subtitleEl = document.getElementById("authSubtitle");
-            const tabSignIn = document.getElementById("tabSignIn");
-            const tabSignUp = document.getElementById("tabSignUp");
-            const signInForm = document.getElementById("signInForm");
-            const signUpForm = document.getElementById("signUpForm");
-            const togglePrompt = document.getElementById("authTogglePrompt");
-            const toggleLink = document.getElementById("authToggleLink");
-            const alertEl = document.getElementById("authAlert");
-
-            alertEl.style.display = "none";
-            alertEl.className = "auth-alert";
-
-            if (tab === "signin") {
-                tabSignIn.classList.add("active");
-                tabSignUp.classList.remove("active");
-                signInForm.classList.add("active");
-                signUpForm.classList.remove("active");
-                titleEl.textContent = "Sign In to Portfolio";
-                subtitleEl.textContent = "Access reviewer features, peer network & project demos";
-                togglePrompt.textContent = "Don't have an account?";
-                toggleLink.textContent = "Sign Up now";
-                toggleLink.setAttribute("onclick", "switchAuthTab('signup')");
-            } else {
-                tabSignUp.classList.add("active");
-                tabSignIn.classList.remove("active");
-                signUpForm.classList.add("active");
-                signInForm.classList.remove("active");
-                titleEl.textContent = "Create New Account";
-                subtitleEl.textContent = "Join as a visitor, developer or peer reviewer";
-                togglePrompt.textContent = "Already have an account?";
-                toggleLink.textContent = "Sign In";
-                toggleLink.setAttribute("onclick", "switchAuthTab('signin')");
-            }
+        <div class="form-group">
+          <label for="pass">Password</label>
+          <input type="password" id="pass" placeholder="Enter password (Bulla)" required>
+        </div>
+        <button type="submit" class="btn btn-primary" id="subBtn" style="width:100%; margin-top:0.5rem;">Sign In</button>
+      </form>
+      <p id="msg" style="margin-top:1rem; font-size:0.85rem; text-align:center; font-weight:600;"></p>
+    </div>
+  </main>
+  <script>
+    let mode = 'in';
+    function setMode(m) {
+      mode = m;
+      document.getElementById('tabIn').className = m === 'in' ? 'active' : '';
+      document.getElementById('tabUp').className = m === 'up' ? 'active' : '';
+      document.getElementById('nameGroup').style.display = m === 'up' ? 'block' : 'none';
+      document.getElementById('subBtn').textContent = m === 'in' ? 'Sign In' : 'Sign Up';
+      document.getElementById('demoHint').style.display = m === 'in' ? 'block' : 'none';
+      document.getElementById('msg').textContent = '';
+    }
+    function handleAuth(e) {
+      e.preventDefault();
+      const u = document.getElementById('user').value.trim();
+      const p = document.getElementById('pass').value.trim();
+      const msg = document.getElementById('msg');
+      if (mode === 'in') {
+        const users = JSON.parse(localStorage.getItem('portfolio_users') || '[]');
+        if ((u.toLowerCase() === 'suneetha' && p === 'Bulla') || users.some(x => x.u.toLowerCase() === u.toLowerCase() && x.p === p)) {
+          localStorage.setItem('portfolio_session', JSON.stringify({ displayName: u, username: u, role: 'Evaluator' }));
+          msg.style.color = '#15803d';
+          msg.textContent = 'Login successful! Redirecting...';
+          setTimeout(() => { window.location.href = 'index.html'; }, 700);
+        } else {
+          msg.style.color = '#b91c1c';
+          msg.textContent = 'Invalid credentials! Try Suneetha / Bulla';
         }
-
-        function toggleAuthMode() {
-            const isSignIn = document.getElementById("signInForm").classList.contains("active");
-            switchAuthTab(isSignIn ? "signup" : "signin");
-        }
-
-        // Toggle Password Show/Hide
-        function togglePasswordVisibility(inputId, btn) {
-            const input = document.getElementById(inputId);
-            if (!input) return;
-            if (input.type === "password") {
-                input.type = "text";
-                btn.textContent = "🔒";
-            } else {
-                input.type = "password";
-                btn.textContent = "👁️";
-            }
-        }
-
-        // Quick Autofill for Mam / Evaluator
-        function autofillDemoCreds() {
-            switchAuthTab("signin");
-            document.getElementById("loginUsername").value = PRESET_USER;
-            document.getElementById("loginPassword").value = PRESET_PASS;
-            showAlert("Pre-filled with Evaluator Credentials (Suneetha / Bulla). Click 'Sign In'!", "success");
-        }
-
-        // Show Alert Helper
-        function showAlert(msg, type) {
-            const alertEl = document.getElementById("authAlert");
-            alertEl.textContent = msg;
-            alertEl.className = `auth-alert ${type}`;
-            alertEl.style.display = "block";
-        }
-
-        // Sign In Handler
-        function handleSignIn(e) {
-            e.preventDefault();
-            const username = document.getElementById("loginUsername").value.trim();
-            const password = document.getElementById("loginPassword").value.trim();
-
-            if (!username || !password) {
-                showAlert("Please enter both username and password.", "error");
-                return;
-            }
-
-            // Check Preset Evaluator Credentials (Case-insensitive for username, exact for password)
-            const isPreset = (username.toLowerCase() === PRESET_USER.toLowerCase() && password === PRESET_PASS);
-
-            // Check Registered Users in LocalStorage
-            let storedUsers = [];
-            try {
-                storedUsers = JSON.parse(localStorage.getItem("portfolio_users") || "[]");
-            } catch (err) {
-                storedUsers = [];
-            }
-
-            const matchedUser = storedUsers.find(u => 
-                (u.username.toLowerCase() === username.toLowerCase() || u.email.toLowerCase() === username.toLowerCase()) && 
-                u.password === password
-            );
-
-            if (isPreset || matchedUser) {
-                const displayName = isPreset ? "Prof. Suneetha" : (matchedUser.fullName || matchedUser.username);
-                const sessionData = {
-                    username: isPreset ? PRESET_USER : matchedUser.username,
-                    displayName: displayName,
-                    role: isPreset ? "Evaluator / Faculty" : "Developer",
-                    loginTime: new Date().toISOString()
-                };
-
-                // Store active session
-                localStorage.setItem("portfolio_session", JSON.stringify(sessionData));
-
-                showAlert(`✅ Login successful! Welcome, ${displayName}. Redirecting to portfolio...`, "success");
-
-                // Redirect after brief delay
-                setTimeout(() => {
-                    window.location.href = "index.html?login=success";
-                }, 1200);
-            } else {
-                showAlert("❌ Invalid username or password. (Hint: Use 'Suneetha' and 'Bulla')", "error");
-            }
-        }
-
-        // Sign Up Handler
-        function handleSignUp(e) {
-            e.preventDefault();
-            const fullName = document.getElementById("signupFullName").value.trim();
-            const username = document.getElementById("signupUsername").value.trim();
-            const email = document.getElementById("signupEmail").value.trim();
-            const password = document.getElementById("signupPassword").value;
-            const confirmPassword = document.getElementById("signupConfirmPassword").value;
-
-            if (!fullName || !username || !email || !password) {
-                showAlert("Please fill in all required fields.", "error");
-                return;
-            }
-
-            if (password.length < 4) {
-                showAlert("Password must be at least 4 characters long.", "error");
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                showAlert("Passwords do not match.", "error");
-                return;
-            }
-
-            // Check existing users
-            let storedUsers = [];
-            try {
-                storedUsers = JSON.parse(localStorage.getItem("portfolio_users") || "[]");
-            } catch (err) {
-                storedUsers = [];
-            }
-
-            const exists = storedUsers.some(u => 
-                u.username.toLowerCase() === username.toLowerCase() || 
-                u.email.toLowerCase() === email.toLowerCase()
-            );
-
-            if (exists || username.toLowerCase() === PRESET_USER.toLowerCase()) {
-                showAlert("This username or email is already registered.", "error");
-                return;
-            }
-
-            // Save new user
-            const newUser = {
-                fullName,
-                username,
-                email,
-                password,
-                registeredAt: new Date().toISOString()
-            };
-            storedUsers.push(newUser);
-            localStorage.setItem("portfolio_users", JSON.stringify(storedUsers));
-
-            showAlert(`✅ Account created for ${fullName}! Please sign in now.`, "success");
-
-            // Switch to sign in and prefill
-            setTimeout(() => {
-                switchAuthTab("signin");
-                document.getElementById("loginUsername").value = username;
-                document.getElementById("loginPassword").value = "";
-                document.getElementById("loginPassword").focus();
-            }, 1200);
-        }
-
-        // On Page Load: Check if already logged in or URL params
-        window.addEventListener("DOMContentLoaded", () => {
-            const currentSession = localStorage.getItem("portfolio_session");
-            if (currentSession) {
-                try {
-                    const session = JSON.parse(currentSession);
-                    showAlert(`You are already logged in as ${session.displayName}. You can return to the portfolio or sign in as another user.`, "success");
-                } catch (e) {}
-            }
-        });
-    </script>
+      } else {
+        const users = JSON.parse(localStorage.getItem('portfolio_users') || '[]');
+        users.push({ u, p, name: document.getElementById('name').value });
+        localStorage.setItem('portfolio_users', JSON.stringify(users));
+        msg.style.color = '#15803d';
+        msg.textContent = 'Account created! Please Sign In.';
+        setTimeout(() => setMode('in'), 800);
+      }
+    }
+  </script>
 </body>
 </html>
