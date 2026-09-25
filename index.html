@@ -57,12 +57,26 @@
                 <a href="https://www.linkedin.com/in/abhijeet-arjeet-1aa62b3a7/" id="nav-linkedin-link" target="_blank" rel="noopener noreferrer" class="btn btn-linkedin" style="margin-left: 0.5rem;">
                     LinkedIn
                 </a>
+                <a href="login.html" id="nav-auth-btn" class="btn btn-primary" style="margin-left: 0.5rem;">
+                    Sign In / Login
+                </a>
             </div>
         </nav>
     </header>
 
     <!-- CO-1 Semantic HTML5: <main> -->
     <main>
+
+        <!-- Logged-in Evaluator / User Welcome Banner (Hydrated by script.js) -->
+        <div id="authWelcomeBanner" class="login-welcome-banner" style="display: none;">
+            <div class="banner-text">
+                <span>🎓</span>
+                <span id="bannerUserMsg">Welcome, Evaluator!</span>
+            </div>
+            <div class="banner-actions">
+                <button type="button" class="btn-logout" onclick="logoutUser()">Log Out</button>
+            </div>
+        </div>
 
         <!-- HERO / ABOUT SECTION (Flexbox layout) -->
         <section id="hero" class="hero-section">
@@ -605,6 +619,7 @@
                     <li><a href="#experience">Experience & Education</a></li>
                     <li><a href="#friends">Peer Network</a></li>
                     <li><a href="#contact">Contact</a></li>
+                    <li><a href="login.html">Sign In / Login</a></li>
                 </ul>
             </div>
 

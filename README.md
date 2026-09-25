@@ -84,12 +84,28 @@ The website includes a dedicated **Peer Portfolio Network** section designed to 
 
 ---
 
+---
+
+## 🔐 Authentication & Evaluator Login System
+A dedicated authentication suite has been integrated at [`login.html`](login.html) with:
+- **Sign In & Sign Up Tabs**: Seamless client-side tab switching with input validation and password show/hide toggles.
+- **Faculty / Evaluator Preset Access**:
+  - **Username / Login**: `Suneetha`
+  - **Password**: `Bulla`
+  - Includes a **1-Click Autofill** button for rapid evaluator grading.
+- **User Registration**: Create custom accounts that persist locally in browser `localStorage`.
+- **Dynamic Session Handling**: When logged in, the main portfolio displays an evaluator welcome banner and updates the navigation bar with active user status and a Logout action.
+
+---
+
 ## 📂 Project Structure
 ```text
 portfolio/
 ├── index.html        # Main HTML5 document with semantic elements
-├── style.css         # CSS3 stylesheet (Grid, Flexbox, Box Model, Responsive)
-├── script.js         # Core JS (Fetch API, DOM manipulation, LocalStorage)
+├── login.html        # Sign In & Sign Up page with Evaluator authentication
+├── style.css         # CSS3 stylesheet (Grid, Flexbox, Box Model, Responsive, Auth)
+├── script.js         # Core JS (Fetch API, DOM manipulation, LocalStorage, Auth)
+├── profile.jpg       # Profile photo
 ├── .gitignore        # Git ignore file for version control
 └── README.md         # Documentation and CO-1/CO-2 syllabus mapping
 ```

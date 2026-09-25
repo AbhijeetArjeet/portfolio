@@ -101,7 +101,54 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Check LocalStorage status
     updateLocalStorageCount();
+
+    // Initialize User / Evaluator Session
+    initAuthSession();
 });
+
+// ----------------------------------------------------------------------------
+// AUTHENTICATION & EVALUATOR SESSION MANAGEMENT (Suneetha / Bulla)
+// ----------------------------------------------------------------------------
+function initAuthSession() {
+    const sessionData = localStorage.getItem("portfolio_session");
+    const navAuthBtn = document.getElementById("nav-auth-btn");
+    const banner = document.getElementById("authWelcomeBanner");
+    const bannerMsg = document.getElementById("bannerUserMsg");
+
+    if (sessionData) {
+        try {
+            const user = JSON.parse(sessionData);
+            if (navAuthBtn) {
+                navAuthBtn.innerHTML = `👤 ${user.displayName || user.username} <span style="font-size: 0.75rem; opacity: 0.8; margin-left: 4px;">(Logout)</span>`;
+                navAuthBtn.href = "javascript:logoutUser()";
+                navAuthBtn.title = "Click to log out";
+                navAuthBtn.className = "btn btn-secondary";
+            }
+            if (banner && bannerMsg) {
+                bannerMsg.textContent = `Welcome, ${user.displayName || user.username}! Logged in as ${user.role || 'User'}.`;
+                banner.style.display = "flex";
+            }
+        } catch (e) {
+            console.error("Error parsing user session:", e);
+        }
+    } else {
+        if (navAuthBtn) {
+            navAuthBtn.textContent = "Sign In / Login";
+            navAuthBtn.href = "login.html";
+            navAuthBtn.className = "btn btn-primary";
+            navAuthBtn.title = "Sign In or Sign Up";
+        }
+        if (banner) {
+            banner.style.display = "none";
+        }
+    }
+}
+
+window.logoutUser = function() {
+    localStorage.removeItem("portfolio_session");
+    alert("You have logged out successfully.");
+    initAuthSession();
+};
 
 // ----------------------------------------------------------------------------
 // PROFILE PHOTO MANAGEMENT & LOCALSTORAGE

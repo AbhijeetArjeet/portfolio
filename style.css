@@ -1174,3 +1174,293 @@ ul {
         grid-template-columns: 1fr;
     }
 }
+
+/* --------------------------------------------------------------------------
+   16. AUTHENTICATION (LOGIN & SIGN UP) STYLES
+   -------------------------------------------------------------------------- */
+.auth-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: calc(100vh - 140px);
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.auth-card {
+    background: #ffffff;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.auth-header {
+    padding: 2rem 2rem 1.25rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    background-color: #ffffff;
+}
+
+.auth-header .auth-logo {
+    display: inline-block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+}
+
+.auth-header .auth-logo span {
+    color: var(--primary-color);
+}
+
+.auth-header h2 {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+    margin-bottom: 0.35rem;
+}
+
+.auth-header p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0;
+}
+
+/* Switcher Tabs */
+.auth-tabs {
+    display: flex;
+    background-color: var(--bg-light);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.auth-tab-btn {
+    flex: 1;
+    padding: 0.85rem 1rem;
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: var(--transition);
+    border-bottom: 2px solid transparent;
+}
+
+.auth-tab-btn:hover {
+    color: var(--primary-color);
+    background-color: rgba(37, 99, 235, 0.04);
+}
+
+.auth-tab-btn.active {
+    color: var(--primary-color);
+    background-color: #ffffff;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+/* Evaluator Credential Quick-Fill Banner */
+.evaluator-demo-box {
+    margin: 1.25rem 1.5rem 0.5rem 1.5rem;
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: var(--radius-md);
+    padding: 0.9rem 1rem;
+    font-size: 0.85rem;
+    color: #1e40af;
+}
+
+.evaluator-demo-box .demo-title {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    color: #1d4ed8;
+}
+
+.evaluator-demo-box .demo-creds {
+    font-family: Consolas, monospace;
+    background: #ffffff;
+    padding: 0.35rem 0.55rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid #dbeafe;
+    margin-bottom: 0.6rem;
+    display: block;
+    word-break: break-all;
+}
+
+.evaluator-demo-box .btn-quickfill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    width: 100%;
+    padding: 0.45rem 0.75rem;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.evaluator-demo-box .btn-quickfill:hover {
+    background: #1d4ed8;
+}
+
+/* Auth Body & Form */
+.auth-body {
+    padding: 1.5rem;
+}
+
+.auth-form {
+    display: none;
+}
+
+.auth-form.active {
+    display: block;
+    animation: fadeIn 0.25s ease-out;
+}
+
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrapper input {
+    padding-right: 2.75rem;
+}
+
+.pwd-toggle-btn {
+    position: absolute;
+    right: 0.75rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    padding: 0.25rem;
+    line-height: 1;
+}
+
+.pwd-toggle-btn:hover {
+    color: var(--text-color);
+}
+
+.form-options-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+    font-size: 0.875rem;
+}
+
+.form-options-row label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.auth-alert {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+    display: none;
+}
+
+.auth-alert.success {
+    display: block;
+    background-color: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.auth-alert.error {
+    display: block;
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.auth-footer-nav {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.9rem;
+}
+
+.auth-footer-nav a {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Top Banner on Main Page for Logged In User */
+.login-welcome-banner {
+    background: linear-gradient(90deg, #1e3a8a 0%, #2563eb 100%);
+    color: #ffffff;
+    padding: 0.65rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    box-shadow: var(--shadow-sm);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.login-welcome-banner .banner-text {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 500;
+}
+
+.login-welcome-banner .banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.login-welcome-banner .btn-logout {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.login-welcome-banner .btn-logout:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.user-nav-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+    padding: 0.4rem 0.85rem;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
