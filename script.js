@@ -20,6 +20,14 @@ const GITHUB_REPOS_API = `https://api.github.com/users/${GITHUB_USERNAME}/repos?
 // Pre-configured fallback projects from Abhijeet's GitHub (Guarantees display if GitHub API rate-limits)
 const FALLBACK_PROJECTS = [
     {
+        name: "portfolio",
+        html_url: "https://github.com/AbhijeetArjeet/portfolio",
+        description: "Official personal portfolio website engineered with semantic HTML5, CSS Grid Layout, Flexbox, Core JavaScript, and live GitHub REST API integration.",
+        language: "HTML",
+        updated_at: "2026-09-26",
+        featured: true
+    },
+    {
         name: "OpenDisplay-USB",
         html_url: "https://github.com/AbhijeetArjeet/OpenDisplay-USB",
         description: "Turn Android devices into genuine secondary displays for Windows PCs over USB with low latency, hardware acceleration, multi-touch, and audio.",
@@ -298,6 +306,13 @@ async function loadGitHubData() {
                     language: repo.language || "General",
                     updated_at: repo.updated_at ? repo.updated_at.split("T")[0] : "Recently"
                 }));
+
+            // Prioritize the original 'portfolio' repository at the very top of featured projects
+            filtered.sort((a, b) => {
+                if (a.name.toLowerCase() === "portfolio") return -1;
+                if (b.name.toLowerCase() === "portfolio") return 1;
+                return 0;
+            });
 
             if (filtered.length > 0) {
                 allProjects = filtered;

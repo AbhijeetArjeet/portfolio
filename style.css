@@ -566,6 +566,7 @@ ul {
     letter-spacing: 0.5px;
 }
 
+.project-lang-pill.html { background-color: #ffedd5; color: #c2410c; }
 .project-lang-pill.python { background-color: #fef3c7; color: #92400e; }
 .project-lang-pill.typescript { background-color: #dbeafe; color: #1e40af; }
 .project-lang-pill.kotlin { background-color: #fce7f3; color: #9d174d; }

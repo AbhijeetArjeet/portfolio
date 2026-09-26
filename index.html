@@ -234,6 +234,7 @@
                 <input type="search" id="projectSearch" placeholder="Search projects by name or language..." class="form-control-input search-input">
                 <div class="filter-buttons">
                     <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="HTML">HTML</button>
                     <button class="filter-btn" data-filter="TypeScript">TypeScript</button>
                     <button class="filter-btn" data-filter="Python">Python</button>
                     <button class="filter-btn" data-filter="Kotlin">Kotlin</button>
@@ -248,6 +249,18 @@
             <!-- THE CSS GRID CONTAINER (Mam's key requirement) -->
             <div id="projectsGrid" class="projects-css-grid">
                 <!-- Fallback content if offline / initial render; hydrated by JavaScript -->
+                <article class="project-card">
+                    <div class="project-card-header">
+                        <span class="project-lang-pill html">HTML / CSS3</span>
+                        <span class="project-date" style="color: #2563eb; font-weight: 700;">Featured</span>
+                    </div>
+                    <h3>portfolio</h3>
+                    <p>Official personal portfolio website engineered with semantic HTML5, CSS Grid Layout, Flexbox, Core JavaScript, and live GitHub REST API integration.</p>
+                    <div class="project-card-footer">
+                        <a href="https://github.com/AbhijeetArjeet/portfolio" target="_blank" rel="noopener" class="card-link">View Repository &rarr;</a>
+                    </div>
+                </article>
+
                 <article class="project-card">
                     <div class="project-card-header">
                         <span class="project-lang-pill python">Python</span>
