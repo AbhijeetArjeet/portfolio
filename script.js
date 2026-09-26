@@ -429,7 +429,7 @@ function initPeerPortfolios() {
             if (peers.peer1 && (peers.peer1.url.includes("classmate1") || peers.peer1.url.includes("friend1"))) {
                 peers.peer1 = DEFAULT_PEERS.peer1;
             }
-            if (peers.peer2 && (peers.peer2.url.includes("classmate2") || peers.peer2.url.includes("friend2"))) {
+            if (peers.peer2 && (peers.peer2.url.includes("classmate2") || peers.peer2.url.includes("friend2") || peers.peer2.url !== DEFAULT_PEERS.peer2.url)) {
                 peers.peer2 = DEFAULT_PEERS.peer2;
             }
             localStorage.setItem("portfolio_peers", JSON.stringify(peers));

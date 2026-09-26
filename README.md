@@ -87,11 +87,11 @@ The website includes a dedicated **Peer Portfolio Network** section designed to 
 ---
 
 ## 🔐 Authentication & Evaluator Login System
-A dedicated authentication suite has been integrated at [`login.html`](login.html) with:
-- **Sign In & Sign Up Tabs**: Seamless client-side tab switching with input validation and password show/hide toggles.
+A dedicated lightweight authentication suite (under 100 lines, built with **CSS Flexbox**) has been integrated at [`login.html`](login.html) with:
+- **Sign In & Sign Up Tabs**: Seamless client-side tab switching with input validation and clean flexbox styling.
 - **Faculty / Evaluator Preset Access**:
-  - **Username / Login**: `Suneetha`
-  - **Password**: `Bulla`
+  - **Username / Login**: `Suneetha Mam`
+  - **Password**: `12345`
   - Includes a **1-Click Autofill** button for rapid evaluator grading.
 - **User Registration**: Create custom accounts that persist locally in browser `localStorage`.
 - **Dynamic Session Handling**: When logged in, the main portfolio displays an evaluator welcome banner and updates the navigation bar with active user status and a Logout action.
