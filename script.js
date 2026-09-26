@@ -456,7 +456,7 @@ const DEFAULT_PEERS = {
     peer2: {
         name: "Hritik Kumar",
         desc: "B.Tech CSE Student · Web Development & Cybersecurity enthusiast.",
-        url: "https://hritikkumar-2543.github.io/Student-Portfolio/"
+        url: "https://hritikkumar-2543.github.io/Student-personal-portfolio/"
     }
 };
 
