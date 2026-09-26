@@ -107,25 +107,51 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ----------------------------------------------------------------------------
-// AUTHENTICATION & EVALUATOR SESSION MANAGEMENT (Suneetha / Bulla)
+// AUTHENTICATION & EVALUATOR SESSION MANAGEMENT (Suneetha Mam vs Regular Users)
 // ----------------------------------------------------------------------------
 function initAuthSession() {
     const sessionData = localStorage.getItem("portfolio_session");
     const navAuthBtn = document.getElementById("nav-auth-btn");
     const banner = document.getElementById("authWelcomeBanner");
     const bannerMsg = document.getElementById("bannerUserMsg");
+    const noticeBanner = document.getElementById("facultyNoticeBanner");
+    const noticeMsg = document.getElementById("facultyNoticeMsg");
+
+    // Display Faculty Notice / Evaluation Note if posted by Suneetha Mam
+    const facultyMsg = localStorage.getItem("portfolio_faculty_message");
+    if (noticeBanner && noticeMsg) {
+        if (facultyMsg) {
+            noticeMsg.textContent = facultyMsg;
+            noticeBanner.style.display = "block";
+        } else {
+            noticeBanner.style.display = "none";
+        }
+    }
 
     if (sessionData) {
         try {
             const user = JSON.parse(sessionData);
+            const isMam = user.username && (user.username.toLowerCase() === "suneetha mam" || user.username.toLowerCase() === "suneetha");
+
             if (navAuthBtn) {
-                navAuthBtn.innerHTML = `👤 ${user.displayName || user.username} <span style="font-size: 0.75rem; opacity: 0.8; margin-left: 4px;">(Logout)</span>`;
-                navAuthBtn.href = "javascript:logoutUser()";
-                navAuthBtn.title = "Click to log out";
-                navAuthBtn.className = "btn btn-secondary";
+                if (isMam) {
+                    navAuthBtn.innerHTML = `🎓 Admin Portal`;
+                    navAuthBtn.href = "admin.html";
+                    navAuthBtn.title = "Open Faculty Admin Dashboard";
+                    navAuthBtn.className = "btn btn-primary";
+                } else {
+                    navAuthBtn.innerHTML = `👤 ${user.displayName || user.username} <span style="font-size: 0.75rem; opacity: 0.8; margin-left: 4px;">(Logout)</span>`;
+                    navAuthBtn.href = "javascript:logoutUser()";
+                    navAuthBtn.title = "Click to log out";
+                    navAuthBtn.className = "btn btn-secondary";
+                }
             }
             if (banner && bannerMsg) {
-                bannerMsg.textContent = `Welcome, ${user.displayName || user.username}! Logged in as ${user.role || 'User'}.`;
+                if (isMam) {
+                    bannerMsg.innerHTML = `Welcome, <strong>Prof. Suneetha Mam</strong>! Logged in as Faculty Evaluator. <a href="admin.html" style="color:#fef08a; text-decoration:underline; font-weight:700; margin-left:8px;">Open Faculty Admin Dashboard &rarr;</a>`;
+                } else {
+                    bannerMsg.textContent = `Welcome, ${user.displayName || user.username}! Logged in as ${user.role || 'Registered User'}.`;
+                }
                 banner.style.display = "flex";
             }
         } catch (e) {

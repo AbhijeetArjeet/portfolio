@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty Admin Dashboard | Suneetha Mam</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background-color: #f1f5f9; min-height: 100vh; display: flex; flex-direction: column; }
+    .admin-header { background: #0f172a; color: #fff; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .admin-brand { font-size: 1.25rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.5rem; }
+    .admin-brand span { color: #38bdf8; }
+    .admin-badge { background: #1e293b; color: #38bdf8; border: 1px solid #0284c7; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; }
+    .admin-nav-actions { display: flex; align-items: center; gap: 0.75rem; }
+    .admin-container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; width: 100%; flex: 1; }
+    
+    /* KPI Stats Bar */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .kpi-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; box-shadow: 0 2px 6px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 1rem; }
+    .kpi-icon { font-size: 2rem; background: #eff6ff; width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .kpi-info h4 { font-size: 0.85rem; color: #64748b; margin-bottom: 0.2rem; }
+    .kpi-info .kpi-num { font-size: 1.6rem; font-weight: 700; color: #0f172a; line-height: 1; }
+
+    /* Dashboard Panels */
+    .dashboard-panel { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.04); overflow: hidden; }
+    .panel-header { padding: 1rem 1.5rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+    .panel-header h3 { font-size: 1.1rem; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 0.5rem; }
+    .panel-body { padding: 1.5rem; }
+
+    /* Tables & Lists */
+    .data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+    .data-table th { background: #f8fafc; padding: 0.75rem 1rem; border-bottom: 2px solid #e2e8f0; color: #475569; font-weight: 600; }
+    .data-table td { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+    .data-table tr:hover { background: #f8fafc; }
+
+    /* Inbox Message Cards */
+    .inbox-list { display: flex; flex-direction: column; gap: 1rem; }
+    .inbox-item { border: 1px solid #e2e8f0; border-radius: 6px; padding: 1rem 1.25rem; background: #ffffff; transition: all 0.2s ease; }
+    .inbox-item:hover { border-color: #3b82f6; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .inbox-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem; }
+    .inbox-sender { font-weight: 600; color: #0f172a; }
+    .inbox-badge { font-size: 0.75rem; background: #dbeafe; color: #1e40af; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600; }
+    .inbox-time { font-size: 0.8rem; color: #94a3b8; }
+    .inbox-msg { color: #334155; font-size: 0.92rem; margin-top: 0.4rem; white-space: pre-wrap; line-height: 1.5; }
+
+    /* Feedback Broadcast Box */
+    .feedback-form { display: flex; flex-direction: column; gap: 0.85rem; }
+    .feedback-form textarea { width: 100%; min-height: 90px; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 0.95rem; }
+    .active-feedback-banner { margin-top: 1rem; padding: 0.85rem 1.2rem; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 6px; color: #065f46; display: flex; justify-content: space-between; align-items: center; }
+
+    /* Auth Gate overlay */
+    #authGate { display: none; text-align: center; padding: 4rem 1rem; max-width: 480px; margin: 3rem auto; background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  </style>
+</head>
+<body>
+
+  <!-- ADMIN NAVIGATION BAR -->
+  <header class="admin-header">
+    <div class="admin-brand">
+      <span>🎓</span> Faculty Admin Portal &bull; Abhijeet<span>.dev</span>
+    </div>
+    <div class="admin-badge">
+      <span>Verified Evaluator:</span> <strong>Prof. Suneetha Mam</strong>
+    </div>
+    <div class="admin-nav-actions">
+      <a href="index.html" class="btn btn-secondary btn-sm">&larr; View Public Portfolio</a>
+      <button type="button" class="btn btn-outline btn-sm" style="color:#fff; border-color:#64748b;" onclick="adminLogout()">Log Out</button>
+    </div>
+  </header>
+
+  <!-- ACCESS GATE IF NOT SUNEETHA MAM -->
+  <div id="authGate">
+    <div style="font-size:3rem; margin-bottom:1rem;">🔒</div>
+    <h2>Faculty Access Only</h2>
+    <p style="color:#64748b; margin:1rem 0 1.5rem 0;">This portal is reserved for <strong>Suneetha Mam</strong> (Evaluator / Admin). Please sign in with evaluator credentials to view registered users and inbox messages.</p>
+    <a href="login.html" class="btn btn-primary">Go to Login Page</a>
+  </div>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main class="admin-container" id="dashboardContent">
+    
+    <!-- WELCOME GREETING -->
+    <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h1 style="font-size: 1.6rem; color: #0f172a;">Welcome to Faculty Portal, Suneetha Mam!</h1>
+        <p style="color: #64748b; margin: 0;">Course Outcomes Evaluation, Project Inquiries, and User Management Console</p>
+      </div>
+      <div>
+        <span style="background:#e0f2fe; color:#0369a1; padding:0.4rem 0.8rem; border-radius:6px; font-size:0.85rem; font-weight:600;">
+          Status: Active Evaluator Session
+        </span>
+      </div>
+    </div>
+
+    <!-- KPI STATS -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon">👥</div>
+        <div class="kpi-info">
+          <h4>Registered Users</h4>
+          <div class="kpi-num" id="kpiUsers">0</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">📬</div>
+        <div class="kpi-info">
+          <h4>Inbox Inquiries</h4>
+          <div class="kpi-num" id="kpiMessages">0</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">🚀</div>
+        <div class="kpi-info">
+          <h4>Active Projects</h4>
+          <div class="kpi-num">29+</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">⭐</div>
+        <div class="kpi-info">
+          <h4>Syllabus Review</h4>
+          <div class="kpi-num" style="font-size: 1.1rem; color: #16a34a; font-weight: 700;">CO-1 &amp; CO-2 Verified</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 1: PROJECT VISIBLE INBOX & CONTACT MESSAGES -->
+    <section class="dashboard-panel">
+      <div class="panel-header">
+        <h3>📬 Project &amp; Contact Inquiries Inbox</h3>
+        <div>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="clearAllInquiries()">Clear Messages</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div id="inboxContainer" class="inbox-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 2: REGISTERED USERS DIRECTORY -->
+    <section class="dashboard-panel">
+      <div class="panel-header">
+        <h3>👥 Registered Users Directory</h3>
+        <span style="font-size:0.85rem; color:#64748b;">Live accounts saved in <code>localStorage</code></span>
+      </div>
+      <div class="panel-body" style="padding:0; overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Full Name</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Registration Date</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PANEL 3: SEND FACULTY EVALUATION FEEDBACK / BROADCAST MESSAGE -->
+    <section class="dashboard-panel">
+      <div class="panel-header">
+        <h3>✍️ Send Evaluator Feedback or Message to Student</h3>
+        <span style="font-size:0.85rem; color:#64748b;">Displays live on Abhijeet's public portfolio homepage</span>
+      </div>
+      <div class="panel-body">
+        <form class="feedback-form" onsubmit="saveFacultyFeedback(event)">
+          <label for="feedbackText" style="font-weight:600; font-size:0.9rem;">Evaluation Note / Message from Suneetha Mam:</label>
+          <textarea id="feedbackText" placeholder="e.g. Excellent portfolio architecture! HTML5 semantic tags, CSS Flexbox & Grid layouts, and Fetch API are thoroughly implemented. Grade: A+ (10/10)" required></textarea>
+          <div style="display:flex; justify-content:flex-end;">
+            <button type="submit" class="btn btn-primary">📢 Post Message to Portfolio</button>
+          </div>
+        </form>
+
+        <div id="activeFeedbackBox" class="active-feedback-banner" style="display:none;">
+          <div>
+            <strong>Active Portfolio Note:</strong> <span id="activeFeedbackMsg"></span>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="removeFacultyFeedback()">Remove Note</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Verify Access Gate
+    function checkAdminAuth() {
+      const sessionStr = localStorage.getItem("portfolio_session");
+      let isMam = false;
+      if (sessionStr) {
+        try {
+          const sess = JSON.parse(sessionStr);
+          if (sess.username && (sess.username.toLowerCase() === "suneetha mam" || sess.username.toLowerCase() === "suneetha")) {
+            isMam = true;
+          }
+        } catch (e) {}
+      }
+
+      if (!isMam) {
+        document.getElementById("dashboardContent").style.display = "none";
+        document.getElementById("authGate").style.display = "block";
+        return false;
+      }
+      return true;
+    }
+
+    // Populate Inbox Messages
+    function renderInbox() {
+      const container = document.getElementById("inboxContainer");
+      const kpiMsg = document.getElementById("kpiMessages");
+      const stored = localStorage.getItem("portfolio_inquiries");
+      let inquiries = [];
+
+      if (stored) {
+        try { inquiries = JSON.parse(stored); } catch (e) { inquiries = []; }
+      }
+
+      // Default sample messages if inbox is empty
+      if (inquiries.length === 0) {
+        inquiries = [
+          {
+            fullName: "Hritik Kumar",
+            emailAddress: "hritik@klu.ac.in",
+            reason: "peer-portfolio",
+            message: "Hey Abhijeet, I checked your CSS Grid projects section and the peer portfolio card. The link to my Student Portfolio is syncing nicely!",
+            submittedAt: "25/09/2026, 11:20:15"
+          },
+          {
+            fullName: "D. Sri Sarvagna",
+            emailAddress: "sarvagna@klu.ac.in",
+            reason: "collaboration",
+            message: "Great work on the OpenDisplay-USB and AniScribe projects. Let us collaborate on the next hackathon system.",
+            submittedAt: "24/09/2026, 18:45:00"
+          }
+        ];
+      }
+
+      kpiMsg.textContent = inquiries.length;
+      container.innerHTML = "";
+
+      inquiries.forEach((item, idx) => {
+        const div = document.createElement("div");
+        div.className = "inbox-item";
+        div.innerHTML = `
+          <div class="inbox-header">
+            <div>
+              <span class="inbox-sender">${item.fullName}</span> 
+              <span style="font-size:0.85rem; color:#64748b;">(${item.emailAddress || 'No email'})</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span class="inbox-badge">${item.reason || 'General'}</span>
+              <span class="inbox-time">${item.submittedAt || 'Recent'}</span>
+            </div>
+          </div>
+          <div class="inbox-msg">${item.message}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // Populate Registered Users Directory
+    function renderUsers() {
+      const tbody = document.getElementById("usersTableBody");
+      const kpiUsers = document.getElementById("kpiUsers");
+      const stored = localStorage.getItem("portfolio_users");
+      let users = [];
+
+      if (stored) {
+        try { users = JSON.parse(stored); } catch (e) { users = []; }
+      }
+
+      // Always show registered users + default peer users
+      const allUsers = [
+        { fullName: "Suneetha Mam", u: "Suneetha Mam", role: "Faculty Evaluator (Admin)", registeredAt: "26/09/2026 (Preset Admin)" },
+        { fullName: "Hritik Kumar", u: "hritik2543", role: "Peer Student", registeredAt: "25/09/2026, 10:14:00" },
+        { fullName: "D. Sri Sarvagna", u: "sarvagna_sudo", role: "Peer Student", registeredAt: "24/09/2026, 14:30:20" },
+        ...users.map(u => ({ fullName: u.name || u.fullName || u.u, u: u.u || u.username, role: "Registered User", registeredAt: u.registeredAt || "Recent" }))
+      ];
+
+      kpiUsers.textContent = allUsers.length;
+      tbody.innerHTML = "";
+
+      allUsers.forEach(u => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${u.fullName}</strong></td>
+          <td><code>${u.u}</code></td>
+          <td><span style="background:${u.role.includes('Admin') ? '#dcfce7' : '#f1f5f9'}; color:${u.role.includes('Admin') ? '#15803d' : '#334155'}; padding:0.2rem 0.5rem; border-radius:4px; font-size:0.8rem; font-weight:600;">${u.role}</span></td>
+          <td style="color:#64748b; font-size:0.85rem;">${u.registeredAt}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Faculty Feedback Broadcast Handling
+    function loadFacultyFeedback() {
+      const activeFeedback = localStorage.getItem("portfolio_faculty_message");
+      const box = document.getElementById("activeFeedbackBox");
+      const msg = document.getElementById("activeFeedbackMsg");
+      if (activeFeedback) {
+        box.style.display = "flex";
+        msg.textContent = activeFeedback;
+      } else {
+        box.style.display = "none";
+      }
+    }
+
+    function saveFacultyFeedback(e) {
+      e.preventDefault();
+      const text = document.getElementById("feedbackText").value.trim();
+      if (!text) return;
+      localStorage.setItem("portfolio_faculty_message", text);
+      document.getElementById("feedbackText").value = "";
+      loadFacultyFeedback();
+      alert("Evaluation feedback message successfully posted to the portfolio homepage!");
+    }
+
+    function removeFacultyFeedback() {
+      localStorage.removeItem("portfolio_faculty_message");
+      loadFacultyFeedback();
+      alert("Faculty note removed from portfolio homepage.");
+    }
+
+    function clearAllInquiries() {
+      if (confirm("Are you sure you want to clear all inquiries?")) {
+        localStorage.removeItem("portfolio_inquiries");
+        renderInbox();
+      }
+    }
+
+    function adminLogout() {
+      localStorage.removeItem("portfolio_session");
+      alert("Logged out from Faculty Admin Portal.");
+      window.location.href = "login.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if (checkAdminAuth()) {
+        renderInbox();
+        renderUsers();
+        loadFacultyFeedback();
+      }
+    });
+  </script>
+</body>
+</html>

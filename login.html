@@ -68,10 +68,11 @@
         const isMam = (u.toLowerCase() === 'suneetha mam' || u.toLowerCase() === 'suneetha') && p === '12345';
         if (isMam || users.some(x => x.u.toLowerCase() === u.toLowerCase() && x.p === p)) {
           const display = isMam ? 'Suneetha Mam' : u;
-          localStorage.setItem('portfolio_session', JSON.stringify({ displayName: display, username: u, role: 'Evaluator / Faculty' }));
+          const role = isMam ? 'Evaluator / Faculty' : 'Registered User';
+          localStorage.setItem('portfolio_session', JSON.stringify({ displayName: display, username: u, role: role }));
           msg.style.color = '#15803d';
-          msg.textContent = 'Login successful! Welcome, ' + display + '. Redirecting...';
-          setTimeout(() => { window.location.href = 'index.html'; }, 700);
+          msg.textContent = 'Login successful! Welcome, ' + display + '. Opening ' + (isMam ? 'Admin Portal...' : 'Portfolio...');
+          setTimeout(() => { window.location.href = isMam ? 'admin.html' : 'index.html'; }, 700);
         } else {
           msg.style.color = '#b91c1c';
           msg.textContent = 'Invalid credentials! Try Suneetha Mam / 12345';
