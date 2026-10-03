@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: portfolio-api
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: "cd server && npm install && npx prisma generate && npx prisma db push && node prisma/seed.js"
+    startCommand: "cd server && npm start"
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: CLIENT_URL
+        sync: false
+      - key: RENDER_EXTERNAL_URL
+        sync: false
+      - key: MONITORING_INTERVAL_MINUTES
+        value: "14"

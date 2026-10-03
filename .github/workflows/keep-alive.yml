@@ -1,0 +1,28 @@
+name: Render Backend Keep-Alive (14-min interval)
+
+on:
+  schedule:
+    # Runs every 14 minutes during active daytime hours (03:00 - 17:00 UTC = 08:30 - 22:30 IST)
+    # Sleeping 10 hours/night ensures you NEVER exceed Render's 750 free hours monthly cap!
+    # (14h/day * 30 days = 420h used out of 750h limit)
+    - cron: '*/14 3-17 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  health-check:
+    name: Ping Health Endpoint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send GET Request to /api/health
+        env:
+          BACKEND_URL: ${{ secrets.RENDER_EXTERNAL_URL || 'https://your-service.onrender.com' }}
+        run: |
+          echo "Pinging Render Health Endpoint at: $BACKEND_URL/api/health"
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}s\n" "$BACKEND_URL/api/health" || true)
+          echo "$RESPONSE"
+          
+          if echo "$RESPONSE" | grep -q "HTTP_STATUS:200"; then
+            echo "✅ Render backend is active and healthy!"
+          else
+            echo "⚠️ Health check returned non-200 or timed out. (Instance may be waking up)"
+          fi

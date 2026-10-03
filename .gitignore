@@ -1,16 +1,33 @@
-# Node modules (if any used later)
+# Dependencies
 node_modules/
+.pnp
+.pnp.js
 
-# OS generated files
+# Testing & Coverage
+coverage/
+
+# Production Build
+dist/
+build/
+
+# Environment Variables
+.env
+.env.local
+.env.production
+.env.development
+
+# Database
+*.db
+*.db-journal
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Editor & OS files
 .DS_Store
 Thumbs.db
-Desktop.ini
-
-# IDE & Editor files
 .vscode/
 .idea/
-*.swp
-*.swo
-
-# Local build / logs
-*.log
