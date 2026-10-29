@@ -73,7 +73,6 @@ exports.updateUserStatus = async (req, res, next) => {
       select: { id: true, name: true, email: true, status: true, role: true }
     });
 
-    // Create audit log
     await prisma.auditLog.create({
       data: {
         userId: req.user.id,
@@ -191,6 +190,63 @@ exports.updateReportStatus = async (req, res, next) => {
     });
 
     res.json({ message: 'Report status updated', report });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getAccessRequests = async (req, res, next) => {
+  try {
+    const requests = await prisma.accessRequest.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: {
+        portfolio: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            user: { select: { id: true, name: true, email: true } }
+          }
+        }
+      }
+    });
+
+    res.json({ requests });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateAccessRequest = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!['APPROVED', 'REJECTED', 'PENDING'].includes(status)) {
+      return res.status(400).json({ error: 'Status must be APPROVED, REJECTED, or PENDING.' });
+    }
+
+    const request = await prisma.accessRequest.update({
+      where: { id },
+      data: {
+        status,
+        reviewedBy: req.user.email,
+        reviewedAt: new Date()
+      }
+    });
+
+    await prisma.auditLog.create({
+      data: {
+        userId: req.user.id,
+        action: `ACCESS_REQUEST_${status}`,
+        targetType: 'ACCESS_REQUEST',
+        targetId: id,
+        details: `Access request for portfolio ${request.portfolioId} set to ${status}`,
+        ipAddress: req.ip
+      }
+    });
+
+    res.json({ message: `Access request status set to ${status}`, request });
   } catch (err) {
     next(err);
   }

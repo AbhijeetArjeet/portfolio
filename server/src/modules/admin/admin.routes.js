@@ -14,6 +14,8 @@ router.get('/portfolios', adminController.getPortfolios);
 router.patch('/portfolios/:id/publish', adminController.togglePortfolioPublish);
 router.get('/reports', adminController.getReports);
 router.patch('/reports/:id', adminController.updateReportStatus);
+router.get('/access-requests', adminController.getAccessRequests);
+router.patch('/access-requests/:id', adminController.updateAccessRequest);
 router.get('/audit-logs', adminController.getAuditLogs);
 
 module.exports = router;

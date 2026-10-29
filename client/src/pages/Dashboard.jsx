@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { portfolioService } from '../services/portfolio.service';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -10,38 +10,40 @@ import {
   Check,
   Eye,
   Globe,
-  Layers,
   Sparkles,
-  Lock,
-  ArrowRight,
   GitBranch,
-  ShieldCheck,
-  Building2,
   Inbox,
-  UserCheck
+  UserCheck,
+  Plus,
+  Trash2,
+  Download,
+  UploadCloud,
+  FileCheck2,
+  Linkedin,
+  ShieldCheck
 } from 'lucide-react';
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const [portfolio, setPortfolio] = useState(null);
+  const navigate = useNavigate();
+  const [portfolios, setPortfolios] = useState([]);
   const [accessRequests, setAccessRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [copied, setCopied] = useState(false);
+  const [copiedSlug, setCopiedSlug] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+  const [newTemplate, setNewTemplate] = useState('developer');
 
-  const fetchPortfolioAndRequests = async () => {
+  const fetchDashboardData = async () => {
     try {
-      const [pData, rData] = await Promise.all([
-        portfolioService.getMyPortfolio(),
+      const [pListData, rData] = await Promise.all([
+        portfolioService.listMyPortfolios(),
         portfolioService.getAccessRequests()
       ]);
-      setPortfolio(pData.portfolio);
-      // Filter requests for this portfolio or show all relevant
-      const allReqs = rData || [];
-      const myReqs = allReqs.filter(
-        (r) => !pData.portfolio || r.portfolioSlug === pData.portfolio.slug || r.portfolioId === pData.portfolio.id
-      );
-      setAccessRequests(myReqs.length > 0 ? myReqs : allReqs.slice(0, 3));
+      const list = pListData?.portfolios || [];
+      setPortfolios(list);
+      setAccessRequests(rData || []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -50,29 +52,93 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    fetchPortfolioAndRequests();
+    fetchDashboardData();
   }, []);
 
-  const handleCopyLink = () => {
-    if (!portfolio) return;
-    const url = `${window.location.origin}/u/${portfolio.slug}`;
+  const handleCopyLink = (slug) => {
+    const url = `${window.location.origin}/u/${slug}`;
     navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setCopiedSlug(slug);
+    setTimeout(() => setCopiedSlug(null), 2000);
   };
 
-  const handleTogglePublish = async () => {
-    if (!portfolio) return;
+  const handleTogglePublish = async (port) => {
     setActionLoading(true);
     try {
-      if (portfolio.isPublished) {
-        await portfolioService.unpublish(portfolio.id);
+      if (port.isPublished) {
+        await portfolioService.unpublish(port.id);
       } else {
-        await portfolioService.publish(portfolio.id);
+        await portfolioService.publish(port.id);
       }
-      await fetchPortfolioAndRequests();
+      await fetchDashboardData();
     } catch (err) {
       alert(err.message || 'Operation failed');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDuplicate = async (portId) => {
+    setActionLoading(true);
+    try {
+      await portfolioService.duplicatePortfolio(portId);
+      await fetchDashboardData();
+    } catch (err) {
+      alert(err.message || 'Duplication failed');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDelete = async (portId) => {
+    if (portfolios.length <= 1) {
+      alert('You must have at least one portfolio.');
+      return;
+    }
+    if (!window.confirm('Are you sure you want to delete this portfolio? This cannot be undone.')) {
+      return;
+    }
+    setActionLoading(true);
+    try {
+      await portfolioService.deletePortfolio(portId);
+      await fetchDashboardData();
+    } catch (err) {
+      alert(err.message || 'Delete failed');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleExport = async (port) => {
+    try {
+      const data = await portfolioService.exportPortfolio(port.id);
+      const jsonStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute('href', jsonStr);
+      downloadAnchor.setAttribute('download', `portfolio-${port.slug}-backup.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    } catch (err) {
+      alert('Failed to export backup: ' + err.message);
+    }
+  };
+
+  const handleCreatePortfolio = async (e) => {
+    e.preventDefault();
+    if (!newTitle.trim()) return;
+
+    setActionLoading(true);
+    try {
+      await portfolioService.createPortfolio({
+        title: newTitle.trim(),
+        templateId: newTemplate
+      });
+      setShowCreateModal(false);
+      setNewTitle('');
+      await fetchDashboardData();
+    } catch (err) {
+      alert(err.message || 'Failed to create portfolio');
     } finally {
       setActionLoading(false);
     }
@@ -81,7 +147,7 @@ export default function Dashboard() {
   const handleApproveRequest = async (requestId) => {
     try {
       await portfolioService.updateAccessRequestStatus(requestId, 'APPROVED', user?.name || 'Owner');
-      await fetchPortfolioAndRequests();
+      await fetchDashboardData();
     } catch (err) {
       alert(err.message || 'Failed to update request');
     }
@@ -90,7 +156,7 @@ export default function Dashboard() {
   const handleDeclineRequest = async (requestId) => {
     try {
       await portfolioService.updateAccessRequestStatus(requestId, 'REJECTED', user?.name || 'Owner');
-      await fetchPortfolioAndRequests();
+      await fetchDashboardData();
     } catch (err) {
       alert(err.message || 'Failed to update request');
     }
@@ -100,26 +166,31 @@ export default function Dashboard() {
     return <LoadingSpinner text="Loading your dashboard..." />;
   }
 
-  if (!portfolio) {
-    return (
-      <div className="container" style={{ padding: '3rem 0', textAlign: 'center' }}>
-        <p>No portfolio record found. Please refresh or create one.</p>
-      </div>
-    );
-  }
-
-  const publicUrl = `${window.location.origin}/u/${portfolio.slug}`;
+  const primaryPortfolio = portfolios[0] || null;
+  const totalViews = portfolios.reduce((acc, p) => acc + (p.views || 0), 0);
+  const totalProjects = portfolios.reduce((acc, p) => acc + (p.projects?.length || 0), 0);
 
   return (
     <div className="container" style={{ padding: '3rem 1.5rem 5rem' }}>
       {/* Module Identification Banner (Criterion #2) */}
-      <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-        <span className="badge badge-success" style={{ padding: '4px 10px', fontSize: '0.8rem' }}>
-          <Sparkles size={13} /> Module: Student &amp; Creator Studio
-        </span>
-        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-          Local Storage Persistence Active &bull; Role: <strong>{user?.role || 'USER'}</strong>
-        </span>
+      <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <span className="badge badge-success" style={{ padding: '4px 10px', fontSize: '0.8rem' }}>
+            <Sparkles size={13} /> Module: Student &amp; Creator Studio
+          </span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+            Active Database &amp; Local Persistence &bull; Role: <strong>{user?.role || 'USER'}</strong>
+          </span>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setShowCreateModal(true)}
+          className="btn btn-primary btn-sm"
+          style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+        >
+          <Plus size={14} /> Create New Portfolio
+        </button>
       </div>
 
       {/* Top Welcome Header */}
@@ -127,76 +198,27 @@ export default function Dashboard() {
         <div>
           <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Welcome, {user?.name}!</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-            Manage your custom portfolio, select features from pre-given building blocks, or randomize design.
+            Multi-portfolio workspace. Manage your live URLs, customize design themes, and review recruiter permission requests.
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-          <Link to="/editor" className="btn btn-primary">
-            <Edit3 size={16} /> Open Visual Editor
-          </Link>
-          {portfolio.isPublished && (
-            <a href={publicUrl} target="_blank" rel="noreferrer" className="btn btn-outline">
-              <ExternalLink size={16} /> View Sharable Link
-            </a>
-          )}
-        </div>
-      </div>
-
-      {/* Public URL & Publication Status Banner */}
-      <div
-        className="card"
-        style={{
-          marginBottom: '2rem',
-          backgroundColor: portfolio.isPublished ? 'var(--bg-card)' : 'var(--bg-secondary)',
-          borderLeft: `5px solid ${portfolio.isPublished ? 'var(--success)' : 'var(--warning)'}`
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.25rem' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
-              <span className={`badge ${portfolio.isPublished ? 'badge-success' : 'badge-warning'}`}>
-                {portfolio.isPublished ? 'Published & Live' : 'Unpublished Draft'}
-              </span>
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                Template: <strong>{portfolio.templateId}</strong> &bull; Layout: <strong>{portfolio.layoutType}</strong>
-              </span>
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
-              <Globe size={18} color="var(--primary)" />
-              <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>Sharable Link:</span>
+        {primaryPortfolio && (
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <Link to="/editor" className="btn btn-primary">
+              <Edit3 size={16} /> Open Visual Editor
+            </Link>
+            {primaryPortfolio.isPublished && (
               <a
-                href={publicUrl}
+                href={`${window.location.origin}/u/${primaryPortfolio.slug}`}
                 target="_blank"
                 rel="noreferrer"
-                style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem', color: 'var(--primary)', textDecoration: 'underline' }}
+                className="btn btn-outline"
               >
-                {publicUrl}
+                <ExternalLink size={16} /> View Live URL
               </a>
-            </div>
+            )}
           </div>
-
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <button
-              type="button"
-              onClick={handleCopyLink}
-              className="btn btn-secondary btn-sm"
-              title="Copy link to clipboard"
-            >
-              {copied ? <Check size={14} color="var(--success)" /> : <Copy size={14} />}
-              {copied ? 'Copied!' : 'Copy Link'}
-            </button>
-            <button
-              type="button"
-              onClick={handleTogglePublish}
-              className={`btn btn-sm ${portfolio.isPublished ? 'btn-outline' : 'btn-primary'}`}
-              disabled={actionLoading}
-            >
-              {actionLoading ? 'Updating...' : portfolio.isPublished ? 'Unpublish Portfolio' : 'Publish Portfolio'}
-            </button>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Stats Cards */}
@@ -206,26 +228,179 @@ export default function Dashboard() {
             <span style={{ fontSize: '0.88rem', fontWeight: 600 }}>Total Views</span>
             <Eye size={18} />
           </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{portfolio.views}</div>
-          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '4px' }}>Public portfolio page visits</div>
+          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{totalViews}</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '4px' }}>Across all published links</div>
         </div>
 
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.88rem', fontWeight: 600 }}>Projects Displayed</span>
+            <span style={{ fontSize: '0.88rem', fontWeight: 600 }}>Active Portfolios</span>
+            <Globe size={18} />
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{portfolios.length}</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '4px' }}>Separate target versions</div>
+        </div>
+
+        <div className="card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.88rem', fontWeight: 600 }}>Showcased Projects</span>
             <GitBranch size={18} />
           </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{portfolio.projects?.length || 0}</div>
+          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{totalProjects}</div>
           <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '4px' }}>Curated works highlighted</div>
         </div>
+      </div>
 
-        <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.88rem', fontWeight: 600 }}>Skills Listed</span>
-            <Sparkles size={18} />
+      {/* ---------------------------------------------------- */}
+      {/* MULTI-PORTFOLIO MANAGEMENT GRID */}
+      {/* ---------------------------------------------------- */}
+      <div style={{ marginBottom: '3rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <div>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, margin: 0 }}>Your Custom Portfolios</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', margin: '0.2rem 0 0' }}>
+              Each portfolio has its own unique slug, layout, theme settings, and shareable link.
+            </p>
           </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{portfolio.skills?.length || 0}</div>
-          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '4px' }}>Verified technical competencies</div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1.5rem' }}>
+          {portfolios.map((port) => {
+            const pubUrl = `${window.location.origin}/u/${port.slug}`;
+            return (
+              <div
+                key={port.id}
+                className="card"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  borderTop: `4px solid ${port.isPublished ? 'var(--success)' : 'var(--text-muted)'}`,
+                  position: 'relative'
+                }}
+              >
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem', gap: '0.5rem' }}>
+                    <div>
+                      <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0 }}>{port.title}</h3>
+                      <div style={{ fontSize: '0.82rem', color: 'var(--primary)', fontWeight: 600, marginTop: '2px' }}>
+                        {port.headline || 'Developer & Creator'}
+                      </div>
+                    </div>
+                    <span className={`badge ${port.isPublished ? 'badge-success' : 'badge-warning'}`} style={{ fontSize: '0.72rem' }}>
+                      {port.isPublished ? 'Published' : 'Draft'}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                    <span className="badge" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)' }}>
+                      Template: <strong>{port.templateId}</strong>
+                    </span>
+                    <span className="badge" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)' }}>
+                      Layout: <strong>{port.layoutType}</strong>
+                    </span>
+                    <span className="badge" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)' }}>
+                      Views: <strong>{port.views || 0}</strong>
+                    </span>
+                    {port.linkedinUrl && (
+                      <span className="badge" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                        <Linkedin size={11} style={{ color: '#0a66c2' }} /> LinkedIn Linked
+                      </span>
+                    )}
+                  </div>
+
+                  <div style={{ background: 'var(--bg-secondary)', padding: '0.6rem 0.8rem', borderRadius: 'var(--radius-sm)', marginBottom: '1.25rem', fontSize: '0.82rem' }}>
+                    <div style={{ color: 'var(--text-muted)', marginBottom: '2px' }}>Sharable URL:</div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+                      <span style={{ fontFamily: 'var(--font-mono)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        /u/{port.slug}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleCopyLink(port.slug)}
+                        style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', padding: '2px' }}
+                        title="Copy link"
+                      >
+                        {copiedSlug === port.slug ? <Check size={14} color="var(--success)" /> : <Copy size={14} />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                    <Link to="/editor" className="btn btn-primary btn-sm" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                      <Edit3 size={13} /> Edit Design
+                    </Link>
+                    {port.isPublished ? (
+                      <a href={pubUrl} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                        <ExternalLink size={13} /> View Live
+                      </a>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleTogglePublish(port)}
+                        className="btn btn-outline btn-sm"
+                        disabled={actionLoading}
+                      >
+                        Publish Live
+                      </button>
+                    )}
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
+                    <div style={{ display: 'flex', gap: '0.4rem' }}>
+                      <button
+                        type="button"
+                        onClick={() => handleDuplicate(port.id)}
+                        className="btn btn-secondary btn-sm"
+                        style={{ fontSize: '0.78rem', padding: '4px 8px' }}
+                        title="Duplicate portfolio as a starting point"
+                        disabled={actionLoading}
+                      >
+                        Duplicate
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleExport(port)}
+                        className="btn btn-secondary btn-sm"
+                        style={{ fontSize: '0.78rem', padding: '4px 8px', display: 'flex', alignItems: 'center', gap: '3px' }}
+                        title="Export JSON backup"
+                      >
+                        <Download size={12} /> JSON
+                      </button>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '0.4rem' }}>
+                      {port.isPublished && (
+                        <button
+                          type="button"
+                          onClick={() => handleTogglePublish(port)}
+                          className="btn btn-secondary btn-sm"
+                          style={{ fontSize: '0.75rem', padding: '4px 8px' }}
+                          disabled={actionLoading}
+                        >
+                          Unpublish
+                        </button>
+                      )}
+                      {portfolios.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(port.id)}
+                          className="btn btn-outline btn-sm"
+                          style={{ color: 'var(--danger)', padding: '4px 8px' }}
+                          title="Delete portfolio"
+                          disabled={actionLoading}
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -239,7 +414,7 @@ export default function Dashboard() {
               <Inbox size={18} color="var(--primary)" /> Incoming Collaboration &amp; Recruiter Requests
             </h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.2rem' }}>
-              Organisations and recruiters who viewed your public link and requested review or collaboration permissions.
+              Organisations and recruiters who viewed your read-only link and requested collaboration or assessment permissions.
             </p>
           </div>
           <span className="badge badge-primary">{accessRequests.length} Requests</span>
@@ -317,40 +492,62 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Onboarding Checklist / Next Steps */}
-      <div className="card" style={{ background: 'var(--bg-secondary)' }}>
-        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '1rem' }}>
-          🚀 Ready for Review &amp; Demonstration
-        </h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem', fontSize: '0.9rem' }}>
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
-            <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--primary-subtle)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.8rem', flexShrink: 0 }}>
-              1
-            </div>
-            <div>
-              <strong>Pre-Given Materials Library:</strong> Open the Visual Editor to pick 1-click domain starter kits, skills, and project blueprints.
-            </div>
-          </div>
+      {/* Create Portfolio Modal */}
+      {showCreateModal && (
+        <div className="modal-backdrop" onClick={() => setShowCreateModal(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 480 }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1rem' }}>
+              Create New Custom Portfolio
+            </h3>
+            <form onSubmit={handleCreatePortfolio}>
+              <div className="form-group">
+                <label className="form-label">Portfolio Title / Purpose</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  placeholder="e.g. Abhijeet | AI & Systems Portfolio"
+                  required
+                />
+              </div>
 
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
-            <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--primary-subtle)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.8rem', flexShrink: 0 }}>
-              2
-            </div>
-            <div>
-              <strong>Magic Randomizer:</strong> Randomly generate matching templates, CSS Grid vs Flexbox, and palettes with lock controls.
-            </div>
-          </div>
+              <div className="form-group">
+                <label className="form-label">Starting Design Template</label>
+                <select
+                  className="form-select"
+                  value={newTemplate}
+                  onChange={(e) => setNewTemplate(e.target.value)}
+                >
+                  <option value="developer">Developer (CLI Terminal + Dark Grid)</option>
+                  <option value="minimal">Minimal (Clean Editorial Mono)</option>
+                  <option value="creative">Creative (Bento Dynamic Layout)</option>
+                  <option value="editorial">Editorial (Magazine Typography)</option>
+                  <option value="academic">Academic (CV &amp; Research Publications)</option>
+                  <option value="executive">Executive (Leadership Dossier)</option>
+                </select>
+              </div>
 
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
-            <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--primary-subtle)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.8rem', flexShrink: 0 }}>
-              3
-            </div>
-            <div>
-              <strong>Organisations Sharable Link:</strong> Recruiters can view read-only portfolios and submit permission requests directly.
-            </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1.5rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowCreateModal(false)}
+                  className="btn btn-outline"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={actionLoading}
+                >
+                  {actionLoading ? 'Creating...' : 'Create Portfolio'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

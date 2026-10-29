@@ -42,22 +42,6 @@ export default function Home() {
         }}
       >
         <div className="container" style={{ maxWidth: 880 }}>
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              marginBottom: '1.75rem',
-              padding: '0.45rem 1.1rem',
-              fontSize: '0.82rem',
-              borderRadius: 'var(--radius-full)',
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-color)',
-              color: 'var(--text-secondary)'
-            }}
-          >
-            <Sparkles size={14} color="#e4e4e7" /> Full-Stack Custom Portfolio Platform &bull; React + Vite &bull; AMOLED Ready
-          </div>
 
           <h1
             style={{

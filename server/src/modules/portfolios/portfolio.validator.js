@@ -1,5 +1,8 @@
 const { z } = require('zod');
 
+// HTTPS LinkedIn profile validation
+const linkedinRegex = /^https:\/\/(www\.)?linkedin\.com\/(in|company)\/[a-zA-Z0-9_\-./]+\/?$/i;
+
 const portfolioUpdateSchema = z.object({
   title: z.string().min(2).max(150).optional(),
   headline: z.string().max(255).optional().nullable(),
@@ -9,12 +12,26 @@ const portfolioUpdateSchema = z.object({
   avatarUrl: z.string().max(1000).optional().nullable(),
   resumeUrl: z.string().max(1000).optional().nullable().or(z.literal('')),
   githubUrl: z.string().max(1000).optional().nullable().or(z.literal('')),
-  linkedinUrl: z.string().max(1000).optional().nullable().or(z.literal('')),
+  linkedinUrl: z.string().regex(linkedinRegex, 'Must be a valid HTTPS LinkedIn profile URL (e.g. https://linkedin.com/in/username)').optional().nullable().or(z.literal('')),
+  showLinkedin: z.boolean().optional(),
   websiteUrl: z.string().max(1000).optional().nullable().or(z.literal('')),
   slug: z.string().min(3).max(60).regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens').optional(),
-  templateId: z.enum(['minimal', 'developer', 'creative']).optional(),
+  templateId: z.enum(['minimal', 'developer', 'creative', 'editorial', 'academic', 'executive']).optional(),
   layoutType: z.enum(['grid', 'flexbox']).optional(),
-  themeConfig: z.string().optional()
+  themeConfig: z.string().optional(),
+  sectionOrder: z.string().optional()
+});
+
+const createPortfolioSchema = z.object({
+  title: z.string().min(2, 'Portfolio title must be at least 2 characters').max(150),
+  slug: z.string().min(3).max(60).regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens').optional(),
+  headline: z.string().max(255).optional().nullable(),
+  bio: z.string().max(5000).optional().nullable(),
+  templateId: z.enum(['minimal', 'developer', 'creative', 'editorial', 'academic', 'executive']).optional().default('developer'),
+  layoutType: z.enum(['grid', 'flexbox']).optional().default('grid'),
+  themeConfig: z.string().optional(),
+  linkedinUrl: z.string().regex(linkedinRegex, 'Must be a valid HTTPS LinkedIn profile URL').optional().nullable().or(z.literal('')),
+  showLinkedin: z.boolean().optional().default(true)
 });
 
 const projectSchema = z.object({
@@ -62,12 +79,27 @@ const reportSchema = z.object({
   reason: z.string().min(10, 'Please provide details of the report').max(1000)
 });
 
+const accessRequestSchema = z.object({
+  requesterName: z.string().min(2, 'Name is required').max(100),
+  organization: z.string().min(2, 'Organization is required').max(100),
+  email: z.string().email('Valid work email is required'),
+  requestedRole: z.string().max(100).optional().default('Recruiter / Evaluator'),
+  reason: z.string().min(5, 'Please provide a reason').max(2000)
+});
+
+const createVersionSchema = z.object({
+  name: z.string().max(100).optional()
+});
+
 module.exports = {
   portfolioUpdateSchema,
+  createPortfolioSchema,
   projectSchema,
   skillSchema,
   experienceSchema,
   educationSchema,
   socialLinkSchema,
-  reportSchema
+  reportSchema,
+  accessRequestSchema,
+  createVersionSchema
 };

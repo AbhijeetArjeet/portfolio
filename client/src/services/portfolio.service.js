@@ -14,6 +14,41 @@ export const portfolioService = {
     return storageService.getMyPortfolio();
   },
 
+  async listMyPortfolios() {
+    try {
+      const data = await apiRequest('/api/v1/portfolios/my/all');
+      if (data && data.portfolios) {
+        return data;
+      }
+    } catch {
+      // Backend offline
+    }
+    return storageService.listMyPortfolios();
+  },
+
+  async createPortfolio(data) {
+    storageService.createPortfolio(data);
+    try {
+      return await apiRequest('/api/v1/portfolios', {
+        method: 'POST',
+        body: JSON.stringify(data)
+      });
+    } catch {
+      return storageService.listMyPortfolios();
+    }
+  },
+
+  async duplicatePortfolio(id) {
+    const localResult = storageService.duplicatePortfolio(id);
+    try {
+      return await apiRequest(`/api/v1/portfolios/${id}/duplicate`, {
+        method: 'POST'
+      });
+    } catch {
+      return localResult;
+    }
+  },
+
   async getPublicPortfolio(slug) {
     try {
       const data = await apiRequest(`/api/v1/portfolios/public/${slug}`);
@@ -66,6 +101,72 @@ export const portfolioService = {
       return await apiRequest(`/api/v1/portfolios/${id}/unpublish`, { method: 'POST' });
     } catch {
       return { success: true };
+    }
+  },
+
+  async deletePortfolio(id) {
+    storageService.deletePortfolio(id);
+    try {
+      return await apiRequest(`/api/v1/portfolios/${id}`, { method: 'DELETE' });
+    } catch {
+      return { success: true };
+    }
+  },
+
+  // Version Snapshots
+  async createVersion(id, name) {
+    storageService.createVersion(id, name);
+    try {
+      return await apiRequest(`/api/v1/portfolios/${id}/versions`, {
+        method: 'POST',
+        body: JSON.stringify({ name })
+      });
+    } catch {
+      return { success: true };
+    }
+  },
+
+  async listVersions(id) {
+    try {
+      const data = await apiRequest(`/api/v1/portfolios/${id}/versions`);
+      if (data && data.versions) return data;
+    } catch {
+      // Backend offline
+    }
+    return storageService.listVersions(id);
+  },
+
+  async restoreVersion(id, versionId) {
+    const localRes = storageService.restoreVersion(id, versionId);
+    try {
+      return await apiRequest(`/api/v1/portfolios/${id}/versions/${versionId}/restore`, {
+        method: 'POST'
+      });
+    } catch {
+      return localRes;
+    }
+  },
+
+  // Backup Import & Export
+  async exportPortfolio(id) {
+    try {
+      const data = await apiRequest(`/api/v1/portfolios/${id}/export`);
+      if (data && data.portfolio) return data;
+    } catch {
+      // Backend offline
+    }
+    return storageService.exportPortfolio(id);
+  },
+
+  async importPortfolio(id, backupData) {
+    storageService.importPortfolio(id, backupData);
+    try {
+      return await apiRequest(`/api/v1/portfolios/${id}/import`, {
+        method: 'POST',
+        body: JSON.stringify(backupData)
+      });
+    } catch {
+      return { portfolio: storageService.getMyPortfolio().portfolio };
     }
   },
 
@@ -238,6 +339,14 @@ export const portfolioService = {
 
   // Access & Collaboration Requests (For visiting organisations & recruiters)
   async submitAccessRequest(requestData) {
+    try {
+      return await apiRequest(`/api/v1/portfolios/${requestData.portfolioId || 'me'}/access-request`, {
+        method: 'POST',
+        body: JSON.stringify(requestData)
+      });
+    } catch {
+      // fallback
+    }
     return storageService.submitAccessRequest(requestData);
   },
 

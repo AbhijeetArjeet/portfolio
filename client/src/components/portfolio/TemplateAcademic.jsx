@@ -46,7 +46,7 @@ export default function TemplateAcademic({ portfolio }) {
                 <Github size={14} /> GitHub
               </a>
             )}
-            {portfolio.linkedinUrl && (
+            {portfolio.linkedinUrl && portfolio.showLinkedin !== false && (
               <a href={portfolio.linkedinUrl} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm">
                 <Linkedin size={14} /> Scholar / LinkedIn
               </a>

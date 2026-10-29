@@ -53,7 +53,7 @@ export default function TemplateMinimal({ portfolio }) {
                 <Github size={15} /> GitHub
               </a>
             )}
-            {portfolio.linkedinUrl && (
+            {portfolio.linkedinUrl && portfolio.showLinkedin !== false && (
               <a href={portfolio.linkedinUrl} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm">
                 <Linkedin size={15} /> LinkedIn
               </a>

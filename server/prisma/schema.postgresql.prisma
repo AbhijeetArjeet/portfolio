@@ -8,11 +8,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
 model User {
   id             String      @id @default(uuid())
   name           String
@@ -22,6 +17,7 @@ model User {
   status         String      @default("ACTIVE") // ACTIVE or SUSPENDED
   avatarUrl      String?
   githubUsername String?
+  linkedinUrl    String?
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 
@@ -45,22 +41,51 @@ model Portfolio {
   resumeUrl    String?
   githubUrl    String?
   linkedinUrl  String?
+  showLinkedin Boolean     @default(true)
   websiteUrl   String?
-  templateId   String      @default("minimal")
+  templateId   String      @default("developer")
   layoutType   String      @default("grid")
-  themeConfig  String      @default("{\"primaryColor\":\"#2563eb\",\"darkTheme\":false,\"fontFamily\":\"inter\",\"showGithubStats\":true}")
+  themeConfig  String      @default("{\"primaryColor\":\"#ffffff\",\"darkTheme\":true,\"fontFamily\":\"inter\",\"showGithubStats\":true}")
+  sectionOrder String      @default("[\"bio\",\"projects\",\"skills\",\"experience\",\"education\"]")
   isPublished  Boolean     @default(false)
   publishedAt  DateTime?
   views        Int         @default(0)
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
 
-  projects     Project[]
-  skills       Skill[]
-  education    Education[]
-  experience   Experience[]
-  socialLinks  SocialLink[]
-  reports      PortfolioReport[]
+  projects       Project[]
+  skills         Skill[]
+  education      Education[]
+  experience     Experience[]
+  socialLinks    SocialLink[]
+  reports        PortfolioReport[]
+  versions       PortfolioVersion[]
+  accessRequests AccessRequest[]
+}
+
+model PortfolioVersion {
+  id          String    @id @default(uuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  version     Int       @default(1)
+  name        String?
+  snapshot    String    // Full serialized JSON snapshot of portfolio data
+  createdAt   DateTime  @default(now())
+}
+
+model AccessRequest {
+  id            String    @id @default(uuid())
+  portfolioId   String
+  portfolio     Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  requesterName String
+  organization  String
+  email         String
+  requestedRole String    @default("Recruiter / Evaluator")
+  reason        String
+  status        String    @default("PENDING")
+  reviewedBy    String?
+  reviewedAt    DateTime?
+  createdAt     DateTime  @default(now())
 }
 
 model Project {

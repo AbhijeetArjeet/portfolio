@@ -5,9 +5,10 @@
  * 1. User Registration, Login, Session Management (Evaluation Criterion #3)
  * 2. Pre-seeded credentials for Faculty Admin (Suneetha Mam / 12345) and Student (Abhijeet Arjeet / password123)
  * 3. Complete Portfolio Management (Create, Edit, Templates, Grid/Flexbox, Randomize, Publish)
- * 4. Sharable Read-Only links for visiting organisations
- * 5. Access Request & Permission Approval Workflow for Admins and Portfolio Owners
- * 6. Audit logging and system stats
+ * 4. Multi-Portfolio CRUD, Duplication, Version History Snapshots, JSON Backup/Restore
+ * 5. Sharable Read-Only links for visiting organisations
+ * 6. Access Request & Permission Approval Workflow for Admins and Portfolio Owners
+ * 7. Audit logging and system stats
  * 
  * Works 100% reliably in static Vercel deployment (Evaluation Criterion #4) and offline!
  */
@@ -15,6 +16,7 @@
 const STORAGE_USERS_KEY = 'portfolioforge_users';
 const STORAGE_ACTIVE_USER_KEY = 'portfolioforge_active_user';
 const STORAGE_PORTFOLIOS_KEY = 'portfolioforge_portfolios';
+const STORAGE_VERSIONS_KEY = 'portfolioforge_versions';
 const STORAGE_REQUESTS_KEY = 'portfolioforge_access_requests';
 const STORAGE_AUDIT_KEY = 'portfolioforge_audit_logs';
 
@@ -57,6 +59,7 @@ const DEFAULT_PORTFOLIOS = [
     avatarUrl: 'https://avatars.githubusercontent.com/u/102927424?v=4',
     githubUrl: 'https://github.com/AbhijeetArjeet',
     linkedinUrl: 'https://linkedin.com/in/abhijeetarjeet',
+    showLinkedin: true,
     websiteUrl: 'https://portfolioforge.vercel.app',
     resumeUrl: 'https://drive.google.com/file/d/sample-resume/view',
     templateId: 'developer', // 'minimal', 'developer', 'creative', 'editorial', 'academic', 'executive'
@@ -68,6 +71,7 @@ const DEFAULT_PORTFOLIOS = [
       showGithubStats: true,
       bannerStyle: 'gradient'
     }),
+    sectionOrder: JSON.stringify(['bio', 'projects', 'skills', 'experience', 'education']),
     isPublished: true,
     publishedAt: '2024-09-15T12:00:00.000Z',
     views: 184,
@@ -122,7 +126,7 @@ const DEFAULT_PORTFOLIOS = [
       { id: 'sk-2', name: 'JavaScript / ES6+', category: 'Frontend', proficiency: 92 },
       { id: 'sk-3', name: 'Node.js & Express', category: 'Backend', proficiency: 88 },
       { id: 'sk-4', name: 'Prisma ORM & PostgreSQL', category: 'Backend', proficiency: 85 },
-      { id: 'sk-5', name: 'Python & FastApi', category: 'Languages', proficiency: 82 },
+      { id: 'sk-5', name: 'Python & FastAPI', category: 'Languages', proficiency: 82 },
       { id: 'sk-6', name: 'CSS Grid & Modern Flexbox', category: 'Frontend', proficiency: 95 },
       { id: 'sk-7', name: 'Git & Version Control', category: 'DevOps', proficiency: 90 },
       { id: 'sk-8', name: 'Docker & Containerization', category: 'DevOps', proficiency: 80 }
@@ -176,7 +180,7 @@ const DEFAULT_REQUESTS = [
     portfolioSlug: 'abhijeet-arjeet',
     portfolioTitle: 'Abhijeet Arjeet',
     requestedRole: 'Recruiter / Evaluator',
-    reason: 'Evaluating candidate profile for upcoming 2025 campus software engineering roles.',
+    reason: 'Evaluating candidate profile for upcoming campus software engineering roles.',
     status: 'PENDING',
     createdAt: '2024-10-25T14:30:00.000Z'
   },
@@ -352,6 +356,7 @@ export const storageService = {
       avatarUrl: newUser.avatarUrl,
       githubUrl: newUser.githubUsername ? `https://github.com/${newUser.githubUsername}` : '',
       linkedinUrl: '',
+      showLinkedin: true,
       websiteUrl: '',
       resumeUrl: '',
       templateId: 'minimal',
@@ -362,6 +367,7 @@ export const storageService = {
         darkTheme: true,
         showGithubStats: true
       }),
+      sectionOrder: JSON.stringify(['bio', 'projects', 'skills', 'experience', 'education']),
       isPublished: true,
       publishedAt: new Date().toISOString(),
       views: 1,
@@ -438,7 +444,7 @@ export const storageService = {
   },
 
   // ----------------------------------------------------
-  // PORTFOLIO CRUD & CUSTOMIZATION
+  // PORTFOLIO CRUD & MULTI-PORTFOLIO
   // ----------------------------------------------------
   getPortfolios() {
     initializeStorage();
@@ -462,13 +468,204 @@ export const storageService = {
     return { portfolio: userPort };
   },
 
+  listMyPortfolios(userId) {
+    const active = this.getActiveUser();
+    const uid = userId || active?.id || 'user-student-abhijeet';
+    const portfolios = this.getPortfolios();
+    const userPorts = portfolios.filter((p) => p.userId === uid);
+    if (userPorts.length === 0) {
+      return { portfolios: [portfolios[0] || DEFAULT_PORTFOLIOS[0]] };
+    }
+    return { portfolios: userPorts };
+  },
+
+  createPortfolio(data = {}) {
+    const active = this.getActiveUser();
+    const uid = active?.id || 'user-student-abhijeet';
+    const portfolios = this.getPortfolios();
+    const baseSlug = (data.title || active?.name || 'portfolio').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const slug = data.slug || `${baseSlug}-${Math.random().toString(36).substr(2, 5)}`;
+
+    const newPortfolio = {
+      id: `portfolio-${Date.now()}`,
+      userId: uid,
+      slug,
+      title: data.title || 'My New Portfolio',
+      headline: data.headline || 'Developer & Creator',
+      bio: data.bio || '',
+      location: data.location || '',
+      contactEmail: active?.email || '',
+      avatarUrl: data.avatarUrl || active?.avatarUrl || '',
+      githubUrl: data.githubUrl || (active?.githubUsername ? `https://github.com/${active.githubUsername}` : ''),
+      linkedinUrl: data.linkedinUrl || '',
+      showLinkedin: data.showLinkedin !== undefined ? data.showLinkedin : true,
+      websiteUrl: data.websiteUrl || '',
+      resumeUrl: data.resumeUrl || '',
+      templateId: data.templateId || 'developer',
+      layoutType: data.layoutType || 'grid',
+      themeConfig: typeof data.themeConfig === 'string' ? data.themeConfig : JSON.stringify(data.themeConfig || { primaryColor: '#ffffff', darkTheme: true, fontFamily: 'inter' }),
+      sectionOrder: typeof data.sectionOrder === 'string' ? data.sectionOrder : JSON.stringify(data.sectionOrder || ['bio', 'projects', 'skills', 'experience', 'education']),
+      isPublished: false,
+      publishedAt: null,
+      views: 0,
+      projects: [],
+      skills: [],
+      experience: [],
+      education: [],
+      socialLinks: []
+    };
+
+    portfolios.push(newPortfolio);
+    localStorage.setItem(STORAGE_PORTFOLIOS_KEY, JSON.stringify(portfolios));
+    this.addAuditLog('PORTFOLIO_CREATE', 'Portfolio', newPortfolio.id, `Created new portfolio: ${newPortfolio.title}`);
+    return { portfolio: newPortfolio };
+  },
+
+  duplicatePortfolio(id) {
+    const portfolios = this.getPortfolios();
+    const source = portfolios.find((p) => p.id === id);
+    if (!source) throw new Error('Portfolio not found');
+
+    const copy = JSON.parse(JSON.stringify(source));
+    copy.id = `portfolio-${Date.now()}`;
+    copy.title = `${source.title} (Copy)`;
+    copy.slug = `${source.slug}-copy-${Math.random().toString(36).substr(2, 4)}`;
+    copy.isPublished = false;
+    copy.publishedAt = null;
+    copy.views = 0;
+
+    copy.projects = (copy.projects || []).map((p) => ({ ...p, id: `proj-${Date.now()}-${Math.random().toString(36).substr(2, 4)}` }));
+    copy.skills = (copy.skills || []).map((s) => ({ ...s, id: `sk-${Date.now()}-${Math.random().toString(36).substr(2, 4)}` }));
+    copy.experience = (copy.experience || []).map((e) => ({ ...e, id: `exp-${Date.now()}-${Math.random().toString(36).substr(2, 4)}` }));
+    copy.education = (copy.education || []).map((ed) => ({ ...ed, id: `edu-${Date.now()}-${Math.random().toString(36).substr(2, 4)}` }));
+
+    portfolios.push(copy);
+    localStorage.setItem(STORAGE_PORTFOLIOS_KEY, JSON.stringify(portfolios));
+    this.addAuditLog('PORTFOLIO_DUPLICATE', 'Portfolio', copy.id, `Duplicated portfolio from ${source.id}`);
+    return { portfolio: copy };
+  },
+
+  deletePortfolio(id) {
+    const portfolios = this.getPortfolios();
+    const filtered = portfolios.filter((p) => p.id !== id);
+    localStorage.setItem(STORAGE_PORTFOLIOS_KEY, JSON.stringify(filtered));
+    this.addAuditLog('PORTFOLIO_DELETE', 'Portfolio', id, `Deleted portfolio ${id}`);
+    return { success: true };
+  },
+
+  exportPortfolio(id) {
+    const portfolios = this.getPortfolios();
+    const portfolio = portfolios.find((p) => p.id === id) || portfolios[0];
+    if (!portfolio) throw new Error('Portfolio not found');
+
+    return {
+      version: '1.0',
+      exportedAt: new Date().toISOString(),
+      portfolio: JSON.parse(JSON.stringify(portfolio))
+    };
+  },
+
+  importPortfolio(id, importedData) {
+    const portfolios = this.getPortfolios();
+    const index = portfolios.findIndex((p) => p.id === id);
+    if (index === -1) throw new Error('Target portfolio not found');
+
+    const portData = importedData.portfolio || importedData;
+    portfolios[index] = {
+      ...portfolios[index],
+      title: portData.title || portfolios[index].title,
+      headline: portData.headline || portfolios[index].headline,
+      bio: portData.bio || portfolios[index].bio,
+      location: portData.location || portfolios[index].location,
+      contactEmail: portData.contactEmail || portfolios[index].contactEmail,
+      avatarUrl: portData.avatarUrl || portfolios[index].avatarUrl,
+      resumeUrl: portData.resumeUrl || portfolios[index].resumeUrl,
+      githubUrl: portData.githubUrl || portfolios[index].githubUrl,
+      linkedinUrl: portData.linkedinUrl || portfolios[index].linkedinUrl,
+      showLinkedin: portData.showLinkedin !== undefined ? portData.showLinkedin : portfolios[index].showLinkedin,
+      websiteUrl: portData.websiteUrl || portfolios[index].websiteUrl,
+      templateId: portData.templateId || portfolios[index].templateId,
+      layoutType: portData.layoutType || portfolios[index].layoutType,
+      themeConfig: typeof portData.themeConfig === 'string' ? portData.themeConfig : JSON.stringify(portData.themeConfig || {}),
+      sectionOrder: typeof portData.sectionOrder === 'string' ? portData.sectionOrder : JSON.stringify(portData.sectionOrder || ['bio', 'projects', 'skills', 'experience', 'education']),
+      projects: Array.isArray(portData.projects) ? portData.projects : portfolios[index].projects,
+      skills: Array.isArray(portData.skills) ? portData.skills : portfolios[index].skills,
+      experience: Array.isArray(portData.experience) ? portData.experience : portfolios[index].experience,
+      education: Array.isArray(portData.education) ? portData.education : portfolios[index].education,
+      socialLinks: Array.isArray(portData.socialLinks) ? portData.socialLinks : portfolios[index].socialLinks,
+      updatedAt: new Date().toISOString()
+    };
+
+    localStorage.setItem(STORAGE_PORTFOLIOS_KEY, JSON.stringify(portfolios));
+    return { portfolio: portfolios[index] };
+  },
+
+  createVersion(portfolioId, name) {
+    const portfolios = this.getPortfolios();
+    const portfolio = portfolios.find((p) => p.id === portfolioId) || portfolios[0];
+    if (!portfolio) throw new Error('Portfolio not found');
+
+    let allVersions = [];
+    try {
+      allVersions = JSON.parse(localStorage.getItem(STORAGE_VERSIONS_KEY)) || [];
+    } catch {
+      allVersions = [];
+    }
+
+    const portVersions = allVersions.filter((v) => v.portfolioId === portfolioId);
+    const newVersion = {
+      id: `ver-${Date.now()}`,
+      portfolioId,
+      version: portVersions.length + 1,
+      name: name || `Snapshot v${portVersions.length + 1}`,
+      snapshot: JSON.stringify(portfolio),
+      createdAt: new Date().toISOString()
+    };
+
+    allVersions.unshift(newVersion);
+    localStorage.setItem(STORAGE_VERSIONS_KEY, JSON.stringify(allVersions));
+    return { version: newVersion };
+  },
+
+  listVersions(portfolioId) {
+    try {
+      const allVersions = JSON.parse(localStorage.getItem(STORAGE_VERSIONS_KEY)) || [];
+      return {
+        versions: allVersions
+          .filter((v) => v.portfolioId === portfolioId)
+          .map((v) => ({ id: v.id, version: v.version, name: v.name, createdAt: v.createdAt }))
+      };
+    } catch {
+      return { versions: [] };
+    }
+  },
+
+  restoreVersion(portfolioId, versionId) {
+    const allVersions = JSON.parse(localStorage.getItem(STORAGE_VERSIONS_KEY)) || [];
+    const versionRecord = allVersions.find((v) => v.id === versionId);
+    if (!versionRecord) throw new Error('Version snapshot not found');
+
+    const snapshot = JSON.parse(versionRecord.snapshot);
+    const portfolios = this.getPortfolios();
+    const index = portfolios.findIndex((p) => p.id === portfolioId);
+    if (index === -1) throw new Error('Portfolio not found');
+
+    portfolios[index] = {
+      ...snapshot,
+      id: portfolioId,
+      updatedAt: new Date().toISOString()
+    };
+
+    localStorage.setItem(STORAGE_PORTFOLIOS_KEY, JSON.stringify(portfolios));
+    return { portfolio: portfolios[index] };
+  },
+
   getPublicPortfolio(slug) {
     const portfolios = this.getPortfolios();
     const cleanSlug = (slug || '').trim().toLowerCase();
     const found = portfolios.find((p) => (p.slug || '').toLowerCase() === cleanSlug);
 
     if (!found) {
-      // If asking for abhijeet, return primary
       if (cleanSlug.includes('abhijeet')) {
         return { portfolio: portfolios[0] || DEFAULT_PORTFOLIOS[0] };
       }
@@ -479,7 +676,6 @@ export const storageService = {
       throw new Error('This portfolio is currently saved as an unpublished draft.');
     }
 
-    // Increment view count
     found.views = (found.views || 0) + 1;
     localStorage.setItem(STORAGE_PORTFOLIOS_KEY, JSON.stringify(portfolios));
 
@@ -546,7 +742,7 @@ export const storageService = {
 
     requests.unshift(newReq);
     localStorage.setItem(STORAGE_REQUESTS_KEY, JSON.stringify(requests));
-    this.addAuditLog('ACCESS_REQUEST_SUBMITTED', 'AccessRequest', newReq.id, `${requesterName} from ${organization} requested ${requestedRole}`);
+    this.addAuditLog('ACCESS_REQUEST_SUBMITTED', 'AccessRequest', newReq.id, `${requesterName} from ${organization} requested access`);
     return { success: true, request: newReq };
   },
 
@@ -588,7 +784,6 @@ export const storageService = {
         ipAddress: '127.0.0.1 (Local)',
         createdAt: new Date().toISOString()
       });
-      // Keep recent 100
       localStorage.setItem(STORAGE_AUDIT_KEY, JSON.stringify(logs.slice(0, 100)));
     } catch {
       // ignore

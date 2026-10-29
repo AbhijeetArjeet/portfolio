@@ -31,7 +31,7 @@ export default function TemplateCreative({ portfolio }) {
                 <Github size={16} /> GitHub Work
               </a>
             )}
-            {portfolio.linkedinUrl && (
+            {portfolio.linkedinUrl && portfolio.showLinkedin !== false && (
               <a href={portfolio.linkedinUrl} target="_blank" rel="noreferrer" className="btn btn-outline">
                 <Linkedin size={16} /> LinkedIn
               </a>

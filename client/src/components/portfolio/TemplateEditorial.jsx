@@ -51,7 +51,7 @@ export default function TemplateEditorial({ portfolio }) {
                   <Github size={14} /> GitHub
                 </a>
               )}
-              {portfolio.linkedinUrl && (
+              {portfolio.linkedinUrl && portfolio.showLinkedin !== false && (
                 <a href={portfolio.linkedinUrl} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm" style={{ fontFamily: 'var(--font-sans)' }}>
                   <Linkedin size={14} /> LinkedIn
                 </a>

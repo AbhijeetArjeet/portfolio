@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { uploadService } from '../../services/upload.service';
-import { Camera, UploadCloud, Link as LinkIcon } from 'lucide-react';
+import { Camera, Linkedin, CheckCircle2, AlertCircle } from 'lucide-react';
+
+const LINKEDIN_REGEX = /^https:\/\/(www\.)?linkedin\.com\/(in|company)\/[a-zA-Z0-9_\-./]+\/?$/i;
 
 export default function PersonalInfoSection({ portfolio, onChange }) {
   const [uploading, setUploading] = useState(false);
@@ -23,6 +25,8 @@ export default function PersonalInfoSection({ portfolio, onChange }) {
       setUploading(false);
     }
   };
+
+  const isLinkedInValid = !portfolio.linkedinUrl || LINKEDIN_REGEX.test(portfolio.linkedinUrl.trim());
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -116,15 +120,48 @@ export default function PersonalInfoSection({ portfolio, onChange }) {
             placeholder="https://github.com/YourUsername"
           />
         </div>
+
+        {/* First-Class LinkedIn Integration */}
         <div className="form-group">
-          <label className="form-label">LinkedIn Profile URL</label>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
+            <label className="form-label" style={{ marginBottom: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Linkedin size={15} style={{ color: '#0a66c2' }} />
+              <span>LinkedIn Profile</span>
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={portfolio.showLinkedin !== false}
+                onChange={(e) => onChange({ showLinkedin: e.target.checked })}
+              />
+              <span>Display on portfolio</span>
+            </label>
+          </div>
           <input
             type="url"
             className="form-input"
+            style={{
+              borderColor: portfolio.linkedinUrl && !isLinkedInValid ? 'var(--danger)' : undefined
+            }}
             value={portfolio.linkedinUrl || ''}
             onChange={(e) => onChange({ linkedinUrl: e.target.value })}
             placeholder="https://linkedin.com/in/YourHandle"
           />
+          {portfolio.linkedinUrl && !isLinkedInValid ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: 'var(--danger)', marginTop: '4px' }}>
+              <AlertCircle size={13} />
+              <span>Must be a valid HTTPS LinkedIn URL (e.g., https://linkedin.com/in/username)</span>
+            </div>
+          ) : portfolio.linkedinUrl ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: 'var(--success)', marginTop: '4px' }}>
+              <CheckCircle2 size={13} />
+              <span>Valid HTTPS LinkedIn profile linked</span>
+            </div>
+          ) : (
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+              First-class social profile badge shown across all 6 portfolio themes.
+            </div>
+          )}
         </div>
       </div>
 

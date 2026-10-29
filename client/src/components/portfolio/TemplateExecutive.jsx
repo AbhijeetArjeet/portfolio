@@ -47,7 +47,7 @@ export default function TemplateExecutive({ portfolio }) {
                   <Github size={15} /> GitHub
                 </a>
               )}
-              {portfolio.linkedinUrl && (
+              {portfolio.linkedinUrl && portfolio.showLinkedin !== false && (
                 <a href={portfolio.linkedinUrl} target="_blank" rel="noreferrer" className="btn btn-outline">
                   <Linkedin size={15} /> LinkedIn
                 </a>
