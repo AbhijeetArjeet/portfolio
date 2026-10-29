@@ -12,7 +12,9 @@ import {
   Menu,
   X,
   ExternalLink,
-  Layers
+  Layers,
+  Building2,
+  Lock
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -84,22 +86,61 @@ export default function Navbar() {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '1.75rem'
+            gap: '1.5rem'
           }}
           className="desktop-nav"
         >
-          <Link to="/" style={{ color: location.pathname === '/' ? 'var(--primary)' : 'var(--text-secondary)', fontWeight: 500, fontSize: '0.92rem' }}>
+          <Link to="/" style={{ color: location.pathname === '/' ? 'var(--primary)' : 'var(--text-secondary)', fontWeight: 500, fontSize: '0.9rem' }}>
             Home
           </Link>
-          <a href="#templates" style={{ color: 'var(--text-secondary)', fontWeight: 500, fontSize: '0.92rem' }}>
-            Templates
-          </a>
-          <a href="#features" style={{ color: 'var(--text-secondary)', fontWeight: 500, fontSize: '0.92rem' }}>
-            Features
-          </a>
-          <Link to="/u/abhijeet-arjeet" style={{ color: 'var(--text-secondary)', fontWeight: 500, fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            Live Example <ExternalLink size={13} />
-          </Link>
+
+          {/* Module Badges / Links */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-secondary)', padding: '2px 8px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+            <Link
+              to="/dashboard"
+              style={{
+                fontSize: '0.8rem',
+                color: location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/editor') ? 'var(--primary)' : 'var(--text-secondary)',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+              title="Student & Creator Module"
+            >
+              <User size={13} /> User Module
+            </Link>
+            <span style={{ color: 'var(--border-color)' }}>|</span>
+            <Link
+              to="/admin"
+              style={{
+                fontSize: '0.8rem',
+                color: location.pathname === '/admin' ? 'var(--primary)' : 'var(--text-secondary)',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+              title="Faculty Evaluation & Admin Module"
+            >
+              <ShieldCheck size={13} /> Admin Module
+            </Link>
+            <span style={{ color: 'var(--border-color)' }}>|</span>
+            <Link
+              to="/u/abhijeet-arjeet"
+              style={{
+                fontSize: '0.8rem',
+                color: location.pathname.startsWith('/u/') ? 'var(--primary)' : 'var(--text-secondary)',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+              title="Organisation Read-Only Viewer Link"
+            >
+              <Building2 size={13} /> Org View
+            </Link>
+          </div>
 
           {/* Theme Toggle Button */}
           <button
@@ -115,10 +156,10 @@ export default function Navbar() {
 
           {/* Auth State Controls */}
           {isAuthenticated ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
               {isAdmin && (
                 <Link to="/admin" className="btn btn-sm" style={{ background: '#ecfdf5', color: '#047857', border: '1px solid #a7f3d0' }}>
-                  <ShieldCheck size={14} /> Faculty Admin
+                  <ShieldCheck size={14} /> Evaluator Portal
                 </Link>
               )}
               <Link to="/dashboard" className="btn btn-secondary btn-sm">
@@ -139,7 +180,7 @@ export default function Navbar() {
                 Sign In
               </Link>
               <Link to="/register" className="btn btn-primary btn-sm">
-                Create Portfolio
+                Sign Up
               </Link>
             </div>
           )}
@@ -157,8 +198,26 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Mobile Drawer */}
+      {mobileMenuOpen && (
+        <div style={{ padding: '1rem', background: 'var(--bg-primary)', borderBottom: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <Link to="/" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+          <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>User Module (Dashboard)</Link>
+          <Link to="/admin" onClick={() => setMobileMenuOpen(false)}>Admin Module (Portal)</Link>
+          <Link to="/u/abhijeet-arjeet" onClick={() => setMobileMenuOpen(false)}>Organisation View</Link>
+          {isAuthenticated ? (
+            <button type="button" onClick={handleLogout} className="btn btn-danger btn-sm">Log Out</button>
+          ) : (
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="btn btn-outline btn-sm">Sign In</Link>
+              <Link to="/register" onClick={() => setMobileMenuOpen(false)} className="btn btn-primary btn-sm">Sign Up</Link>
+            </div>
+          )}
+        </div>
+      )}
+
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 860px) {
           .desktop-nav { display: none !important; }
           .mobile-toggle { display: block !important; }
         }

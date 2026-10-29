@@ -319,3 +319,34 @@
   transform: translateY(-3px);
   box-shadow: var(--shadow-lg);
 }
+
+
+/* =========================================================
+   TEMPLATE D: Editorial Essayist
+   ========================================================= */
+.tpl-editorial {
+  font-family: var(--font-heading), Georgia, serif;
+}
+.tpl-editorial h1, .tpl-editorial h2, .tpl-editorial h3 {
+  font-family: var(--font-heading), Georgia, serif;
+}
+
+/* =========================================================
+   TEMPLATE E: Academic Research CV
+   ========================================================= */
+.tpl-academic {
+  font-family: var(--font-sans);
+}
+.tpl-academic h1, .tpl-academic h2 {
+  letter-spacing: -0.01em;
+}
+
+/* =========================================================
+   TEMPLATE F: Modern Executive
+   ========================================================= */
+.tpl-executive {
+  font-family: var(--font-sans);
+}
+.tpl-executive h1 {
+  letter-spacing: -0.02em;
+}

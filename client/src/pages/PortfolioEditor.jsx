@@ -5,9 +5,15 @@ import ProjectsManager from '../components/editor/ProjectsManager';
 import SkillsManager from '../components/editor/SkillsManager';
 import ExperienceManager from '../components/editor/ExperienceManager';
 import ThemeCustomizer from '../components/editor/ThemeCustomizer';
+import PreGivenMaterialsLibrary from '../components/editor/PreGivenMaterialsLibrary';
+
 import TemplateMinimal from '../components/portfolio/TemplateMinimal';
 import TemplateDeveloper from '../components/portfolio/TemplateDeveloper';
 import TemplateCreative from '../components/portfolio/TemplateCreative';
+import TemplateEditorial from '../components/portfolio/TemplateEditorial';
+import TemplateAcademic from '../components/portfolio/TemplateAcademic';
+import TemplateExecutive from '../components/portfolio/TemplateExecutive';
+
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import {
   User,
@@ -22,7 +28,9 @@ import {
   Monitor,
   Tablet,
   Smartphone,
-  AlertCircle
+  AlertCircle,
+  Sparkles,
+  BookOpen
 } from 'lucide-react';
 
 export default function PortfolioEditor() {
@@ -68,7 +76,7 @@ export default function PortfolioEditor() {
           console.error('Autosave error:', err);
           setSaveStatus('error');
         }
-      }, 700);
+      }, 600);
 
       return updated;
     });
@@ -96,12 +104,19 @@ export default function PortfolioEditor() {
     return <div className="container" style={{ padding: '3rem' }}>Portfolio not found.</div>;
   }
 
+  // 6 Distinct Templates
   const renderTemplate = () => {
     switch (portfolio.templateId) {
       case 'developer':
         return <TemplateDeveloper portfolio={portfolio} />;
       case 'creative':
         return <TemplateCreative portfolio={portfolio} />;
+      case 'editorial':
+        return <TemplateEditorial portfolio={portfolio} />;
+      case 'academic':
+        return <TemplateAcademic portfolio={portfolio} />;
+      case 'executive':
+        return <TemplateExecutive portfolio={portfolio} />;
       case 'minimal':
       default:
         return <TemplateMinimal portfolio={portfolio} />;
@@ -148,20 +163,34 @@ export default function PortfolioEditor() {
             )}
             {saveStatus === 'error' && (
               <span style={{ color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <AlertCircle size={14} /> Autosave failed
+                <AlertCircle size={14} /> Failed to save
               </span>
             )}
           </div>
         </div>
 
-        {/* Device Switcher and Publish Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          {/* Responsive viewport simulator */}
-          <div style={{ display: 'flex', background: 'var(--bg-secondary)', padding: '2px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}>
+        {/* Viewport switchers & Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div
+            style={{
+              display: 'flex',
+              background: 'var(--bg-secondary)',
+              padding: '3px',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid var(--border-color)'
+            }}
+          >
             <button
               type="button"
               onClick={() => setPreviewDevice('desktop')}
-              style={{ background: previewDevice === 'desktop' ? 'var(--primary)' : 'transparent', color: previewDevice === 'desktop' ? '#fff' : 'inherit', border: 'none', padding: '4px 8px', borderRadius: 4, cursor: 'pointer' }}
+              style={{
+                background: previewDevice === 'desktop' ? 'var(--bg-card)' : 'transparent',
+                border: 'none',
+                padding: '4px 8px',
+                borderRadius: 'var(--radius-sm)',
+                cursor: 'pointer',
+                color: previewDevice === 'desktop' ? 'var(--primary)' : 'var(--text-muted)'
+              }}
               title="Desktop View"
             >
               <Monitor size={15} />
@@ -169,7 +198,14 @@ export default function PortfolioEditor() {
             <button
               type="button"
               onClick={() => setPreviewDevice('tablet')}
-              style={{ background: previewDevice === 'tablet' ? 'var(--primary)' : 'transparent', color: previewDevice === 'tablet' ? '#fff' : 'inherit', border: 'none', padding: '4px 8px', borderRadius: 4, cursor: 'pointer' }}
+              style={{
+                background: previewDevice === 'tablet' ? 'var(--bg-card)' : 'transparent',
+                border: 'none',
+                padding: '4px 8px',
+                borderRadius: 'var(--radius-sm)',
+                cursor: 'pointer',
+                color: previewDevice === 'tablet' ? 'var(--primary)' : 'var(--text-muted)'
+              }}
               title="Tablet View"
             >
               <Tablet size={15} />
@@ -177,7 +213,14 @@ export default function PortfolioEditor() {
             <button
               type="button"
               onClick={() => setPreviewDevice('mobile')}
-              style={{ background: previewDevice === 'mobile' ? 'var(--primary)' : 'transparent', color: previewDevice === 'mobile' ? '#fff' : 'inherit', border: 'none', padding: '4px 8px', borderRadius: 4, cursor: 'pointer' }}
+              style={{
+                background: previewDevice === 'mobile' ? 'var(--bg-card)' : 'transparent',
+                border: 'none',
+                padding: '4px 8px',
+                borderRadius: 'var(--radius-sm)',
+                cursor: 'pointer',
+                color: previewDevice === 'mobile' ? 'var(--primary)' : 'var(--text-muted)'
+              }}
               title="Mobile View"
             >
               <Smartphone size={15} />
@@ -228,6 +271,29 @@ export default function PortfolioEditor() {
           >
             <button
               type="button"
+              onClick={() => setActiveTab('materials')}
+              style={{
+                flex: 1,
+                padding: '0.75rem 0.5rem',
+                border: 'none',
+                background: activeTab === 'materials' ? 'var(--bg-card)' : 'transparent',
+                borderBottom: activeTab === 'materials' ? '2px solid var(--primary)' : 'none',
+                fontWeight: activeTab === 'materials' ? 700 : 500,
+                color: activeTab === 'materials' ? 'var(--primary)' : 'var(--text-secondary)',
+                cursor: 'pointer',
+                fontSize: '0.82rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              <Sparkles size={14} /> Pre-Given Library
+            </button>
+
+            <button
+              type="button"
               onClick={() => setActiveTab('profile')}
               style={{
                 flex: 1,
@@ -238,7 +304,7 @@ export default function PortfolioEditor() {
                 fontWeight: activeTab === 'profile' ? 700 : 500,
                 color: activeTab === 'profile' ? 'var(--primary)' : 'var(--text-secondary)',
                 cursor: 'pointer',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -261,7 +327,7 @@ export default function PortfolioEditor() {
                 fontWeight: activeTab === 'projects' ? 700 : 500,
                 color: activeTab === 'projects' ? 'var(--primary)' : 'var(--text-secondary)',
                 cursor: 'pointer',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -284,7 +350,7 @@ export default function PortfolioEditor() {
                 fontWeight: activeTab === 'skills' ? 700 : 500,
                 color: activeTab === 'skills' ? 'var(--primary)' : 'var(--text-secondary)',
                 cursor: 'pointer',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -307,7 +373,7 @@ export default function PortfolioEditor() {
                 fontWeight: activeTab === 'experience' ? 700 : 500,
                 color: activeTab === 'experience' ? 'var(--primary)' : 'var(--text-secondary)',
                 cursor: 'pointer',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -330,7 +396,7 @@ export default function PortfolioEditor() {
                 fontWeight: activeTab === 'themes' ? 700 : 500,
                 color: activeTab === 'themes' ? 'var(--primary)' : 'var(--text-secondary)',
                 cursor: 'pointer',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -338,12 +404,26 @@ export default function PortfolioEditor() {
                 whiteSpace: 'nowrap'
               }}
             >
-              <Palette size={14} /> Themes
+              <Palette size={14} /> Themes &amp; Randomize
             </button>
           </div>
 
           {/* Tab Content Panel */}
           <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem' }}>
+            {activeTab === 'materials' && (
+              <PreGivenMaterialsLibrary
+                portfolio={portfolio}
+                onApplyPreset={(preset) => handlePortfolioUpdate(preset)}
+                onAddProject={async (proj) => {
+                  await portfolioService.addProject(portfolio.id, proj);
+                  fetchPortfolio();
+                }}
+                onAddSkill={async (skill) => {
+                  await portfolioService.addSkill(portfolio.id, skill);
+                  fetchPortfolio();
+                }}
+              />
+            )}
             {activeTab === 'profile' && (
               <PersonalInfoSection portfolio={portfolio} onChange={handlePortfolioUpdate} />
             )}

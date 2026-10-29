@@ -12,12 +12,18 @@ import {
   Globe,
   CheckCircle,
   ExternalLink,
-  Activity
+  Activity,
+  Dices,
+  Building2,
+  Lock,
+  User,
+  Layers,
+  BookOpen,
+  Award
 } from 'lucide-react';
 
 export default function Home() {
   const [gallery, setGallery] = useState([]);
-  const [activeTab, setActiveTab] = useState('developer');
 
   useEffect(() => {
     portfolioService.getPublicGallery().then(data => {
@@ -40,7 +46,7 @@ export default function Home() {
             className="badge badge-primary"
             style={{ marginBottom: '1.5rem', padding: '0.4rem 1rem', fontSize: '0.85rem' }}
           >
-            <Activity size={14} /> Render Backend Keep-Alive &bull; Automated Health Checks Enabled
+            <Sparkles size={14} /> Full-Stack Portfolio Platform &bull; React + Vite &bull; Local Storage Ready
           </div>
 
           <h1
@@ -52,7 +58,7 @@ export default function Home() {
               marginBottom: '1.25rem'
             }}
           >
-            Build your personal portfolio <span style={{ color: 'var(--primary)' }}>without writing code.</span>
+            Build your custom portfolio <span style={{ color: 'var(--primary)' }}>without writing code.</span>
           </h1>
 
           <p
@@ -61,11 +67,11 @@ export default function Home() {
               color: 'var(--text-secondary)',
               lineHeight: 1.6,
               marginBottom: '2rem',
-              maxWidth: 700,
+              maxWidth: 720,
               margin: '0 auto 2.5rem'
             }}
           >
-            Import your GitHub repositories, customize responsive Grid or Flexbox layouts, select curated templates, and publish your permanent public portfolio link in seconds.
+            Select from pre-given features and materials, use our procedural design randomizer, toggle between CSS Grid and Flexbox, and share protected read-only links with recruiters and partner organisations.
           </p>
 
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
@@ -89,7 +95,9 @@ export default function Home() {
               padding: '0.6rem 1.25rem',
               borderRadius: 'var(--radius-full)',
               fontSize: '0.85rem',
-              color: 'var(--text-secondary)'
+              color: 'var(--text-secondary)',
+              flexWrap: 'wrap',
+              justifyContent: 'center'
             }}
           >
             <span>🎓 Faculty Evaluator?</span>
@@ -100,170 +108,189 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Templates Showcase Section */}
-      <section id="templates" style={{ padding: '4rem 0', borderTop: '1px solid var(--border-color)' }}>
+      {/* ---------------------------------------------------- */}
+      {/* MODULE IDENTIFICATION SECTION (Evaluation Criterion #2) */}
+      {/* ---------------------------------------------------- */}
+      <section style={{ padding: '4rem 0', background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)' }}>
         <div className="container">
-          <div style={{ textAlign: 'center', maxWidth: 650, margin: '0 auto 3rem' }}>
+          <div style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto 3rem' }}>
+            <div style={{ textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 700, marginBottom: '0.5rem' }}>
+              Evaluation Criterion #2
+            </div>
             <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem' }}>
-              3 Distinctive, Production-Grade Templates
+              Distinct Platform Modules &amp; Roles
             </h2>
             <p style={{ color: 'var(--text-muted)' }}>
-              Built strictly with semantic HTML5, CSS Grid, Flexbox, and responsive design systems.
+              Clearly isolated architecture with specific operational boundaries for creators, faculty, and viewing organisations.
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-            {/* Template 1 */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.75rem' }}>
+            {/* Module 1: Student / User Creator */}
             <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ height: 160, background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)', padding: '1rem', marginBottom: '1.25rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#cbd5e1', marginBottom: '0.75rem' }} />
-                <div style={{ height: 12, width: '60%', background: '#94a3b8', borderRadius: 4, marginBottom: '0.5rem' }} />
-                <div style={{ height: 8, width: '40%', background: '#cbd5e1', borderRadius: 4 }} />
+              <div style={{ width: 44, height: 44, borderRadius: '10px', background: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                <User size={22} />
               </div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.4rem' }}>Minimal Professional</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.25rem', flex: 1 }}>
-                Clean, spacious typography-led layout tailored for software architects, managers, and consultants.
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+                1. Student / User Creator Module
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1.25rem', flex: 1 }}>
+                Create and edit custom portfolios, insert pre-given materials (domain profiles, projects, skills), execute procedural randomizer, toggle CSS Grid vs Flexbox, and approve collaborator requests.
               </p>
-              <Link to="/u/alex-morgan" className="btn btn-outline btn-sm">
-                Preview Minimal Template &rarr;
-              </Link>
+              <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
+                <Link to="/dashboard" className="btn btn-outline btn-sm" style={{ width: '100%' }}>
+                  Open User Dashboard &rarr;
+                </Link>
+              </div>
             </div>
 
-            {/* Template 2 */}
+            {/* Module 2: Faculty Admin */}
             <div className="card" style={{ display: 'flex', flexDirection: 'column', borderColor: 'var(--primary)' }}>
-              <div style={{ height: 160, background: '#0d1117', borderRadius: 'var(--radius-md)', padding: '1rem', marginBottom: '1.25rem', color: '#58a6ff', fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>
-                <div style={{ display: 'flex', gap: 6, marginBottom: '0.75rem' }}>
-                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ff5f56' }} />
-                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ffbd2e' }} />
-                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#27c93f' }} />
-                </div>
-                <div>$ curl github/AbhijeetArjeet</div>
-                <div style={{ color: '#3fb950', marginTop: 4 }}>// Systems &amp; Full-Stack Dev</div>
+              <div style={{ width: 44, height: 44, borderRadius: '10px', background: '#059669', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                <ShieldCheck size={22} />
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Modern Developer</h3>
-                <span className="badge badge-primary" style={{ fontSize: '0.7rem' }}>Popular</span>
-              </div>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.25rem', flex: 1 }}>
-                Developer terminal window, live status pulses, repository badges, and technical skill matrices.
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+                2. Faculty &amp; Administrator Module
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1.25rem', flex: 1 }}>
+                Protected evaluation portal (`/admin`). Suspend/reactivate accounts, force publish/unpublish portfolios, review incoming organization permission requests, and inspect real-time system telemetry.
               </p>
-              <Link to="/u/abhijeet-arjeet" className="btn btn-primary btn-sm">
-                Preview Developer Template &rarr;
-              </Link>
+              <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
+                <Link to="/admin" className="btn btn-primary btn-sm" style={{ width: '100%' }}>
+                  Open Faculty Admin Portal &rarr;
+                </Link>
+              </div>
             </div>
 
-            {/* Template 3 */}
+            {/* Module 3: Organisation / Recruiter Viewer */}
             <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ height: 160, background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.15))', borderRadius: 'var(--radius-md)', padding: '1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Sparkles size={40} color="#6366f1" />
+              <div style={{ width: 44, height: 44, borderRadius: '10px', background: '#0f172a', color: '#38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                <Building2 size={22} />
               </div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.4rem' }}>Creative Bento</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.25rem', flex: 1 }}>
-                Bento-grid showcase with dynamic card spans, media previews, and eye-catching portfolio visuals.
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+                3. Organisation &amp; Recruiter Viewer
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1.25rem', flex: 1 }}>
+                Read-only public link (`/u/:slug`). External companies and reviewers can view candidate projects, download verified resumes, scan mobile QR codes, and formally request edit/collaboration permission.
               </p>
-              <Link to="/u/abhijeet-arjeet" className="btn btn-outline btn-sm">
-                Preview Bento Template &rarr;
-              </Link>
+              <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
+                <Link to="/u/abhijeet-arjeet" className="btn btn-outline btn-sm" style={{ width: '100%' }}>
+                  Test Organisation Read-Only Link &rarr;
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" style={{ padding: '4rem 0', background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)' }}>
+      {/* 6 Curated Templates Section */}
+      <section id="templates" style={{ padding: '4.5rem 0', borderTop: '1px solid var(--border-color)' }}>
         <div className="container">
           <div style={{ textAlign: 'center', maxWidth: 650, margin: '0 auto 3rem' }}>
             <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem' }}>
-              Built for Students, Engineers &amp; Faculty
+              6 Distinctive Portfolio Architectures
             </h2>
             <p style={{ color: 'var(--text-muted)' }}>
-              Everything needed to build, host, and monitor custom web portfolios with complete security.
+              Built strictly with semantic HTML5, CSS Grid, Flexbox, and modular design systems.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.75rem' }}>
+            {/* Minimal */}
+            <div className="card">
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.3rem' }}>1. Minimal Professional</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>Clean, spacious typography tailored for managers, consultants, and leaders.</p>
+              <Link to="/u/abhijeet-arjeet" className="btn btn-outline btn-sm">Preview Minimal &rarr;</Link>
+            </div>
+
+            {/* Developer */}
+            <div className="card" style={{ borderColor: 'var(--primary)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.3rem' }}>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>2. Modern Developer</h3>
+                <span className="badge badge-primary" style={{ fontSize: '0.68rem' }}>Popular</span>
+              </div>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>Terminal prompt, GitHub indicators, code badges, and technical proficiency meters.</p>
+              <Link to="/u/abhijeet-arjeet" className="btn btn-primary btn-sm">Preview Developer &rarr;</Link>
+            </div>
+
+            {/* Creative */}
+            <div className="card">
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.3rem' }}>3. Creative Bento</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>Dynamic bento grid cards, visual highlights, and media-rich presentation.</p>
+              <Link to="/u/abhijeet-arjeet" className="btn btn-outline btn-sm">Preview Creative &rarr;</Link>
+            </div>
+
+            {/* Editorial */}
+            <div className="card">
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.3rem' }}>4. Editorial Essayist</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>Serif headlines, narrative biography, publication focus, and thought leadership.</p>
+              <Link to="/u/abhijeet-arjeet" className="btn btn-outline btn-sm">Preview Editorial &rarr;</Link>
+            </div>
+
+            {/* Academic */}
+            <div className="card">
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.3rem' }}>5. Academic Research CV</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>Structured research statements, formal degree milestones, credentials, and citations.</p>
+              <Link to="/u/abhijeet-arjeet" className="btn btn-outline btn-sm">Preview Academic &rarr;</Link>
+            </div>
+
+            {/* Executive */}
+            <div className="card">
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.3rem' }}>6. Modern Executive</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>Strategic leadership highlights, metric counters, on-time delivery metrics, and dossier download.</p>
+              <Link to="/u/abhijeet-arjeet" className="btn btn-outline btn-sm">Preview Executive &rarr;</Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Showcase */}
+      <section id="features" style={{ padding: '4.5rem 0', background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)' }}>
+        <div className="container">
+          <div style={{ textAlign: 'center', maxWidth: 650, margin: '0 auto 3rem' }}>
+            <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+              Custom Portfolio Creation Features
+            </h2>
+            <p style={{ color: 'var(--text-muted)' }}>
+              Everything requested by university evaluators and modern software engineering syllabi.
             </p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.75rem' }}>
             <div className="card">
-              <Github size={28} color="var(--primary)" style={{ marginBottom: '1rem' }} />
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem' }}>1-Click GitHub Sync</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6 }}>
-                Fetch public repositories and repository stats with a single click. No manual data copying required.
+              <Sparkles size={26} color="var(--primary)" style={{ marginBottom: '1rem' }} />
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem' }}>Pre-Given Materials Library</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6 }}>
+                Insert ready-made domain profiles, verified technical skill packages, and complete project blueprints with 1-click.
               </p>
             </div>
 
             <div className="card">
-              <Layout size={28} color="var(--primary)" style={{ marginBottom: '1rem' }} />
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>Grid &amp; Flexbox Customizer</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6 }}>
-                Switch effortlessly between responsive CSS Grid multi-column cards and vertical CSS Flexbox rows.
+              <Dices size={26} color="var(--primary)" style={{ marginBottom: '1rem' }} />
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem' }}>Procedural Design Randomizer</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6 }}>
+                Synthesize random compatible templates, color accents, and typography pairings with attribute locking controls.
               </p>
             </div>
 
             <div className="card">
-              <ShieldCheck size={28} color="var(--primary)" style={{ marginBottom: '1rem' }} />
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>Role-Based Access Control</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6 }}>
-                Users only have privileges to edit their own portfolios. Faculty evaluators access a moderation portal.
+              <Layout size={26} color="var(--primary)" style={{ marginBottom: '1rem' }} />
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem' }}>CSS Grid &amp; Flexbox Toggle</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6 }}>
+                Switch dynamically between multi-column CSS Grid cards and structured vertical CSS Flexbox rows without data loss.
               </p>
             </div>
 
             <div className="card">
-              <Activity size={28} color="var(--primary)" style={{ marginBottom: '1rem' }} />
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>Keep-Alive Monitoring</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6 }}>
-                Automated <code>/api/health</code> liveness checks prevent unnecessary Render sleep and retry cold starts safely.
+              <Lock size={26} color="var(--primary)" style={{ marginBottom: '1rem' }} />
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem' }}>Organisation Permission Requests</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6 }}>
+                Visiting organisations can submit formal access/collaboration requests which are approved or declined by Admin and Candidate.
               </p>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Public Gallery Section */}
-      {gallery.length > 0 && (
-        <section style={{ padding: '4rem 0', borderTop: '1px solid var(--border-color)' }}>
-          <div className="container">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-              <div>
-                <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Published Student Portfolios</h2>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Browse publicly shareable portfolios hosted on the platform</p>
-              </div>
-              <Link to="/register" className="btn btn-outline btn-sm">
-                Add Your Portfolio &rarr;
-              </Link>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
-              {gallery.map((p) => (
-                <Link
-                  key={p.id}
-                  to={`/u/${p.slug}`}
-                  className="card"
-                  style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column' }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-                    <img
-                      src={p.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'}
-                      alt={p.title}
-                      style={{ width: 50, height: 50, borderRadius: '50%', objectFit: 'cover' }}
-                      onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'; }}
-                    />
-                    <div>
-                      <h3 style={{ fontSize: '1.05rem', fontWeight: 700 }}>{p.title}</h3>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 600 }}>/u/{p.slug}</div>
-                    </div>
-                  </div>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '1rem', flex: 1 }}>
-                    {p.headline || 'Developer portfolio'}
-                  </p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', color: 'var(--text-muted)', borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem' }}>
-                    <span>Template: {p.templateId}</span>
-                    <span style={{ color: 'var(--primary)', fontWeight: 600 }}>View Portfolio &rarr;</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
     </div>
   );
 }

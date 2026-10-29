@@ -1,10 +1,6 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://portfolio-api-sample.onrender.com/api/$1"
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

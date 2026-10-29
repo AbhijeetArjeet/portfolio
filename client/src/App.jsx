@@ -20,14 +20,14 @@ import './styles/templates.css';
 
 function Layout({ children }) {
   const location = useLocation();
-  const isPublicPortfolio = location.pathname.startsWith('/u/');
-  const isEditor = location.pathname === '/editor';
+  const isPublicPortfolio = location.pathname.startsWith('/u/') || location.pathname.startsWith('/p/');
+  const isEditor = location.pathname.startsWith('/editor') || location.pathname.includes('/edit');
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <ColdStartBanner />
       {!isPublicPortfolio && <Navbar />}
-      <div className="main-content">{children}</div>
+      <div className="main-content" style={{ flex: 1 }}>{children}</div>
       {!isPublicPortfolio && !isEditor && <Footer />}
     </div>
   );
@@ -44,9 +44,12 @@ export default function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard/portfolios/new" element={<PortfolioEditor />} />
+              <Route path="/dashboard/portfolios/:id/edit" element={<PortfolioEditor />} />
               <Route path="/editor" element={<PortfolioEditor />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/u/:slug" element={<PublicPortfolio />} />
+              <Route path="/p/:slug" element={<PublicPortfolio />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>
