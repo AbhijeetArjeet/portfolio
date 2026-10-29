@@ -191,10 +191,10 @@ export default function PublicPortfolio() {
       {/* ---------------------------------------------------- */}
       <div
         style={{
-          background: '#0f172a',
-          color: '#f8fafc',
+          background: '#000000',
+          color: '#ffffff',
           padding: '0.65rem 1.25rem',
-          borderBottom: '1px solid #1e293b',
+          borderBottom: '1px solid #222222',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -207,7 +207,7 @@ export default function PublicPortfolio() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Building2 size={16} color="#38bdf8" />
+          <Building2 size={16} color="#ffffff" />
           <span>
             <strong>Organisation View Mode:</strong> Read-Only Public Portfolio &bull; Direct editing restricted to owner &amp; university admin.
           </span>
@@ -218,7 +218,7 @@ export default function PublicPortfolio() {
             type="button"
             onClick={handleCopySharableLink}
             className="btn btn-sm"
-            style={{ background: '#1e293b', color: '#f8fafc', border: '1px solid #334155' }}
+            style={{ background: '#111111', color: '#ffffff', border: '1px solid #262626' }}
           >
             {copiedLink ? <Check size={14} color="#4ade80" /> : <Share2 size={14} />} {copiedLink ? 'Copied URL!' : 'Share Link'}
           </button>
@@ -227,7 +227,7 @@ export default function PublicPortfolio() {
             type="button"
             onClick={() => setShowQrModal(true)}
             className="btn btn-sm"
-            style={{ background: '#1e293b', color: '#f8fafc', border: '1px solid #334155' }}
+            style={{ background: '#111111', color: '#ffffff', border: '1px solid #262626' }}
             title="Scan QR Code for mobile"
           >
             <QrCode size={14} /> Mobile QR
@@ -237,7 +237,7 @@ export default function PublicPortfolio() {
             type="button"
             onClick={() => setShowAccessModal(true)}
             className="btn btn-sm"
-            style={{ background: '#38bdf8', color: '#0f172a', fontWeight: 700 }}
+            style={{ background: '#ffffff', color: '#000000', fontWeight: 700, border: '1px solid #ffffff' }}
           >
             <Lock size={13} /> Request Edit / Collaboration Permission
           </button>

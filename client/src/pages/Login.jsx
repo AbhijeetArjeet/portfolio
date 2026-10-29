@@ -49,7 +49,7 @@ export default function Login() {
               width: 44,
               height: 44,
               borderRadius: '10px',
-              background: 'var(--primary)',
+              background: '#18181b', border: '1px solid #27272a',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -68,15 +68,15 @@ export default function Login() {
         {/* Demo Credentials Box */}
         <div
           style={{
-            background: 'var(--primary-subtle)',
-            border: '1px solid var(--primary-border)',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
             borderRadius: 'var(--radius-md)',
             padding: '0.9rem',
             marginBottom: '1.5rem',
             fontSize: '0.85rem'
           }}
         >
-          <div style={{ fontWeight: 600, color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.4rem' }}>
+          <div style={{ fontWeight: 600, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.4rem' }}>
             <ShieldCheck size={16} /> Quick Evaluator Credentials
           </div>
           <div style={{ color: 'var(--text-secondary)', marginBottom: '0.6rem' }}>
@@ -158,7 +158,7 @@ export default function Login() {
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
           Don&apos;t have an account yet?{' '}
-          <Link to="/register" style={{ fontWeight: 600, color: 'var(--primary)' }}>
+          <Link to="/register" style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
             Create one now
           </Link>
         </div>

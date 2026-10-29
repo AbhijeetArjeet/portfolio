@@ -62,9 +62,9 @@ const DEFAULT_PORTFOLIOS = [
     templateId: 'developer', // 'minimal', 'developer', 'creative', 'editorial', 'academic', 'executive'
     layoutType: 'grid', // 'grid' | 'flexbox'
     themeConfig: JSON.stringify({
-      primaryColor: '#2563eb',
+      primaryColor: '#ffffff',
       fontFamily: 'inter',
-      darkTheme: false,
+      darkTheme: true,
       showGithubStats: true,
       bannerStyle: 'gradient'
     }),
@@ -357,9 +357,9 @@ export const storageService = {
       templateId: 'minimal',
       layoutType: 'grid',
       themeConfig: JSON.stringify({
-        primaryColor: '#2563eb',
+        primaryColor: '#ffffff',
         fontFamily: 'inter',
-        darkTheme: false,
+        darkTheme: true,
         showGithubStats: true
       }),
       isPublished: true,

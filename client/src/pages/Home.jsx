@@ -32,21 +32,31 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
+    <div style={{ backgroundColor: 'var(--bg-primary)', minHeight: '100vh' }}>
       {/* Hero Section */}
       <section
         style={{
-          padding: '5rem 0 4rem',
+          padding: '5rem 0 4.5rem',
           textAlign: 'center',
-          background: 'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37, 99, 235, 0.15), transparent)'
+          background: 'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 255, 255, 0.06), transparent)'
         }}
       >
-        <div className="container" style={{ maxWidth: 860 }}>
+        <div className="container" style={{ maxWidth: 880 }}>
           <div
-            className="badge badge-primary"
-            style={{ marginBottom: '1.5rem', padding: '0.4rem 1rem', fontSize: '0.85rem' }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              marginBottom: '1.75rem',
+              padding: '0.45rem 1.1rem',
+              fontSize: '0.82rem',
+              borderRadius: 'var(--radius-full)',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-color)',
+              color: 'var(--text-secondary)'
+            }}
           >
-            <Sparkles size={14} /> Full-Stack Portfolio Platform &bull; React + Vite &bull; Local Storage Ready
+            <Sparkles size={14} color="#e4e4e7" /> Full-Stack Custom Portfolio Platform &bull; React + Vite &bull; AMOLED Ready
           </div>
 
           <h1
@@ -55,10 +65,21 @@ export default function Home() {
               fontWeight: 800,
               lineHeight: 1.15,
               letterSpacing: '-0.04em',
-              marginBottom: '1.25rem'
+              marginBottom: '1.25rem',
+              color: 'var(--text-primary)'
             }}
           >
-            Build your custom portfolio <span style={{ color: 'var(--primary)' }}>without writing code.</span>
+            Build your custom portfolio{' '}
+            <span
+              style={{
+                background: 'linear-gradient(180deg, #ffffff 30%, #71717a 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                display: 'inline-block'
+              }}
+            >
+              without writing code.
+            </span>
           </h1>
 
           <p
@@ -66,12 +87,12 @@ export default function Home() {
               fontSize: 'clamp(1.05rem, 2vw, 1.25rem)',
               color: 'var(--text-secondary)',
               lineHeight: 1.6,
-              marginBottom: '2rem',
+              marginBottom: '2.5rem',
               maxWidth: 720,
               margin: '0 auto 2.5rem'
             }}
           >
-            Select from pre-given features and materials, use our procedural design randomizer, toggle between CSS Grid and Flexbox, and share protected read-only links with recruiters and partner organisations.
+            Select features from pre-given building blocks, synthesize procedural designs with our Magic Randomizer, toggle between CSS Grid and Flexbox, and share protected read-only links with organisations.
           </p>
 
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
@@ -86,7 +107,7 @@ export default function Home() {
           {/* Quick Evaluator Access Hint */}
           <div
             style={{
-              marginTop: '2.5rem',
+              marginTop: '2.75rem',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.75rem',
@@ -101,7 +122,7 @@ export default function Home() {
             }}
           >
             <span>🎓 Faculty Evaluator?</span>
-            <Link to="/login" style={{ fontWeight: 600, color: 'var(--primary)', textDecoration: 'underline' }}>
+            <Link to="/login" style={{ fontWeight: 600, color: 'var(--text-primary)', textDecoration: 'underline' }}>
               Autofill Suneetha Mam / 12345 to test Admin Portal &rarr;
             </Link>
           </div>
@@ -111,24 +132,24 @@ export default function Home() {
       {/* ---------------------------------------------------- */}
       {/* MODULE IDENTIFICATION SECTION (Evaluation Criterion #2) */}
       {/* ---------------------------------------------------- */}
-      <section style={{ padding: '4rem 0', background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)' }}>
+      <section style={{ padding: '4.5rem 0', background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)' }}>
         <div className="container">
           <div style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto 3rem' }}>
-            <div style={{ textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 700, marginBottom: '0.5rem' }}>
+            <div style={{ textTransform: 'uppercase', letterSpacing: '0.12em', fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '0.5rem' }}>
               Evaluation Criterion #2
             </div>
             <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem' }}>
               Distinct Platform Modules &amp; Roles
             </h2>
             <p style={{ color: 'var(--text-muted)' }}>
-              Clearly isolated architecture with specific operational boundaries for creators, faculty, and viewing organisations.
+              Isolated architectural boundaries for creators, faculty evaluators, and viewing organisations.
             </p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.75rem' }}>
             {/* Module 1: Student / User Creator */}
             <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ width: 44, height: 44, borderRadius: '10px', background: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+              <div style={{ width: 44, height: 44, borderRadius: '10px', background: '#171717', border: '1px solid #262626', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
                 <User size={22} />
               </div>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.5rem' }}>
@@ -145,8 +166,8 @@ export default function Home() {
             </div>
 
             {/* Module 2: Faculty Admin */}
-            <div className="card" style={{ display: 'flex', flexDirection: 'column', borderColor: 'var(--primary)' }}>
-              <div style={{ width: 44, height: 44, borderRadius: '10px', background: '#059669', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+            <div className="card" style={{ display: 'flex', flexDirection: 'column', border: '1px solid #333333' }}>
+              <div style={{ width: 44, height: 44, borderRadius: '10px', background: '#171717', border: '1px solid #262626', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
                 <ShieldCheck size={22} />
               </div>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.5rem' }}>
@@ -164,7 +185,7 @@ export default function Home() {
 
             {/* Module 3: Organisation / Recruiter Viewer */}
             <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ width: 44, height: 44, borderRadius: '10px', background: '#0f172a', color: '#38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+              <div style={{ width: 44, height: 44, borderRadius: '10px', background: '#171717', border: '1px solid #262626', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
                 <Building2 size={22} />
               </div>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.5rem' }}>
@@ -204,7 +225,7 @@ export default function Home() {
             </div>
 
             {/* Developer */}
-            <div className="card" style={{ borderColor: 'var(--primary)' }}>
+            <div className="card" style={{ border: '1px solid #333333' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.3rem' }}>
                 <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>2. Modern Developer</h3>
                 <span className="badge badge-primary" style={{ fontSize: '0.68rem' }}>Popular</span>
@@ -258,7 +279,7 @@ export default function Home() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.75rem' }}>
             <div className="card">
-              <Sparkles size={26} color="var(--primary)" style={{ marginBottom: '1rem' }} />
+              <Sparkles size={24} color="#e4e4e7" style={{ marginBottom: '1rem' }} />
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem' }}>Pre-Given Materials Library</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6 }}>
                 Insert ready-made domain profiles, verified technical skill packages, and complete project blueprints with 1-click.
@@ -266,7 +287,7 @@ export default function Home() {
             </div>
 
             <div className="card">
-              <Dices size={26} color="var(--primary)" style={{ marginBottom: '1rem' }} />
+              <Dices size={24} color="#e4e4e7" style={{ marginBottom: '1rem' }} />
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem' }}>Procedural Design Randomizer</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6 }}>
                 Synthesize random compatible templates, color accents, and typography pairings with attribute locking controls.
@@ -274,7 +295,7 @@ export default function Home() {
             </div>
 
             <div className="card">
-              <Layout size={26} color="var(--primary)" style={{ marginBottom: '1rem' }} />
+              <Layout size={24} color="#e4e4e7" style={{ marginBottom: '1rem' }} />
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem' }}>CSS Grid &amp; Flexbox Toggle</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6 }}>
                 Switch dynamically between multi-column CSS Grid cards and structured vertical CSS Flexbox rows without data loss.
@@ -282,7 +303,7 @@ export default function Home() {
             </div>
 
             <div className="card">
-              <Lock size={26} color="var(--primary)" style={{ marginBottom: '1rem' }} />
+              <Lock size={24} color="#e4e4e7" style={{ marginBottom: '1rem' }} />
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem' }}>Organisation Permission Requests</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6 }}>
                 Visiting organisations can submit formal access/collaboration requests which are approved or declined by Admin and Candidate.

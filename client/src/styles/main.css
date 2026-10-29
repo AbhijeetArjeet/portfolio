@@ -10,19 +10,19 @@
   --bg-card: #ffffff;
   --bg-overlay: rgba(15, 23, 42, 0.6);
 
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-  --text-light: #94a3b8;
+  --text-primary: #09090b;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
+  --text-light: #a1a1aa;
 
-  --border-color: #e2e8f0;
-  --border-subtle: #f1f5f9;
-  --border-focus: #3b82f6;
+  --border-color: #e4e4e7;
+  --border-subtle: #f4f4f5;
+  --border-focus: #18181b;
 
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-subtle: #eff6ff;
-  --primary-border: #bfdbfe;
+  --primary: #18181b;
+  --primary-hover: #27272a;
+  --primary-subtle: rgba(24, 24, 27, 0.06);
+  --primary-border: #d4d4d8;
 
   --success: #10b981;
   --success-bg: #ecfdf5;
@@ -55,43 +55,47 @@
   --header-height: 70px;
 }
 
+/* =========================================================
+   TRUE AMOLED BLACK DARK THEME (#000000)
+   No blueish tint. Zero battery drain on OLED. Crisp monochrome.
+   ========================================================= */
 [data-theme='dark'] {
-  --bg-primary: #0b0f19;
-  --bg-secondary: #111827;
-  --bg-tertiary: #1f2937;
-  --bg-card: #141d2e;
-  --bg-overlay: rgba(0, 0, 0, 0.75);
+  --bg-primary: #000000;
+  --bg-secondary: #080808;
+  --bg-tertiary: #121212;
+  --bg-card: #0a0a0a;
+  --bg-overlay: rgba(0, 0, 0, 0.92);
 
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --text-light: #64748b;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --text-light: #52525b;
 
-  --border-color: #273549;
-  --border-subtle: #1e293b;
-  --border-focus: #60a5fa;
+  --border-color: #1f1f23;
+  --border-subtle: #141416;
+  --border-focus: #52525b;
 
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
-  --primary-subtle: rgba(59, 130, 246, 0.15);
-  --primary-border: #1d4ed8;
+  --primary: #ffffff;
+  --primary-hover: #e4e4e7;
+  --primary-subtle: rgba(255, 255, 255, 0.08);
+  --primary-border: #27272a;
 
-  --success-bg: rgba(16, 185, 129, 0.15);
+  --success-bg: rgba(16, 185, 129, 0.12);
   --success-border: #065f46;
   --success-text: #34d399;
 
-  --warning-bg: rgba(245, 158, 11, 0.15);
+  --warning-bg: rgba(245, 158, 11, 0.12);
   --warning-border: #78350f;
   --warning-text: #fbbf24;
 
-  --danger-bg: rgba(239, 68, 68, 0.15);
+  --danger-bg: rgba(239, 68, 68, 0.12);
   --danger-border: #7f1d1d;
   --danger-text: #f87171;
 
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.7);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.8);
+  --shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.9);
+  --shadow-lg: 0 10px 25px 0 rgba(0, 0, 0, 0.95);
+  --shadow-xl: 0 20px 35px 0 rgba(0, 0, 0, 1);
 }
 
 /* Reset & Box Model */
@@ -117,6 +121,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: var(--bg-primary);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -176,16 +181,30 @@ button, input, textarea, select {
   white-space: nowrap;
 }
 
+/* AMOLED High-Contrast Primary Button */
 .btn-primary {
   background-color: var(--primary);
-  color: #ffffff;
+  color: #000000;
+  font-weight: 700;
+  border: 1px solid var(--primary);
 }
 
 .btn-primary:hover {
   background-color: var(--primary-hover);
-  color: #ffffff;
+  color: #000000;
   transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.2);
+}
+
+/* In Light Mode, primary button is dark with white text */
+[data-theme='light'] .btn-primary {
+  background-color: #09090b;
+  color: #ffffff;
+  border-color: #09090b;
+}
+[data-theme='light'] .btn-primary:hover {
+  background-color: #27272a;
+  color: #ffffff;
 }
 
 .btn-secondary {
@@ -196,7 +215,7 @@ button, input, textarea, select {
 
 .btn-secondary:hover {
   background-color: var(--bg-tertiary);
-  border-color: var(--text-light);
+  border-color: var(--border-focus);
 }
 
 .btn-outline {
@@ -207,8 +226,8 @@ button, input, textarea, select {
 
 .btn-outline:hover {
   background-color: var(--bg-secondary);
-  border-color: var(--primary);
-  color: var(--primary);
+  border-color: var(--border-focus);
+  color: var(--text-primary);
 }
 
 .btn-danger {
@@ -259,14 +278,14 @@ button, input, textarea, select {
   padding: 0.65rem 0.9rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
-  background-color: var(--bg-primary);
+  background-color: var(--bg-card);
   color: var(--text-primary);
   outline: none;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .form-input:focus, .form-select:focus, .form-textarea:focus {
-  border-color: var(--primary);
+  border-color: var(--border-focus);
   box-shadow: 0 0 0 3px var(--primary-subtle);
 }
 
@@ -314,8 +333,8 @@ button, input, textarea, select {
 
 .badge-primary {
   background-color: var(--primary-subtle);
-  color: var(--primary);
-  border: 1px solid var(--primary-border);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 }
 
 .badge-success {
@@ -338,8 +357,9 @@ button, input, textarea, select {
 
 /* Cold-Start / System Banner */
 .cold-start-banner {
-  background: linear-gradient(90deg, #1e3a8a, #2563eb);
-  color: #ffffff;
+  background: #18181b;
+  border-bottom: 1px solid #27272a;
+  color: #f4f4f5;
   padding: 0.75rem 1.5rem;
   display: flex;
   align-items: center;
@@ -363,7 +383,7 @@ button, input, textarea, select {
 .cold-start-banner .spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-top-color: #ffffff;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;

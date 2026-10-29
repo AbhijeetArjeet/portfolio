@@ -38,7 +38,7 @@ export default function Navbar() {
         zIndex: 50,
         backgroundColor: 'var(--bg-primary)',
         borderBottom: '1px solid var(--border-color)',
-        backdropFilter: 'blur(8px)',
+        backdropFilter: 'blur(12px)',
         height: 'var(--header-height)'
       }}
     >
@@ -69,7 +69,8 @@ export default function Navbar() {
               width: 34,
               height: 34,
               borderRadius: '8px',
-              backgroundColor: 'var(--primary)',
+              backgroundColor: '#18181b',
+              border: '1px solid #27272a',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -78,7 +79,7 @@ export default function Navbar() {
           >
             <Sparkles size={18} />
           </div>
-          <span>Portfolio<span style={{ color: 'var(--primary)' }}>Forge</span></span>
+          <span>Portfolio<span style={{ color: '#a1a1aa' }}>Forge</span></span>
         </Link>
 
         {/* Desktop Nav */}
@@ -86,21 +87,21 @@ export default function Navbar() {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '1.5rem'
+            gap: '1.25rem'
           }}
           className="desktop-nav"
         >
-          <Link to="/" style={{ color: location.pathname === '/' ? 'var(--primary)' : 'var(--text-secondary)', fontWeight: 500, fontSize: '0.9rem' }}>
+          <Link to="/" style={{ color: location.pathname === '/' ? 'var(--text-primary)' : 'var(--text-muted)', fontWeight: 500, fontSize: '0.9rem' }}>
             Home
           </Link>
 
           {/* Module Badges / Links */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-secondary)', padding: '2px 8px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-card)', padding: '3px 10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
             <Link
               to="/dashboard"
               style={{
                 fontSize: '0.8rem',
-                color: location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/editor') ? 'var(--primary)' : 'var(--text-secondary)',
+                color: location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/editor') ? 'var(--text-primary)' : 'var(--text-muted)',
                 fontWeight: 600,
                 display: 'flex',
                 alignItems: 'center',
@@ -115,7 +116,7 @@ export default function Navbar() {
               to="/admin"
               style={{
                 fontSize: '0.8rem',
-                color: location.pathname === '/admin' ? 'var(--primary)' : 'var(--text-secondary)',
+                color: location.pathname === '/admin' ? 'var(--text-primary)' : 'var(--text-muted)',
                 fontWeight: 600,
                 display: 'flex',
                 alignItems: 'center',
@@ -130,7 +131,7 @@ export default function Navbar() {
               to="/u/abhijeet-arjeet"
               style={{
                 fontSize: '0.8rem',
-                color: location.pathname.startsWith('/u/') ? 'var(--primary)' : 'var(--text-secondary)',
+                color: location.pathname.startsWith('/u/') ? 'var(--text-primary)' : 'var(--text-muted)',
                 fontWeight: 600,
                 display: 'flex',
                 alignItems: 'center',
@@ -148,7 +149,7 @@ export default function Navbar() {
             onClick={toggleTheme}
             className="btn btn-outline btn-sm"
             style={{ padding: '0.4rem', borderRadius: '50%', width: 34, height: 34 }}
-            title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+            title={`Switch to ${theme === 'light' ? 'AMOLED Dark' : 'Light'} Mode`}
             aria-label="Toggle theme"
           >
             {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
@@ -158,7 +159,7 @@ export default function Navbar() {
           {isAuthenticated ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
               {isAdmin && (
-                <Link to="/admin" className="btn btn-sm" style={{ background: '#ecfdf5', color: '#047857', border: '1px solid #a7f3d0' }}>
+                <Link to="/admin" className="btn btn-sm" style={{ background: '#18181b', color: '#f4f4f5', border: '1px solid #27272a' }}>
                   <ShieldCheck size={14} /> Evaluator Portal
                 </Link>
               )}

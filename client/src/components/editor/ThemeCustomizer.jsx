@@ -41,15 +41,15 @@ export default function ThemeCustomizer({ portfolio, onChange }) {
     { id: 'executive', name: 'Modern Executive', desc: 'Leadership trajectory, metric counters, corporate showcase.' }
   ];
 
-  // Curated Color Presets
+  // Refined AMOLED & Monochrome Color Presets (No heavy blues)
   const colorPresets = [
-    { name: 'Royal Blue', hex: '#2563eb' },
-    { name: 'Emerald Green', hex: '#059669' },
-    { name: 'Indigo Purple', hex: '#6366f1' },
-    { name: 'Cyberpunk Teal', hex: '#0d9488' },
-    { name: 'Sunset Amber', hex: '#d97706' },
-    { name: 'Crimson Rose', hex: '#e11d48' },
-    { name: 'Obsidian Dark', hex: '#0f172a' }
+    { name: 'AMOLED Pure White', hex: '#ffffff' },
+    { name: 'Obsidian Black', hex: '#18181b' },
+    { name: 'Stealth Silver', hex: '#e4e4e7' },
+    { name: 'Emerald Minimal', hex: '#10b981' },
+    { name: 'Amber Gold', hex: '#f59e0b' },
+    { name: 'Crimson Minimal', hex: '#f43f5e' },
+    { name: 'Slate Gray', hex: '#71717a' }
   ];
 
   // Curated Typography Pairings
@@ -63,7 +63,6 @@ export default function ThemeCustomizer({ portfolio, onChange }) {
 
   // -------------------------------------------------------------------
   // RANDOM PORTFOLIO DESIGN GENERATOR ("Magic Randomizer")
-  // Satisfies requirement: "or the site will create randomly"
   // -------------------------------------------------------------------
   const [lockTemplate, setLockTemplate] = useState(false);
   const [lockColor, setLockColor] = useState(false);
@@ -98,7 +97,7 @@ export default function ThemeCustomizer({ portfolio, onChange }) {
     updates.themeConfig = JSON.stringify(newConfig);
     onChange(updates);
 
-    setRandomNotice(`Randomized design generated! (Template: ${updates.templateId || currentTemplate}, Layout: ${updates.layoutType || currentLayout})`);
+    setRandomNotice(`Procedural AMOLED design generated! (Template: ${updates.templateId || currentTemplate}, Layout: ${updates.layoutType || currentLayout})`);
     setTimeout(() => setRandomNotice(''), 3500);
   };
 
@@ -107,8 +106,8 @@ export default function ThemeCustomizer({ portfolio, onChange }) {
       {/* Magic Randomizer Banner */}
       <div
         style={{
-          background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(99, 102, 241, 0.12) 100%)',
-          border: '1px solid var(--primary-border)',
+          background: 'var(--bg-secondary)',
+          border: '1px solid var(--border-color)',
           borderRadius: 'var(--radius-lg)',
           padding: '1.25rem',
           display: 'flex',
@@ -118,11 +117,11 @@ export default function ThemeCustomizer({ portfolio, onChange }) {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
           <div>
-            <h4 style={{ fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px', margin: 0, color: 'var(--primary)' }}>
+            <h4 style={{ fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px', margin: 0, color: 'var(--text-primary)' }}>
               <Dices size={20} /> Magic Randomizer &amp; Design Generator
             </h4>
-            <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: '0.2rem 0 0' }}>
-              Let the system procedurally synthesize a compatible, aesthetically balanced portfolio theme.
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', margin: '0.2rem 0 0' }}>
+              Procedurally synthesize a compatible, aesthetically balanced AMOLED portfolio theme.
             </p>
           </div>
 
@@ -165,7 +164,7 @@ export default function ThemeCustomizer({ portfolio, onChange }) {
         </div>
 
         {randomNotice && (
-          <div style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 600 }}>
+          <div style={{ fontSize: '0.8rem', color: 'var(--text-primary)', fontWeight: 600 }}>
             {randomNotice}
           </div>
         )}
@@ -186,15 +185,15 @@ export default function ThemeCustomizer({ portfolio, onChange }) {
               style={{
                 padding: '1.1rem',
                 borderRadius: 'var(--radius-md)',
-                border: `2px solid ${currentTemplate === tpl.id ? 'var(--primary)' : 'var(--border-color)'}`,
-                background: currentTemplate === tpl.id ? 'var(--primary-subtle)' : 'var(--bg-card)',
+                border: `2px solid ${currentTemplate === tpl.id ? 'var(--text-primary)' : 'var(--border-color)'}`,
+                background: currentTemplate === tpl.id ? 'var(--bg-tertiary)' : 'var(--bg-card)',
                 cursor: 'pointer',
                 transition: 'all var(--transition-fast)'
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
                 <strong style={{ fontSize: '0.92rem' }}>{tpl.name}</strong>
-                {currentTemplate === tpl.id && <Check size={16} color="var(--primary)" />}
+                {currentTemplate === tpl.id && <Check size={16} color="var(--text-primary)" />}
               </div>
               <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.4 }}>
                 {tpl.desc}
@@ -222,9 +221,9 @@ export default function ThemeCustomizer({ portfolio, onChange }) {
               padding: '0.5rem 1.25rem',
               borderRadius: 'var(--radius-sm)',
               border: 'none',
-              background: currentLayout === 'grid' ? 'var(--primary)' : 'transparent',
-              color: currentLayout === 'grid' ? '#ffffff' : 'var(--text-secondary)',
-              fontWeight: 600,
+              background: currentLayout === 'grid' ? '#ffffff' : 'transparent',
+              color: currentLayout === 'grid' ? '#000000' : 'var(--text-secondary)',
+              fontWeight: 700,
               fontSize: '0.88rem',
               cursor: 'pointer'
             }}
@@ -241,9 +240,9 @@ export default function ThemeCustomizer({ portfolio, onChange }) {
               padding: '0.5rem 1.25rem',
               borderRadius: 'var(--radius-sm)',
               border: 'none',
-              background: currentLayout === 'flexbox' ? 'var(--primary)' : 'transparent',
-              color: currentLayout === 'flexbox' ? '#ffffff' : 'var(--text-secondary)',
-              fontWeight: 600,
+              background: currentLayout === 'flexbox' ? '#ffffff' : 'transparent',
+              color: currentLayout === 'flexbox' ? '#000000' : 'var(--text-secondary)',
+              fontWeight: 700,
               fontSize: '0.88rem',
               cursor: 'pointer'
             }}
@@ -256,10 +255,10 @@ export default function ThemeCustomizer({ portfolio, onChange }) {
       {/* 3. Primary Color Palette */}
       <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
         <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Palette size={18} /> Accent Color
+          <Palette size={18} /> Accent Palette (AMOLED / Monochrome)
         </h3>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-          Select the primary brand color for buttons, badges, and project highlights.
+          Select the accent color for buttons, badges, and project highlights.
         </p>
 
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -273,13 +272,13 @@ export default function ThemeCustomizer({ portfolio, onChange }) {
                 height: 38,
                 borderRadius: '50%',
                 backgroundColor: c.hex,
-                border: themeConfig.primaryColor === c.hex ? '3px solid #000' : '2px solid #fff',
+                border: themeConfig.primaryColor === c.hex ? '3px solid #ffffff' : '1px solid #333333',
                 boxShadow: 'var(--shadow-sm)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#fff'
+                color: c.hex === '#ffffff' || c.hex === '#e4e4e7' ? '#000000' : '#ffffff'
               }}
               title={c.name}
             >
@@ -306,8 +305,8 @@ export default function ThemeCustomizer({ portfolio, onChange }) {
               style={{
                 padding: '0.75rem 1rem',
                 borderRadius: 'var(--radius-sm)',
-                border: `1px solid ${themeConfig.fontFamily === f.id ? 'var(--primary)' : 'var(--border-color)'}`,
-                background: themeConfig.fontFamily === f.id ? 'var(--primary-subtle)' : 'var(--bg-secondary)',
+                border: `1px solid ${themeConfig.fontFamily === f.id ? 'var(--text-primary)' : 'var(--border-color)'}`,
+                background: themeConfig.fontFamily === f.id ? 'var(--bg-tertiary)' : 'var(--bg-card)',
                 cursor: 'pointer',
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -315,7 +314,7 @@ export default function ThemeCustomizer({ portfolio, onChange }) {
               }}
             >
               <span style={{ fontSize: '0.84rem', fontWeight: 600 }}>{f.name}</span>
-              {themeConfig.fontFamily === f.id && <Check size={14} color="var(--primary)" />}
+              {themeConfig.fontFamily === f.id && <Check size={14} color="var(--text-primary)" />}
             </div>
           ))}
         </div>

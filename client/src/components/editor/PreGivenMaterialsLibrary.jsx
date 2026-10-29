@@ -29,7 +29,7 @@ export default function PreGivenMaterialsLibrary({ portfolio, onApplyPreset, onA
       bio: 'Full-stack software developer with proven experience architecting scalable React web applications and reliable Node.js/PostgreSQL microservices. Dedicated to performance optimization, clean code, and zero-downtime CI/CD delivery.',
       templateId: 'developer',
       layoutType: 'grid',
-      color: '#2563eb',
+      color: '#ffffff',
       suggestedSkills: ['React 18', 'Node.js & Express', 'PostgreSQL & Prisma', 'TypeScript', 'Docker', 'CSS Grid & Flexbox']
     },
     {

@@ -42,7 +42,7 @@ export default function Register() {
               width: 44,
               height: 44,
               borderRadius: '10px',
-              background: 'var(--primary)',
+              background: '#18181b', border: '1px solid #27272a',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -138,7 +138,7 @@ export default function Register() {
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
           Already have an account?{' '}
-          <Link to="/login" style={{ fontWeight: 600, color: 'var(--primary)' }}>
+          <Link to="/login" style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
             Sign in
           </Link>
         </div>
