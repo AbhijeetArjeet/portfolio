@@ -836,5 +836,63 @@ export const storageService = {
     localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(users));
     this.addAuditLog('USER_STATUS_CHANGE', 'User', userId, `Status changed to ${status}`);
     return { user: users[index] };
+  },
+
+  createAccountByAdmin({ name, email, password, role }) {
+    const users = this.getUsers();
+    const trimmedEmail = email.trim().toLowerCase();
+
+    if (users.some((u) => u.email.toLowerCase() === trimmedEmail)) {
+      throw new Error('An account with this email address already exists.');
+    }
+
+    const assignedRole = role === 'ADMIN' ? 'ADMIN' : 'USER';
+    const newUser = {
+      id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+      name: name.trim(),
+      email: trimmedEmail,
+      password: password,
+      role: assignedRole,
+      status: 'ACTIVE',
+      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+      createdAt: new Date().toISOString()
+    };
+
+    users.push(newUser);
+    localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(users));
+
+    const baseSlug = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'portfolio';
+    const slug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`;
+
+    const newPortfolio = {
+      id: `portfolio-${Date.now()}`,
+      userId: newUser.id,
+      slug,
+      title: `${name} | Portfolio`,
+      headline: assignedRole === 'ADMIN' ? 'Platform Administrator & Evaluator' : 'Developer & Creator',
+      bio: `Hello! I am ${name}. Welcome to my custom portfolio.`,
+      location: 'India',
+      contactEmail: trimmedEmail,
+      avatarUrl: newUser.avatarUrl,
+      templateId: assignedRole === 'ADMIN' ? 'executive' : 'developer',
+      layoutType: 'grid',
+      themeConfig: JSON.stringify({ primaryColor: '#ffffff', darkTheme: true, fontFamily: 'inter' }),
+      sectionOrder: JSON.stringify(['bio', 'projects', 'skills', 'experience', 'education']),
+      isPublished: true,
+      publishedAt: new Date().toISOString(),
+      views: 0,
+      projects: [],
+      skills: [],
+      experience: [],
+      education: [],
+      socialLinks: []
+    };
+
+    const portfolios = this.getPortfolios();
+    portfolios.push(newPortfolio);
+    localStorage.setItem(STORAGE_PORTFOLIOS_KEY, JSON.stringify(portfolios));
+
+    this.addAuditLog('ADMIN_USER_CREATE', 'User', newUser.id, `Created ${assignedRole} account for ${newUser.name}`);
+    return { user: newUser };
   }
 };

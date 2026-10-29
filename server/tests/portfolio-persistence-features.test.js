@@ -273,4 +273,35 @@ describe('5. Portfolio Persistence, LinkedIn Integration, and Versioning Feature
     const demoteData = await demoteRes.json();
     assert.strictEqual(demoteData.user.role, 'USER');
   });
+
+  test('Admin can directly create new users and new admins', async () => {
+    const loginRes = await fetch(`${baseUrl}/api/v1/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        emailOrUsername: 'Suneetha Mam',
+        password: '12345'
+      })
+    });
+    const { token: adminToken } = await loginRes.json();
+
+    const newAdminEmail = `admin_created_${Date.now()}@example.com`;
+    const createAdminRes = await fetch(`${baseUrl}/api/v1/admin/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${adminToken}`
+      },
+      body: JSON.stringify({
+        name: 'Dean Raman',
+        email: newAdminEmail,
+        password: 'AdminPassword123!',
+        role: 'ADMIN'
+      })
+    });
+    assert.strictEqual(createAdminRes.status, 201);
+    const adminCreated = await createAdminRes.json();
+    assert.strictEqual(adminCreated.user.role, 'ADMIN');
+    assert.strictEqual(adminCreated.user.email, newAdminEmail);
+  });
 });

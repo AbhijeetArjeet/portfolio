@@ -19,7 +19,9 @@ import {
   Building2,
   Inbox,
   UserCheck,
-  XCircle
+  XCircle,
+  UserPlus,
+  Plus
 } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -32,6 +34,12 @@ export default function AdminDashboard() {
   const [accessRequests, setAccessRequests] = useState([]);
   const [activeTab, setActiveTab] = useState('health');
   const [loading, setLoading] = useState(true);
+  const [showAddUserModal, setShowAddUserModal] = useState(false);
+  const [newUserName, setNewUserName] = useState('');
+  const [newUserEmail, setNewUserEmail] = useState('');
+  const [newUserPassword, setNewUserPassword] = useState('');
+  const [newUserRole, setNewUserRole] = useState('USER');
+  const [submittingUser, setSubmittingUser] = useState(false);
 
   // Health ping state
   const [healthStatus, setHealthStatus] = useState(null);
@@ -86,6 +94,32 @@ export default function AdminDashboard() {
     fetchAllData();
     handlePingHealth();
   }, []);
+
+  const handleAddUser = async (e) => {
+    e.preventDefault();
+    if (!newUserName.trim() || !newUserEmail.trim() || !newUserPassword) return;
+
+    setSubmittingUser(true);
+    try {
+      await adminService.createUser({
+        name: newUserName.trim(),
+        email: newUserEmail.trim(),
+        password: newUserPassword,
+        role: newUserRole
+      });
+      setShowAddUserModal(false);
+      setNewUserName('');
+      setNewUserEmail('');
+      setNewUserPassword('');
+      setNewUserRole('USER');
+      await fetchAllData();
+      alert(`Account for ${newUserName} created successfully with role ${newUserRole}!`);
+    } catch (err) {
+      alert(err.message || 'Failed to create user account');
+    } finally {
+      setSubmittingUser(false);
+    }
+  };
 
   const handleToggleUserRole = async (userId, currentRole, userName) => {
     const nextRole = currentRole === 'ADMIN' ? 'USER' : 'ADMIN';
@@ -315,7 +349,27 @@ export default function AdminDashboard() {
 
       {/* TAB 2: REGISTERED USERS */}
       {activeTab === 'users' && (
-        <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', background: 'var(--bg-secondary)', padding: '1rem 1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+            <div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Users size={18} color="var(--primary)" /> Registered User &amp; Admin Accounts
+              </h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: '4px 0 0' }}>
+                Manage candidate accounts, promote users to Administrator, or register new users and admins directly.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowAddUserModal(true)}
+              className="btn btn-primary btn-sm"
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              <UserPlus size={15} /> Add User or Admin
+            </button>
+          </div>
+
+          <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem', textAlign: 'left' }}>
             <thead>
               <tr style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
@@ -372,6 +426,7 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
+        </div>
         </div>
       )}
 
@@ -568,6 +623,87 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+      {/* Add User / Admin Modal */}
+      {showAddUserModal && (
+        <div className="modal-backdrop" onClick={() => setShowAddUserModal(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 480 }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <UserPlus size={20} color="var(--primary)" /> Add New User or Admin
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+              Create a new user account with assigned privileges and auto-generated starter portfolio.
+            </p>
+
+            <form onSubmit={handleAddUser}>
+              <div className="form-group">
+                <label className="form-label">Full Name</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="e.g. Dr. Ramesh Sharma or Alex Carter"
+                  value={newUserName}
+                  onChange={(e) => setNewUserName(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Email Address</label>
+                <input
+                  type="email"
+                  className="form-input"
+                  placeholder="e.g. ramesh@university.edu"
+                  value={newUserEmail}
+                  onChange={(e) => setNewUserEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Initial Password</label>
+                <input
+                  type="password"
+                  className="form-input"
+                  placeholder="Enter initial password"
+                  value={newUserPassword}
+                  onChange={(e) => setNewUserPassword(e.target.value)}
+                  required
+                  minLength={4}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Account Role &amp; Access Level</label>
+                <select
+                  className="form-select"
+                  value={newUserRole}
+                  onChange={(e) => setNewUserRole(e.target.value)}
+                >
+                  <option value="USER">Student / Standard User (Can build &amp; publish portfolios)</option>
+                  <option value="ADMIN">Faculty Administrator (Full moderation &amp; admin portal access)</option>
+                </select>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1.5rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowAddUserModal(false)}
+                  className="btn btn-outline"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={submittingUser}
+                >
+                  {submittingUser ? 'Creating...' : 'Create Account'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

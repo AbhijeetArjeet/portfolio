@@ -60,6 +60,18 @@ export const adminService = {
     }
   },
 
+  async createUser(userData) {
+    storageService.createAccountByAdmin(userData);
+    try {
+      return await apiRequest('/api/v1/admin/users', {
+        method: 'POST',
+        body: JSON.stringify(userData)
+      });
+    } catch {
+      return { success: true };
+    }
+  },
+
   async updateUserRole(userId, role) {
     storageService.updateUserRole(userId, role);
     try {

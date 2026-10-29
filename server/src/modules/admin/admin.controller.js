@@ -1,4 +1,5 @@
 const prisma = require('../../config/prisma');
+const bcrypt = require('bcryptjs');
 
 exports.getStats = async (req, res, next) => {
   try {
@@ -53,6 +54,79 @@ exports.getUsers = async (req, res, next) => {
     });
 
     res.json({ users });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.createUser = async (req, res, next) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Name, email, and password are required.' });
+    }
+
+    const trimmedEmail = email.trim().toLowerCase();
+    const existing = await prisma.user.findUnique({ where: { email: trimmedEmail } });
+    if (existing) {
+      return res.status(400).json({ error: 'A user with this email already exists.' });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    const assignedRole = role === 'ADMIN' ? 'ADMIN' : 'USER';
+
+    const newUser = await prisma.user.create({
+      data: {
+        name: name.trim(),
+        email: trimmedEmail,
+        passwordHash,
+        role: assignedRole,
+        status: 'ACTIVE'
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        status: true,
+        createdAt: true
+      }
+    });
+
+    // Create starter portfolio
+    const baseSlug = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'portfolio';
+    const uniqueSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`;
+
+    await prisma.portfolio.create({
+      data: {
+        userId: newUser.id,
+        slug: uniqueSlug,
+        title: `${name} | Portfolio`,
+        headline: assignedRole === 'ADMIN' ? 'Platform Administrator & Evaluator' : 'Developer & Creator',
+        contactEmail: trimmedEmail,
+        templateId: assignedRole === 'ADMIN' ? 'executive' : 'developer',
+        layoutType: 'grid',
+        isPublished: true,
+        themeConfig: JSON.stringify({ primaryColor: '#ffffff', darkTheme: true, fontFamily: 'inter' })
+      }
+    });
+
+    await prisma.auditLog.create({
+      data: {
+        userId: req.user.id,
+        action: `ADMIN_CREATED_${assignedRole}`,
+        targetType: 'USER',
+        targetId: newUser.id,
+        details: `Administrator created new account for ${trimmedEmail} with role ${assignedRole}`,
+        ipAddress: req.ip
+      }
+    });
+
+    res.status(201).json({
+      message: `New ${assignedRole} account created successfully`,
+      user: newUser
+    });
   } catch (err) {
     next(err);
   }
