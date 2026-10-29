@@ -217,7 +217,7 @@ exports.duplicatePortfolio = async (req, res, next) => {
         where: { id: newPortfolio.id },
         include: portfolioIncludes
       });
-    });
+    }, { maxWait: 10000, timeout: 30000 });
 
     res.status(201).json({ message: 'Portfolio duplicated successfully', portfolio: duplicated });
   } catch (err) {
@@ -417,7 +417,7 @@ exports.importPortfolio = async (req, res, next) => {
         where: { id },
         include: portfolioIncludes
       });
-    });
+    }, { maxWait: 10000, timeout: 30000 });
 
     res.json({ message: 'Portfolio imported and restored successfully', portfolio: updated });
   } catch (err) {
@@ -606,7 +606,7 @@ exports.restoreVersion = async (req, res, next) => {
         where: { id: portfolioId },
         include: portfolioIncludes
       });
-    });
+    }, { maxWait: 10000, timeout: 30000 });
 
     res.json({ message: `Successfully restored version #${versionRecord.version}`, portfolio: restored });
   } catch (err) {

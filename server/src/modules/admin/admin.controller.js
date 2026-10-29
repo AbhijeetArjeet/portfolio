@@ -93,6 +93,41 @@ exports.updateUserStatus = async (req, res, next) => {
   }
 };
 
+exports.updateUserRole = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    if (!['ADMIN', 'USER'].includes(role)) {
+      return res.status(400).json({ error: 'Role must be ADMIN or USER.' });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: { role },
+      select: { id: true, name: true, email: true, status: true, role: true }
+    });
+
+    await prisma.auditLog.create({
+      data: {
+        userId: req.user.id,
+        action: `USER_ROLE_${role}`,
+        targetType: 'USER',
+        targetId: id,
+        details: `Admin privileges changed to ${role} for ${updatedUser.email}`,
+        ipAddress: req.ip
+      }
+    });
+
+    res.json({
+      message: `User role changed to ${role}`,
+      user: updatedUser
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.getPortfolios = async (req, res, next) => {
   try {
     const portfolios = await prisma.portfolio.findMany({

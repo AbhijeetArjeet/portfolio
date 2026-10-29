@@ -87,6 +87,22 @@ export default function AdminDashboard() {
     handlePingHealth();
   }, []);
 
+  const handleToggleUserRole = async (userId, currentRole, userName) => {
+    const nextRole = currentRole === 'ADMIN' ? 'USER' : 'ADMIN';
+    const confirmMsg = nextRole === 'ADMIN'
+      ? `Promote "${userName}" to Administrator? They will gain full platform evaluation and admin privileges.`
+      : `Change "${userName}" to regular Student / User role?`;
+
+    if (!window.confirm(confirmMsg)) return;
+
+    try {
+      await adminService.updateUserRole(userId, nextRole);
+      await fetchAllData();
+    } catch (err) {
+      alert(err.message || 'Failed to update user role');
+    }
+  };
+
   const handleToggleUserStatus = async (userId, currentStatus) => {
     const nextStatus = currentStatus === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE';
     try {

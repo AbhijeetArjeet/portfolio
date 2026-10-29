@@ -10,6 +10,7 @@ router.use(authenticate, requireRole('ADMIN'));
 router.get('/stats', adminController.getStats);
 router.get('/users', adminController.getUsers);
 router.patch('/users/:id/status', adminController.updateUserStatus);
+router.patch('/users/:id/role', adminController.updateUserRole);
 router.get('/portfolios', adminController.getPortfolios);
 router.patch('/portfolios/:id/publish', adminController.togglePortfolioPublish);
 router.get('/reports', adminController.getReports);

@@ -6,7 +6,6 @@ export const githubService = {
     try {
       return await apiRequest(`/api/v1/github/user/${encodeURIComponent(username)}`);
     } catch {
-      // Fallback to direct public GitHub API
       const res = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}`);
       if (!res.ok) throw new Error('GitHub profile not found');
       return await res.json();
@@ -17,7 +16,6 @@ export const githubService = {
     try {
       return await apiRequest(`/api/v1/github/repos/${encodeURIComponent(username)}`);
     } catch {
-      // Fallback to direct public GitHub API
       const res = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=12`);
       if (!res.ok) throw new Error('Failed to fetch repositories from GitHub');
       return await res.json();
@@ -27,7 +25,6 @@ export const githubService = {
 
 export const uploadService = {
   async uploadImage(file) {
-    // If backend is running, try server upload
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -36,7 +33,6 @@ export const uploadService = {
         body: formData
       });
     } catch {
-      // Offline / Vercel fallback: create Base64 Data URL for instant preview
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve({ url: reader.result, filename: file.name });
@@ -61,6 +57,18 @@ export const adminService = {
       return await apiRequest('/api/v1/admin/users');
     } catch {
       return { users: storageService.getUsers() };
+    }
+  },
+
+  async updateUserRole(userId, role) {
+    storageService.updateUserRole(userId, role);
+    try {
+      return await apiRequest(`/api/v1/admin/users/${userId}/role`, {
+        method: 'PATCH',
+        body: JSON.stringify({ role })
+      });
+    } catch {
+      return { success: true };
     }
   },
 

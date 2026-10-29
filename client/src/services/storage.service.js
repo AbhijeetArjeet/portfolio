@@ -809,6 +809,24 @@ export const storageService = {
     };
   },
 
+  updateUserRole(userId, role) {
+    const users = this.getUsers();
+    const index = users.findIndex((u) => u.id === userId);
+    if (index === -1) throw new Error('User not found');
+
+    users[index].role = role;
+    localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(users));
+
+    const active = this.getActiveUser();
+    if (active && active.id === userId) {
+      active.role = role;
+      this.setActiveUser(active);
+    }
+
+    this.addAuditLog('USER_ROLE_CHANGE', 'User', userId, `Privileges changed to ${role}`);
+    return { user: users[index] };
+  },
+
   updateUserStatus(userId, status) {
     const users = this.getUsers();
     const index = users.findIndex((u) => u.id === userId);

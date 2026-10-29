@@ -224,4 +224,53 @@ describe('5. Portfolio Persistence, LinkedIn Integration, and Versioning Feature
     const updated = await patchRes.json();
     assert.strictEqual(updated.request.status, 'APPROVED');
   });
+
+  test('Admin can change any user role to ADMIN or USER', async () => {
+    // 1. Log in as faculty admin
+    const loginRes = await fetch(`${baseUrl}/api/v1/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        emailOrUsername: 'Suneetha Mam',
+        password: '12345'
+      })
+    });
+    assert.strictEqual(loginRes.status, 200);
+    const { token: adminToken } = await loginRes.json();
+
+    // 2. Fetch users list
+    const usersRes = await fetch(`${baseUrl}/api/v1/admin/users`, {
+      headers: { Authorization: `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(usersRes.status, 200);
+    const { users } = await usersRes.json();
+    const regularUser = users.find(u => u.role === 'USER');
+    assert.ok(regularUser);
+
+    // 3. Promote regular user to ADMIN
+    const promoteRes = await fetch(`${baseUrl}/api/v1/admin/users/${regularUser.id}/role`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${adminToken}`
+      },
+      body: JSON.stringify({ role: 'ADMIN' })
+    });
+    assert.strictEqual(promoteRes.status, 200);
+    const promoteData = await promoteRes.json();
+    assert.strictEqual(promoteData.user.role, 'ADMIN');
+
+    // 4. Demote back to USER
+    const demoteRes = await fetch(`${baseUrl}/api/v1/admin/users/${regularUser.id}/role`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${adminToken}`
+      },
+      body: JSON.stringify({ role: 'USER' })
+    });
+    assert.strictEqual(demoteRes.status, 200);
+    const demoteData = await demoteRes.json();
+    assert.strictEqual(demoteData.user.role, 'USER');
+  });
 });
