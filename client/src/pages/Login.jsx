@@ -31,12 +31,22 @@ export default function Login() {
   };
 
   const autofillFaculty = () => {
-    setEmailOrUsername('Suneetha Mam');
-    setPassword('12345');
+    setEmailOrUsername('Sunita Bulla');
+    setPassword('mam');
   };
 
-  const autofillStudent = () => {
+  const autofillAbhijeet = () => {
     setEmailOrUsername('abhijeet@example.com');
+    setPassword('password123');
+  };
+
+  const autofillHritik = () => {
+    setEmailOrUsername('hritik@example.com');
+    setPassword('password123');
+  };
+
+  const autofillSarvagna = () => {
+    setEmailOrUsername('sarvagna@example.com');
     setPassword('password123');
   };
 
@@ -80,7 +90,7 @@ export default function Login() {
             <ShieldCheck size={16} /> Quick Evaluator Credentials
           </div>
           <div style={{ color: 'var(--text-secondary)', marginBottom: '0.6rem' }}>
-            Faculty Admin: <strong>Suneetha Mam</strong> &bull; Password: <strong>12345</strong>
+            Faculty Admin: <strong>Sunita Bulla</strong> &bull; Password: <strong>mam</strong>
           </div>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             <button
@@ -89,15 +99,31 @@ export default function Login() {
               className="btn btn-primary btn-sm"
               style={{ fontSize: '0.75rem', padding: '3px 8px' }}
             >
-              Autofill Faculty Admin
+              Faculty Admin (Sunita Bulla)
             </button>
             <button
               type="button"
-              onClick={autofillStudent}
+              onClick={autofillAbhijeet}
               className="btn btn-secondary btn-sm"
               style={{ fontSize: '0.75rem', padding: '3px 8px' }}
             >
-              Autofill Student (Abhijeet)
+              Student (Abhijeet)
+            </button>
+            <button
+              type="button"
+              onClick={autofillHritik}
+              className="btn btn-secondary btn-sm"
+              style={{ fontSize: '0.75rem', padding: '3px 8px' }}
+            >
+              Student (Hritik)
+            </button>
+            <button
+              type="button"
+              onClick={autofillSarvagna}
+              className="btn btn-secondary btn-sm"
+              style={{ fontSize: '0.75rem', padding: '3px 8px' }}
+            >
+              Student (Sri Sarvagna)
             </button>
           </div>
         </div>
@@ -128,7 +154,7 @@ export default function Login() {
               type="text"
               className="form-input"
               required
-              placeholder="e.g. Suneetha Mam or abhijeet@example.com"
+              placeholder="e.g. Sunita Bulla or abhijeet@example.com"
               value={emailOrUsername}
               onChange={(e) => setEmailOrUsername(e.target.value)}
             />

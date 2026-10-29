@@ -231,8 +231,8 @@ describe('5. Portfolio Persistence, LinkedIn Integration, and Versioning Feature
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        emailOrUsername: 'Suneetha Mam',
-        password: '12345'
+        emailOrUsername: 'Sunita Bulla',
+        password: 'mam'
       })
     });
     assert.strictEqual(loginRes.status, 200);
@@ -279,8 +279,8 @@ describe('5. Portfolio Persistence, LinkedIn Integration, and Versioning Feature
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        emailOrUsername: 'Suneetha Mam',
-        password: '12345'
+        emailOrUsername: 'Sunita Bulla',
+        password: 'mam'
       })
     });
     const { token: adminToken } = await loginRes.json();

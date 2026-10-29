@@ -102,7 +102,7 @@ exports.login = async (req, res, next) => {
     const { emailOrUsername, password } = req.body;
     const identifier = emailOrUsername.trim();
 
-    // Check by email or name (case-insensitive for convenience of faculty evaluator like "Suneetha Mam")
+    // Check by email or name (case-insensitive for convenience of faculty evaluator like "Sunita Bulla")
     const user = await prisma.user.findFirst({
       where: {
         OR: [

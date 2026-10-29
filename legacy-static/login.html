@@ -33,12 +33,12 @@
         <button type="button" id="tabUp" onclick="setMode('up')">Sign Up</button>
       </div>
       <div class="demo-hint" id="demoHint">
-        <span>Evaluator: <b>Suneetha Mam</b> &bull; Password: <b>12345</b></span>
+        <span>Evaluator: <b>Sunita Bulla</b> &bull; Password: <b>mam</b></span>
         <button type="button" onclick="fillDemo()">⚡ Autofill Evaluator Credentials</button>
       </div>
       <form id="authForm" onsubmit="handleAuth(event)" style="display:flex; flex-direction:column;">
         <div class="form-group" id="nameGroup" style="display:none;"><label for="name">Full Name</label><input type="text" id="name" placeholder="Your Name"></div>
-        <div class="form-group"><label for="user">Username</label><input type="text" id="user" placeholder="Enter username (Suneetha Mam)" required></div>
+        <div class="form-group"><label for="user">Username</label><input type="text" id="user" placeholder="Enter username (Sunita Bulla)" required></div>
         <div class="form-group"><label for="pass">Password</label><input type="password" id="pass" placeholder="Enter password (12345)" required></div>
         <button type="submit" class="btn btn-primary" id="subBtn" style="width:100%; margin-top:0.5rem;">Sign In</button>
       </form>
@@ -57,17 +57,17 @@
       document.getElementById('msg').textContent = '';
     }
     function fillDemo() {
-      document.getElementById('user').value = 'Suneetha Mam';
-      document.getElementById('pass').value = '12345';
+      document.getElementById('user').value = 'Sunita Bulla';
+      document.getElementById('pass').value = 'mam';
     }
     function handleAuth(e) {
       e.preventDefault();
       const u = document.getElementById('user').value.trim(), p = document.getElementById('pass').value.trim(), msg = document.getElementById('msg');
       if (mode === 'in') {
         const users = JSON.parse(localStorage.getItem('portfolio_users') || '[]');
-        const isMam = (u.toLowerCase() === 'suneetha mam' || u.toLowerCase() === 'suneetha') && p === '12345';
+        const isMam = (u.toLowerCase() === 'sunita bulla' || u.toLowerCase() === 'sunita') && p === 'mam';
         if (isMam || users.some(x => x.u.toLowerCase() === u.toLowerCase() && x.p === p)) {
-          const display = isMam ? 'Suneetha Mam' : u;
+          const display = isMam ? 'Sunita Bulla' : u;
           const role = isMam ? 'Evaluator / Faculty' : 'Registered User';
           localStorage.setItem('portfolio_session', JSON.stringify({ displayName: display, username: u, role: role }));
           msg.style.color = '#15803d';
@@ -75,7 +75,7 @@
           setTimeout(() => { window.location.href = isMam ? 'admin.html' : 'index.html'; }, 700);
         } else {
           msg.style.color = '#b91c1c';
-          msg.textContent = 'Invalid credentials! Try Suneetha Mam / 12345';
+          msg.textContent = 'Invalid credentials! Try Sunita Bulla / 12345';
         }
       } else {
         const users = JSON.parse(localStorage.getItem('portfolio_users') || '[]');

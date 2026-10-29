@@ -89,9 +89,9 @@ The website includes a dedicated **Peer Portfolio Network** section designed to 
 ## 🔐 Authentication & Faculty Admin System
 A dedicated lightweight authentication suite (under 100 lines, built with **CSS Flexbox**) has been integrated at [`login.html`](login.html) with role-based access control:
 
-### 1. Faculty Evaluator Access (`Suneetha Mam`):
-- **Username / Login**: `Suneetha Mam` *(or `Suneetha`)*
-- **Password**: `12345`
+### 1. Faculty Evaluator Access (`Sunita Bulla`):
+- **Username / Login**: `Sunita Bulla` *(or `Sunita`)*
+- **Password**: `mam`
 - **Privileges & Admin Dashboard ([`admin.html`](admin.html))**:
   - **Project Inquiries Inbox**: View, review, and clear contact messages submitted from the portfolio.
   - **Registered Users Directory**: Live table showing all registered user accounts stored in `localStorage`.
@@ -109,7 +109,7 @@ A dedicated lightweight authentication suite (under 100 lines, built with **CSS 
 ```text
 portfolio/
 ├── index.html        # Main HTML5 document with semantic elements
-├── admin.html        # Faculty Admin Dashboard for Suneetha Mam (Inbox, Users, Broadcast)
+├── admin.html        # Faculty Admin Dashboard for Sunita Bulla (Inbox, Users, Broadcast)
 ├── login.html        # Sign In & Sign Up page with Evaluator authentication (<100 lines)
 ├── style.css         # CSS3 stylesheet (Grid, Flexbox, Box Model, Responsive, Auth)
 ├── script.js         # Core JS (Fetch API, DOM manipulation, LocalStorage, Auth)

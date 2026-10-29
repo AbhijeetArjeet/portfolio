@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ----------------------------------------------------------------------------
-// AUTHENTICATION & EVALUATOR SESSION MANAGEMENT (Suneetha Mam vs Regular Users)
+// AUTHENTICATION & EVALUATOR SESSION MANAGEMENT (Sunita Bulla vs Regular Users)
 // ----------------------------------------------------------------------------
 function initAuthSession() {
     const sessionData = localStorage.getItem("portfolio_session");
@@ -125,7 +125,7 @@ function initAuthSession() {
     const noticeBanner = document.getElementById("facultyNoticeBanner");
     const noticeMsg = document.getElementById("facultyNoticeMsg");
 
-    // Display Faculty Notice / Evaluation Note if posted by Suneetha Mam
+    // Display Faculty Notice / Evaluation Note if posted by Sunita Bulla
     const facultyMsg = localStorage.getItem("portfolio_faculty_message");
     if (noticeBanner && noticeMsg) {
         if (facultyMsg) {
@@ -139,7 +139,7 @@ function initAuthSession() {
     if (sessionData) {
         try {
             const user = JSON.parse(sessionData);
-            const isMam = user.username && (user.username.toLowerCase() === "suneetha mam" || user.username.toLowerCase() === "suneetha");
+            const isMam = user.username && (user.username.toLowerCase() === "sunita bulla" || user.username.toLowerCase() === "sunita");
 
             if (navAuthBtn) {
                 if (isMam) {
@@ -156,7 +156,7 @@ function initAuthSession() {
             }
             if (banner && bannerMsg) {
                 if (isMam) {
-                    bannerMsg.innerHTML = `Welcome, <strong>Prof. Suneetha Mam</strong>! Logged in as Faculty Evaluator. <a href="admin.html" style="color:#fef08a; text-decoration:underline; font-weight:700; margin-left:8px;">Open Faculty Admin Dashboard &rarr;</a>`;
+                    bannerMsg.innerHTML = `Welcome, <strong>Prof. Sunita Bulla</strong>! Logged in as Faculty Evaluator. <a href="admin.html" style="color:#fef08a; text-decoration:underline; font-weight:700; margin-left:8px;">Open Faculty Admin Dashboard &rarr;</a>`;
                 } else {
                     bannerMsg.textContent = `Welcome, ${user.displayName || user.username}! Logged in as ${user.role || 'Registered User'}.`;
                 }

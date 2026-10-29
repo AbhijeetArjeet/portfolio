@@ -21,8 +21,10 @@ The application enables students, creators, and developers to generate, customiz
 
 | Role | Username / Email | Password | Access Details |
 | :--- | :--- | :--- | :--- |
-| **Faculty Admin** | `Suneetha Mam` (`suneetha@university.edu`) | `12345` | Full moderation, user status toggle, publication override, collaboration request approval, and audit logs. |
-| **Student Creator** | `Abhijeet Arjeet` (`abhijeet@example.com`) | `password123` | Multi-portfolio manager, visual editor, SIH VAYU-CPI projects, LinkedIn integration, version snapshots. |
+| **Faculty Admin** | `Sunita Bulla` (`sunita.bulla@university.edu`) | `mam` | Full platform moderation, user role toggles (Admin/User), new user creation, publication control, and audit logs. |
+| **Student Creator** | `Abhijeet Arjeet` (`abhijeet@example.com`) | `password123` | OpenDisplay-USB, AniScribe, AURA, dualboot-clock-fix, LinkedIn integration, multi-portfolio management. |
+| **Student Creator** | `Hritik Kumar` (`hritik@example.com`) | `password123` | Student-personal-portfolio, Web Portfolio, responsive layouts, LinkedIn integration. |
+| **Student Creator** | `Duggiralapati Sri Sarvagna` (`sarvagna@example.com`) | `password123` | KAREN-AI Desktop Assistant, CTCMS, Flappy Bird Engine, Frontend Lab, LinkedIn integration. |
 
 *Quick login buttons are available directly on the `/login` page.*
 

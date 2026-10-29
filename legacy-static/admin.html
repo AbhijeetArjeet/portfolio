@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Faculty Admin Dashboard | Suneetha Mam</title>
+  <title>Faculty Admin Dashboard | Sunita Bulla</title>
   <link rel="stylesheet" href="style.css">
   <style>
     body { background-color: #f1f5f9; min-height: 100vh; display: flex; flex-direction: column; }
@@ -60,7 +60,7 @@
       <span>🎓</span> Faculty Admin Portal &bull; Abhijeet<span>.dev</span>
     </div>
     <div class="admin-badge">
-      <span>Verified Evaluator:</span> <strong>Prof. Suneetha Mam</strong>
+      <span>Verified Evaluator:</span> <strong>Prof. Sunita Bulla</strong>
     </div>
     <div class="admin-nav-actions">
       <a href="index.html" class="btn btn-secondary btn-sm">&larr; View Public Portfolio</a>
@@ -68,11 +68,11 @@
     </div>
   </header>
 
-  <!-- ACCESS GATE IF NOT SUNEETHA MAM -->
+  <!-- ACCESS GATE IF NOT SUNITA BULLA -->
   <div id="authGate">
     <div style="font-size:3rem; margin-bottom:1rem;">🔒</div>
     <h2>Faculty Access Only</h2>
-    <p style="color:#64748b; margin:1rem 0 1.5rem 0;">This portal is reserved for <strong>Suneetha Mam</strong> (Evaluator / Admin). Please sign in with evaluator credentials to view registered users and inbox messages.</p>
+    <p style="color:#64748b; margin:1rem 0 1.5rem 0;">This portal is reserved for <strong>Sunita Bulla</strong> (Evaluator / Admin). Please sign in with evaluator credentials to view registered users and inbox messages.</p>
     <a href="login.html" class="btn btn-primary">Go to Login Page</a>
   </div>
 
@@ -82,7 +82,7 @@
     <!-- WELCOME GREETING -->
     <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
       <div>
-        <h1 style="font-size: 1.6rem; color: #0f172a;">Welcome to Faculty Portal, Suneetha Mam!</h1>
+        <h1 style="font-size: 1.6rem; color: #0f172a;">Welcome to Faculty Portal, Sunita Bulla!</h1>
         <p style="color: #64748b; margin: 0;">Course Outcomes Evaluation, Project Inquiries, and User Management Console</p>
       </div>
       <div>
@@ -170,7 +170,7 @@
       </div>
       <div class="panel-body">
         <form class="feedback-form" onsubmit="saveFacultyFeedback(event)">
-          <label for="feedbackText" style="font-weight:600; font-size:0.9rem;">Evaluation Note / Message from Suneetha Mam:</label>
+          <label for="feedbackText" style="font-weight:600; font-size:0.9rem;">Evaluation Note / Message from Sunita Bulla:</label>
           <textarea id="feedbackText" placeholder="e.g. Excellent portfolio architecture! HTML5 semantic tags, CSS Flexbox & Grid layouts, and Fetch API are thoroughly implemented. Grade: A+ (10/10)" required></textarea>
           <div style="display:flex; justify-content:flex-end;">
             <button type="submit" class="btn btn-primary">📢 Post Message to Portfolio</button>
@@ -196,7 +196,7 @@
       if (sessionStr) {
         try {
           const sess = JSON.parse(sessionStr);
-          if (sess.username && (sess.username.toLowerCase() === "suneetha mam" || sess.username.toLowerCase() === "suneetha")) {
+          if (sess.username && (sess.username.toLowerCase() === "sunita bulla" || sess.username.toLowerCase() === "sunita")) {
             isMam = true;
           }
         } catch (e) {}
@@ -277,7 +277,7 @@
 
       // Always show registered users + default peer users
       const allUsers = [
-        { fullName: "Suneetha Mam", u: "Suneetha Mam", role: "Faculty Evaluator (Admin)", registeredAt: "26/09/2026 (Preset Admin)" },
+        { fullName: "Sunita Bulla", u: "Sunita Bulla", role: "Faculty Evaluator (Admin)", registeredAt: "26/09/2026 (Preset Admin)" },
         { fullName: "Hritik Kumar", u: "hritik2543", role: "Peer Student", registeredAt: "25/09/2026, 10:14:00" },
         { fullName: "D. Sri Sarvagna", u: "sarvagna_sudo", role: "Peer Student", registeredAt: "24/09/2026, 14:30:20" },
         ...users.map(u => ({ fullName: u.name || u.fullName || u.u, u: u.u || u.username, role: "Registered User", registeredAt: u.registeredAt || "Recent" }))

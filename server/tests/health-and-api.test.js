@@ -74,13 +74,13 @@ describe('2. Authentication & Authorization Security', () => {
   let userPortfolioId;
   let adminToken;
 
-  test('Faculty Evaluator / Admin Login works (Suneetha Mam / 12345)', async () => {
+  test('Faculty Evaluator / Admin Login works (Sunita Bulla / mam)', async () => {
     const res = await fetch(`${baseUrl}/api/v1/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        emailOrUsername: 'Suneetha Mam',
-        password: '12345'
+        emailOrUsername: 'Sunita Bulla',
+        password: 'mam'
       })
     });
 

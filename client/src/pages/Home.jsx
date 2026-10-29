@@ -107,7 +107,7 @@ export default function Home() {
           >
             <span>🎓 Faculty Evaluator?</span>
             <Link to="/login" style={{ fontWeight: 600, color: 'var(--text-primary)', textDecoration: 'underline' }}>
-              Autofill Suneetha Mam / 12345 to test Admin Portal &rarr;
+              Autofill Sunita Bulla / mam to test Admin Portal &rarr;
             </Link>
           </div>
         </div>
