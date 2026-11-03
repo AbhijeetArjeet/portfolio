@@ -48,6 +48,8 @@ model Portfolio {
   websiteUrl   String?
   templateId   String      @default("minimal")
   layoutType   String      @default("grid")
+  sectionOrder String?
+  showLinkedin Boolean?    @default(true)
   themeConfig  String      @default("{\"primaryColor\":\"#2563eb\",\"darkTheme\":false,\"fontFamily\":\"inter\",\"showGithubStats\":true}")
   isPublished  Boolean     @default(false)
   publishedAt  DateTime?
