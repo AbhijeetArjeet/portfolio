@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { portfolioService } from '../../services/portfolio.service';
+import { useToast } from '../../context/ToastContext';
 import { Plus, Trash2, Briefcase, GraduationCap } from 'lucide-react';
 
 export default function ExperienceManager({ portfolio, onReload }) {
+  const { success, error: toastError } = useToast();
   const [expCompany, setExpCompany] = useState('');
   const [expRole, setExpRole] = useState('');
   const [expStart, setExpStart] = useState('');
@@ -31,9 +33,10 @@ export default function ExperienceManager({ portfolio, onReload }) {
       setExpStart('');
       setExpEnd('');
       setExpDesc('');
+      success('Experience entry added.');
       onReload();
     } catch (err) {
-      alert(err.message || 'Failed to add experience.');
+      toastError(err.message || 'Failed to add experience.');
     }
   };
 
@@ -53,9 +56,10 @@ export default function ExperienceManager({ portfolio, onReload }) {
       setEduStart('');
       setEduEnd('');
       setEduDesc('');
+      success('Education entry added.');
       onReload();
     } catch (err) {
-      alert(err.message || 'Failed to add education.');
+      toastError(err.message || 'Failed to add education.');
     }
   };
 

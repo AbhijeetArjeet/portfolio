@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { Sparkles, ArrowRight, AlertCircle } from 'lucide-react';
 
 export default function Register() {
@@ -11,6 +12,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { register } = useAuth();
+  const { success, error: toastError } = useToast();
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
@@ -23,11 +25,14 @@ export default function Register() {
         name,
         email,
         password,
-        githubUsername: githubUsername || undefined
+        githubUsername: githubUsername ? githubUsername.trim() : undefined
       });
+      success(`Welcome to PortfolioForge, ${name}! Your portfolio space is ready.`);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Registration failed. Please check the details entered.');
+      const msg = err.message || 'Registration failed. Please check the details entered.';
+      setError(msg);
+      toastError(msg);
     } finally {
       setLoading(false);
     }
@@ -54,7 +59,7 @@ export default function Register() {
           </div>
           <h2 style={{ fontSize: '1.6rem', fontWeight: 800, letterSpacing: '-0.02em' }}>Create an Account</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.3rem' }}>
-            Set up your profile and launch your custom portfolio
+            Set up your profile and launch your custom portfolio in seconds
           </p>
         </div>
 
@@ -96,7 +101,7 @@ export default function Register() {
               type="email"
               className="form-input"
               required
-              placeholder="e.g. abhijeet@example.com"
+              placeholder="e.g. yourname@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -107,7 +112,7 @@ export default function Register() {
             <input
               type="text"
               className="form-input"
-              placeholder="e.g. AbhijeetArjeet (for auto-syncing projects)"
+              placeholder="e.g. your-github-handle (for 1-click repo sync)"
               value={githubUsername}
               onChange={(e) => setGithubUsername(e.target.value)}
             />
@@ -139,7 +144,7 @@ export default function Register() {
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
           Already have an account?{' '}
           <Link to="/login" style={{ fontWeight: 600, color: 'var(--primary)' }}>
-            Sign in
+            Sign in &rarr;
           </Link>
         </div>
       </div>

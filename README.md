@@ -27,11 +27,10 @@ To make evaluation straightforward for faculty and examiners, default seeded cre
 - **Access**: Full access to the protected **Faculty Admin Portal** (`/admin`), user moderation, portfolio unpublishing, abuse report reviews, and real-time Render keep-alive health diagnostics.
 - *Tip*: On the Sign In page, click the **"Autofill Faculty Admin"** button to log in with a single click.
 
-### 2. Student Creator Account
-- **Username / Login**: `Abhijeet Arjeet` *(or `abhijeet@example.com`)*
-- **Password**: `password123`
-- **Role**: `USER`
-- **Access**: Pre-populated live portfolio showcasing SIH VAYU-CPI, OpenDisplay-USB, AniScribe, verified skills, and academic history.
+### 2. Verified Student Accounts
+- **Abhijeet Arjeet (Lead Creator)**: `tathagattanmayall@gmail.com` | Password: `password123` | Role: `USER` (Modern Developer Template, slug `/u/abhijeet-arjeet`)
+- **Hritik Kumar (Contributor)**: `hroy50750@gmail.com` | Password: `password123` | Role: `USER` (Minimal Professional Template, slug `/u/hritik-kumar`)
+- **D. Sri Sarvagna (Contributor)**: `dsrisarvagna@gmail.com` | Password: `password123` | Role: `USER` (Creative Bento Template, slug `/u/dsri-sarvagna`)
 
 ---
 

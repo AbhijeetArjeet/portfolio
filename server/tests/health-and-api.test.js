@@ -200,7 +200,7 @@ describe('2. Authentication & Authorization Security', () => {
 });
 
 describe('3. Public Portfolios & Publishing Lifecycle', () => {
-  test('Abhijeet published portfolio is accessible publicly at /api/v1/portfolios/public/abhijeet-arjeet', async () => {
+  test('Abhijeet published portfolio is accessible publicly at /api/v1/portfolios/public/abhijeet-arjeet and alias tanmay-tathagat', async () => {
     const res = await fetch(`${baseUrl}/api/v1/portfolios/public/abhijeet-arjeet`);
     assert.strictEqual(res.status, 200);
 
@@ -209,6 +209,10 @@ describe('3. Public Portfolios & Publishing Lifecycle', () => {
     assert.strictEqual(data.portfolio.user.name, 'Abhijeet Arjeet');
     assert.ok(data.portfolio.projects.length >= 2);
     assert.ok(data.portfolio.skills.length >= 3);
+
+    // Verify backward compatibility alias resolves to the portfolio
+    const aliasRes = await fetch(`${baseUrl}/api/v1/portfolios/public/tanmay-tathagat`);
+    assert.strictEqual(aliasRes.status, 200);
   });
 
   test('Draft portfolios are NOT publicly viewable by visitors', async () => {

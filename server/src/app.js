@@ -33,17 +33,29 @@ if (config.renderExternalUrl) {
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, or server-to-server)
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        // In development/staging, accept origin; in production enforce allowlist
-        if (!config.isProduction) {
-          callback(null, true);
-        } else {
-          callback(new Error('Blocked by CORS policy'));
-        }
+      // Allow requests with no origin (like mobile apps, curl, or server-to-server health checks)
+      if (!origin) return callback(null, true);
+
+      // Check configured exact origins
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+
+      // Allow Vercel preview deployments if origin matches *.vercel.app
+      if (/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)*\.vercel\.app$/i.test(origin)) {
+        return callback(null, true);
       }
+
+      // Allow onrender.com deployments
+      if (/^https:\/\/[a-z0-9-]+\.onrender\.com$/i.test(origin)) {
+        return callback(null, true);
+      }
+
+      // In local development, accept all origins
+      if (!config.isProduction) {
+        return callback(null, true);
+      }
+
+      // Disallow without throwing unhandled internal exception
+      callback(null, false);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

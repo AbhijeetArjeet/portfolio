@@ -100,7 +100,7 @@ export default function PersonalInfoSection({ portfolio, onChange }) {
             className="form-input"
             value={portfolio.contactEmail || ''}
             onChange={(e) => onChange({ contactEmail: e.target.value })}
-            placeholder="e.g. contact@example.com"
+            placeholder="e.g. yourname@gmail.com"
           />
         </div>
       </div>

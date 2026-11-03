@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Sparkles, ShieldCheck, ArrowRight, AlertCircle } from 'lucide-react';
+import { useToast } from '../context/ToastContext';
+import { Sparkles, ShieldCheck, ArrowRight, AlertCircle, UserCheck } from 'lucide-react';
 
 export default function Login() {
   const [emailOrUsername, setEmailOrUsername] = useState('');
@@ -9,7 +10,11 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
+  const { success, error: toastError } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const redirectPath = location.state?.from?.pathname;
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,13 +23,19 @@ export default function Login() {
 
     try {
       const data = await login(emailOrUsername, password);
-      if (data.user?.role === 'ADMIN') {
+      success(`Welcome back, ${data.user?.name || 'Developer'}!`);
+      
+      if (redirectPath) {
+        navigate(redirectPath, { replace: true });
+      } else if (data.user?.role === 'ADMIN') {
         navigate('/admin');
       } else {
         navigate('/dashboard');
       }
     } catch (err) {
-      setError(err.message || 'Login failed. Please check your credentials.');
+      const msg = err.message || 'Login failed. Please check your credentials.';
+      setError(msg);
+      toastError(msg);
     } finally {
       setLoading(false);
     }
@@ -33,16 +44,24 @@ export default function Login() {
   const autofillFaculty = () => {
     setEmailOrUsername('Suneetha Mam');
     setPassword('12345');
+    setError('');
   };
 
-  const autofillStudent = () => {
-    setEmailOrUsername('abhijeet@example.com');
+  const autofillAbhijeet = () => {
+    setEmailOrUsername('tathagattanmayall@gmail.com');
     setPassword('password123');
+    setError('');
+  };
+
+  const autofillHritik = () => {
+    setEmailOrUsername('hroy50750@gmail.com');
+    setPassword('password123');
+    setError('');
   };
 
   return (
     <div style={{ padding: '3.5rem 1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - var(--header-height))' }}>
-      <div className="card" style={{ width: '100%', maxWidth: 440, padding: '2.25rem' }}>
+      <div className="card" style={{ width: '100%', maxWidth: 460, padding: '2.25rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
           <div
             style={{
@@ -59,9 +78,9 @@ export default function Login() {
           >
             <Sparkles size={22} />
           </div>
-          <h2 style={{ fontSize: '1.6rem', fontWeight: 800, letterSpacing: '-0.02em' }}>Welcome back</h2>
+          <h2 style={{ fontSize: '1.6rem', fontWeight: 800, letterSpacing: '-0.02em' }}>Welcome Back</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.3rem' }}>
-            Sign in to manage and customize your portfolio
+            Sign in to manage, customize, and publish your web portfolio
           </p>
         </div>
 
@@ -71,33 +90,41 @@ export default function Login() {
             background: 'var(--primary-subtle)',
             border: '1px solid var(--primary-border)',
             borderRadius: 'var(--radius-md)',
-            padding: '0.9rem',
+            padding: '1rem',
             marginBottom: '1.5rem',
             fontSize: '0.85rem'
           }}
         >
           <div style={{ fontWeight: 600, color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.4rem' }}>
-            <ShieldCheck size={16} /> Quick Evaluator Credentials
+            <ShieldCheck size={16} /> Quick Evaluator &amp; Student Credentials
           </div>
-          <div style={{ color: 'var(--text-secondary)', marginBottom: '0.6rem' }}>
-            Faculty Admin: <strong>Suneetha Mam</strong> &bull; Password: <strong>12345</strong>
+          <div style={{ color: 'var(--text-secondary)', marginBottom: '0.6rem', fontSize: '0.82rem' }}>
+            Click any button below to autofill verified project accounts:
           </div>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             <button
               type="button"
               onClick={autofillFaculty}
               className="btn btn-primary btn-sm"
-              style={{ fontSize: '0.75rem', padding: '3px 8px' }}
+              style={{ fontSize: '0.75rem', padding: '4px 9px' }}
             >
-              Autofill Faculty Admin
+              🎓 Faculty Admin (Suneetha)
             </button>
             <button
               type="button"
-              onClick={autofillStudent}
+              onClick={autofillAbhijeet}
               className="btn btn-secondary btn-sm"
-              style={{ fontSize: '0.75rem', padding: '3px 8px' }}
+              style={{ fontSize: '0.75rem', padding: '4px 9px' }}
             >
-              Autofill Student (Abhijeet)
+              👨‍💻 Student (Abhijeet)
+            </button>
+            <button
+              type="button"
+              onClick={autofillHritik}
+              className="btn btn-secondary btn-sm"
+              style={{ fontSize: '0.75rem', padding: '4px 9px' }}
+            >
+              👨‍💻 Student (Hritik)
             </button>
           </div>
         </div>
@@ -128,7 +155,7 @@ export default function Login() {
               type="text"
               className="form-input"
               required
-              placeholder="e.g. Suneetha Mam or abhijeet@example.com"
+              placeholder="e.g. Abhijeet Arjeet or tathagattanmayall@gmail.com"
               value={emailOrUsername}
               onChange={(e) => setEmailOrUsername(e.target.value)}
             />
@@ -140,7 +167,7 @@ export default function Login() {
               type="password"
               className="form-input"
               required
-              placeholder="Enter password"
+              placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -159,7 +186,7 @@ export default function Login() {
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
           Don&apos;t have an account yet?{' '}
           <Link to="/register" style={{ fontWeight: 600, color: 'var(--primary)' }}>
-            Create one now
+            Create one now &rarr;
           </Link>
         </div>
       </div>

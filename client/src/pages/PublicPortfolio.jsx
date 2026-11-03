@@ -1,17 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { portfolioService } from '../services/portfolio.service';
+import { useToast } from '../context/ToastContext';
 import TemplateMinimal from '../components/portfolio/TemplateMinimal';
 import TemplateDeveloper from '../components/portfolio/TemplateDeveloper';
 import TemplateCreative from '../components/portfolio/TemplateCreative';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-import { Sparkles, Flag, ArrowLeft, AlertCircle, X, Check } from 'lucide-react';
+import {
+  Sparkles,
+  Flag,
+  ArrowLeft,
+  AlertCircle,
+  X,
+  Check,
+  Share2,
+  Copy,
+  ExternalLink
+} from 'lucide-react';
 
 export default function PublicPortfolio() {
   const { slug } = useParams();
   const [portfolio, setPortfolio] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { success, error: toastError } = useToast();
 
   // Abuse report modal
   const [showReportModal, setShowReportModal] = useState(false);
@@ -19,6 +31,9 @@ export default function PublicPortfolio() {
   const [reportReason, setReportReason] = useState('');
   const [reportSent, setReportSent] = useState(false);
   const [reportSubmitting, setReportSubmitting] = useState(false);
+
+  // Share link state
+  const [copiedShare, setCopiedShare] = useState(false);
 
   useEffect(() => {
     async function loadPortfolio() {
@@ -28,7 +43,7 @@ export default function PublicPortfolio() {
         const data = await portfolioService.getPublicPortfolio(slug);
         setPortfolio(data.portfolio);
 
-        // Update document title for SEO
+        // Update document title and dynamic meta tags for SEO
         if (data.portfolio?.title) {
           document.title = `${data.portfolio.title} | PortfolioForge`;
         }
@@ -44,6 +59,14 @@ export default function PublicPortfolio() {
     }
   }, [slug]);
 
+  const handleCopyShareLink = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+    setCopiedShare(true);
+    success('Portfolio link copied to clipboard!');
+    setTimeout(() => setCopiedShare(false), 2500);
+  };
+
   const handleSendReport = async (e) => {
     e.preventDefault();
     if (!reportEmail || !reportReason) return;
@@ -54,8 +77,9 @@ export default function PublicPortfolio() {
         reason: reportReason
       });
       setReportSent(true);
+      success('Report submitted to moderation team.');
     } catch (err) {
-      alert(err.message || 'Failed to submit report');
+      toastError(err.message || 'Failed to submit report. Please try again.');
     } finally {
       setReportSubmitting(false);
     }
@@ -79,7 +103,7 @@ export default function PublicPortfolio() {
         <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.6, marginBottom: '2rem' }}>
           {error || 'This portfolio is either private or does not exist.'}
         </p>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
           <Link to="/" className="btn btn-primary">
             <ArrowLeft size={16} /> Back to Homepage
           </Link>
@@ -115,7 +139,7 @@ export default function PublicPortfolio() {
       {/* Render Selected Portfolio Template */}
       <main>{renderTemplate()}</main>
 
-      {/* Floating Bottom Bar: Built with PortfolioForge */}
+      {/* Floating Bottom Bar: Built with PortfolioForge + Share + Report */}
       <div
         style={{
           position: 'fixed',
@@ -124,7 +148,7 @@ export default function PublicPortfolio() {
           zIndex: 100,
           display: 'flex',
           alignItems: 'center',
-          gap: '0.5rem',
+          gap: '0.65rem',
           background: 'var(--bg-card)',
           border: '1px solid var(--border-color)',
           padding: '6px 14px',
@@ -136,6 +160,16 @@ export default function PublicPortfolio() {
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'var(--text-primary)', fontWeight: 600 }}>
           <Sparkles size={14} color="var(--primary)" /> PortfolioForge
         </Link>
+        <span style={{ color: 'var(--border-color)' }}>|</span>
+        <button
+          type="button"
+          onClick={handleCopyShareLink}
+          style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', fontWeight: 600 }}
+          title="Share portfolio link"
+        >
+          {copiedShare ? <Check size={13} color="var(--success)" /> : <Share2 size={13} />}
+          {copiedShare ? 'Copied!' : 'Share'}
+        </button>
         <span style={{ color: 'var(--border-color)' }}>|</span>
         <button
           type="button"
@@ -196,7 +230,7 @@ export default function PublicPortfolio() {
                     className="form-input"
                     value={reportEmail}
                     onChange={(e) => setReportEmail(e.target.value)}
-                    placeholder="email@example.com"
+                    placeholder="your.email@gmail.com"
                   />
                 </div>
 

@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding initial platform data...');
+  console.log('Seeding initial platform data with verified team profiles...');
 
   // Clean existing data for clean seed
   await prisma.portfolioReport.deleteMany({});
@@ -22,7 +22,9 @@ async function main() {
   const adminPasswordHash = await bcrypt.hash('12345', 10);
   const userPasswordHash = await bcrypt.hash('password123', 10);
 
-  // 1. Create Faculty Evaluator / Admin (Suneetha Mam)
+  // =========================================================================
+  // 1. Faculty Evaluator / Admin (Suneetha Mam)
+  // =========================================================================
   const admin = await prisma.user.create({
     data: {
       name: 'Suneetha Mam',
@@ -34,14 +36,15 @@ async function main() {
       githubUsername: 'suneetha-prof'
     }
   });
-
   console.log(`Created Admin: ${admin.name} (${admin.email})`);
 
-  // 2. Create Abhijeet Arjeet (Student / Creator)
+  // =========================================================================
+  // 2. Primary Creator / Student: Abhijeet Arjeet
+  // =========================================================================
   const abhijeet = await prisma.user.create({
     data: {
       name: 'Abhijeet Arjeet',
-      email: 'abhijeet@example.com',
+      email: 'tathagattanmayall@gmail.com',
       passwordHash: userPasswordHash,
       role: 'USER',
       status: 'ACTIVE',
@@ -49,10 +52,9 @@ async function main() {
       githubUsername: 'AbhijeetArjeet'
     }
   });
-
   console.log(`Created User: ${abhijeet.name} (${abhijeet.email})`);
 
-  // Create Abhijeet's published Portfolio
+  // Create Abhijeet's published Portfolio (Modern Developer Template)
   const abhijeetPortfolio = await prisma.portfolio.create({
     data: {
       userId: abhijeet.id,
@@ -61,7 +63,7 @@ async function main() {
       headline: 'Software & Systems Developer • Open Source Creator',
       bio: 'I am Abhijeet Arjeet, a developer passionate about building tools that bridge hardware, software, and the web. From building low-latency USB display systems (OpenDisplay-USB) to AI-powered transcription suites (AniScribe) and modern web portals (vayu-cpi), I love solving practical engineering problems.',
       location: 'India',
-      contactEmail: 'abhijeet.dev@example.com',
+      contactEmail: 'tathagattanmayall@gmail.com',
       avatarUrl: '/uploads/profile.jpg',
       githubUrl: 'https://github.com/AbhijeetArjeet',
       linkedinUrl: 'https://www.linkedin.com/in/abhijeet-arjeet-1aa62b3a7/',
@@ -77,7 +79,7 @@ async function main() {
       }),
       isPublished: true,
       publishedAt: new Date(),
-      views: 142
+      views: 184
     }
   });
 
@@ -119,8 +121,8 @@ async function main() {
       },
       {
         portfolioId: abhijeetPortfolio.id,
-        title: 'Portfolio Platform with Keep-Alive Monitoring',
-        description: 'SaaS multi-user portfolio builder with automated Render keep-alive health monitoring, template engine, and role-based privilege isolation.',
+        title: 'PortfolioForge Platform',
+        description: 'Production multi-user portfolio builder with automated Render keep-alive health monitoring, template engine, and role-based privilege isolation.',
         technologies: 'React, Vite, Node.js, Express, Prisma, Render',
         repositoryUrl: 'https://github.com/AbhijeetArjeet',
         demoUrl: 'https://portfolio-api-sample.onrender.com',
@@ -174,7 +176,7 @@ async function main() {
   await prisma.education.create({
     data: {
       portfolioId: abhijeetPortfolio.id,
-      institution: 'University Engineering College',
+      institution: 'KL University (KLU)',
       degree: 'Bachelor of Technology (B.Tech)',
       field: 'Computer Science & Engineering',
       startDate: '2022',
@@ -183,7 +185,7 @@ async function main() {
     }
   });
 
-  // Social Links
+  // Social Links for Abhijeet
   await prisma.socialLink.createMany({
     data: [
       { portfolioId: abhijeetPortfolio.id, platform: 'github', url: 'https://github.com/AbhijeetArjeet' },
@@ -191,28 +193,36 @@ async function main() {
     ]
   });
 
-  // 3. Create Sample User (Alex Morgan)
-  const alex = await prisma.user.create({
+  // =========================================================================
+  // 3. Contributor & Student: Hritik Kumar
+  // =========================================================================
+  const hritik = await prisma.user.create({
     data: {
-      name: 'Alex Morgan',
-      email: 'alex@example.com',
+      name: 'Hritik Kumar',
+      email: 'hroy50750@gmail.com',
       passwordHash: userPasswordHash,
       role: 'USER',
       status: 'ACTIVE',
-      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
-      githubUsername: 'alexmorgan-dev'
+      avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&auto=format&fit=crop&q=80',
+      githubUsername: 'hritikkumar-2543'
     }
   });
+  console.log(`Created User: ${hritik.name} (${hritik.email})`);
 
-  const alexPortfolio = await prisma.portfolio.create({
+  // Create Hritik's published Portfolio (Minimal Professional Template)
+  const hritikPortfolio = await prisma.portfolio.create({
     data: {
-      userId: alex.id,
-      slug: 'alex-morgan',
-      title: 'Alex Morgan | Product Designer & Frontend Engineer',
-      headline: 'Crafting thoughtful digital interfaces and design systems',
-      bio: 'Product designer and creative developer building intuitive web experiences. Specializing in UI/UX systems and micro-interactions.',
-      location: 'San Francisco, CA',
-      contactEmail: 'alex@example.com',
+      userId: hritik.id,
+      slug: 'hritik-kumar',
+      title: 'Hritik Kumar | Full-Stack & Cloud Developer',
+      headline: 'Full-Stack Developer • Cloud Architecture Enthusiast',
+      bio: 'Computer Science engineer focused on creating fast, accessible web applications and reliable cloud services. Passionate about clean frontend architecture, responsive CSS layout systems, and modern API design.',
+      location: 'India',
+      contactEmail: 'hroy50750@gmail.com',
+      avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&auto=format&fit=crop&q=80',
+      githubUrl: 'https://github.com/hritikkumar-2543',
+      linkedinUrl: 'https://linkedin.com',
+      websiteUrl: 'https://hritikkumar-2543.github.io/Student-personal-portfolio/',
       templateId: 'minimal',
       layoutType: 'grid',
       themeConfig: JSON.stringify({
@@ -223,47 +233,181 @@ async function main() {
       }),
       isPublished: true,
       publishedAt: new Date(),
-      views: 58
+      views: 126
     }
   });
 
   await prisma.project.createMany({
     data: [
       {
-        portfolioId: alexPortfolio.id,
-        title: 'Open-source Design System',
-        description: 'Accessible, tokens-based design system with 40+ components built for React and Figma.',
-        technologies: 'Figma, React, Tailwind, Storybook',
-        repositoryUrl: 'https://github.com',
-        demoUrl: 'https://github.com',
+        portfolioId: hritikPortfolio.id,
+        title: 'Student Personal Portfolio',
+        description: 'Interactive web portfolio built with semantic HTML5, custom responsive CSS Flexbox, and JavaScript micro-interactions.',
+        technologies: 'HTML5, CSS3, JavaScript, GitHub Pages',
+        repositoryUrl: 'https://github.com/hritikkumar-2543/Student-personal-portfolio',
+        demoUrl: 'https://hritikkumar-2543.github.io/Student-personal-portfolio/',
+        imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80',
         featured: true,
         displayOrder: 1
       },
       {
-        portfolioId: alexPortfolio.id,
-        title: 'Fintech Dashboard UX',
-        description: 'Redesign of high-frequency cryptocurrency and stock analytics terminal.',
-        technologies: 'TypeScript, Next.js, D3.js',
-        repositoryUrl: 'https://github.com',
+        portfolioId: hritikPortfolio.id,
+        title: 'Cloud Microservices & API Gateway',
+        description: 'Resilient API gateway with token-based rate limiting, circuit breaker patterns, and automated telemetry.',
+        technologies: 'Node.js, Express, Redis, Docker',
+        repositoryUrl: 'https://github.com/hritikkumar-2543',
+        demoUrl: 'https://github.com/hritikkumar-2543',
+        imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&auto=format&fit=crop&q=80',
         featured: true,
         displayOrder: 2
       }
     ]
   });
 
+  await prisma.skill.createMany({
+    data: [
+      { portfolioId: hritikPortfolio.id, name: 'JavaScript (ES6+)', category: 'Languages', proficiency: 90, displayOrder: 1 },
+      { portfolioId: hritikPortfolio.id, name: 'React & Vite', category: 'Frontend', proficiency: 88, displayOrder: 2 },
+      { portfolioId: hritikPortfolio.id, name: 'CSS Grid & Flexbox', category: 'Frontend', proficiency: 92, displayOrder: 3 },
+      { portfolioId: hritikPortfolio.id, name: 'Node.js & Express', category: 'Backend', proficiency: 86, displayOrder: 4 },
+      { portfolioId: hritikPortfolio.id, name: 'PostgreSQL / SQL', category: 'Database', proficiency: 82, displayOrder: 5 }
+    ]
+  });
+
+  await prisma.education.create({
+    data: {
+      portfolioId: hritikPortfolio.id,
+      institution: 'KL University (KLU)',
+      degree: 'Bachelor of Technology (B.Tech)',
+      field: 'Computer Science & Engineering',
+      startDate: '2022',
+      endDate: '2026',
+      description: 'Coursework: Web Technologies, Data Structures & Algorithms, Computer Networks, Operating Systems.'
+    }
+  });
+
+  await prisma.socialLink.createMany({
+    data: [
+      { portfolioId: hritikPortfolio.id, platform: 'github', url: 'https://github.com/hritikkumar-2543' },
+      { portfolioId: hritikPortfolio.id, platform: 'website', url: 'https://hritikkumar-2543.github.io/Student-personal-portfolio/' }
+    ]
+  });
+
+  // =========================================================================
+  // 4. Contributor & Student: D. Sri Sarvagna
+  // =========================================================================
+  const sarvagna = await prisma.user.create({
+    data: {
+      name: 'D. Sri Sarvagna',
+      email: 'dsrisarvagna@gmail.com',
+      passwordHash: userPasswordHash,
+      role: 'USER',
+      status: 'ACTIVE',
+      avatarUrl: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=300&auto=format&fit=crop&q=80',
+      githubUsername: 'dsrisarvagna-sudo'
+    }
+  });
+  console.log(`Created User: ${sarvagna.name} (${sarvagna.email})`);
+
+  // Create Sarvagna's published Portfolio (Creative Bento Showcase Template)
+  const sarvagnaPortfolio = await prisma.portfolio.create({
+    data: {
+      userId: sarvagna.id,
+      slug: 'dsri-sarvagna',
+      title: 'D. Sri Sarvagna | Systems & Creative Web Developer',
+      headline: 'Systems Architect • Creative Interfaces & Performance Computing',
+      bio: 'Computer Science student with an interest in low-level systems programming, high-efficiency data structures, and interactive bento-style user experiences. Focused on practical applications and algorithmic problem solving.',
+      location: 'India',
+      contactEmail: 'dsrisarvagna@gmail.com',
+      avatarUrl: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=300&auto=format&fit=crop&q=80',
+      githubUrl: 'https://github.com/dsrisarvagna-sudo',
+      linkedinUrl: 'https://linkedin.com',
+      websiteUrl: 'https://dsrisarvagna-sudo.github.io/Student-Personal-Portfolio/',
+      templateId: 'creative',
+      layoutType: 'grid',
+      themeConfig: JSON.stringify({
+        primaryColor: '#8b5cf6',
+        darkTheme: false,
+        fontFamily: 'inter',
+        projectLayout: 'grid'
+      }),
+      isPublished: true,
+      publishedAt: new Date(),
+      views: 110
+    }
+  });
+
+  await prisma.project.createMany({
+    data: [
+      {
+        portfolioId: sarvagnaPortfolio.id,
+        title: 'Student Personal Portfolio',
+        description: 'Personal developer portfolio featuring responsive card grids, clean CSS animations, and GitHub portfolio integration.',
+        technologies: 'HTML5, CSS3, JavaScript, GitHub Pages',
+        repositoryUrl: 'https://github.com/dsrisarvagna-sudo/Student-Personal-Portfolio',
+        demoUrl: 'https://dsrisarvagna-sudo.github.io/Student-Personal-Portfolio/',
+        imageUrl: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=600&auto=format&fit=crop&q=80',
+        featured: true,
+        displayOrder: 1
+      },
+      {
+        portfolioId: sarvagnaPortfolio.id,
+        title: 'High-Performance Algorithmic Suite',
+        description: 'Optimized graph search, tree traversal, and algorithmic simulation tools built with modern C++ and WebAssembly bindings.',
+        technologies: 'C++, WebAssembly, Python, Algorithms',
+        repositoryUrl: 'https://github.com/dsrisarvagna-sudo',
+        demoUrl: 'https://github.com/dsrisarvagna-sudo',
+        imageUrl: 'https://images.unsplash.com/photo-1516116211227-bbc045b85e05?w=600&auto=format&fit=crop&q=80',
+        featured: true,
+        displayOrder: 2
+      }
+    ]
+  });
+
+  await prisma.skill.createMany({
+    data: [
+      { portfolioId: sarvagnaPortfolio.id, name: 'C / C++', category: 'Languages', proficiency: 90, displayOrder: 1 },
+      { portfolioId: sarvagnaPortfolio.id, name: 'Python', category: 'Languages', proficiency: 86, displayOrder: 2 },
+      { portfolioId: sarvagnaPortfolio.id, name: 'JavaScript / DOM', category: 'Languages', proficiency: 88, displayOrder: 3 },
+      { portfolioId: sarvagnaPortfolio.id, name: 'HTML5 & CSS Grid', category: 'Frontend', proficiency: 92, displayOrder: 4 },
+      { portfolioId: sarvagnaPortfolio.id, name: 'Data Structures & Algorithms', category: 'Systems', proficiency: 92, displayOrder: 5 }
+    ]
+  });
+
+  await prisma.education.create({
+    data: {
+      portfolioId: sarvagnaPortfolio.id,
+      institution: 'KL University (KLU)',
+      degree: 'Bachelor of Technology (B.Tech)',
+      field: 'Computer Science & Engineering',
+      startDate: '2022',
+      endDate: '2026',
+      description: 'Coursework: Advanced Data Structures, Operating Systems, Web Technologies, Database Systems.'
+    }
+  });
+
+  await prisma.socialLink.createMany({
+    data: [
+      { portfolioId: sarvagnaPortfolio.id, platform: 'github', url: 'https://github.com/dsrisarvagna-sudo' },
+      { portfolioId: sarvagnaPortfolio.id, platform: 'website', url: 'https://dsrisarvagna-sudo.github.io/Student-Personal-Portfolio/' }
+    ]
+  });
+
+  // =========================================================================
   // Initial Audit Log
+  // =========================================================================
   await prisma.auditLog.create({
     data: {
       userId: admin.id,
       action: 'SYSTEM_INITIALIZED',
       targetType: 'PLATFORM',
       targetId: 'root',
-      details: 'Initial system seed completed with faculty evaluator and student creator portfolios.',
+      details: 'Initial system seed completed with faculty evaluator and verified student creators (Abhijeet, Hritik, Sarvagna).',
       ipAddress: '127.0.0.1'
     }
   });
 
-  console.log('Database seeded successfully!');
+  console.log('✅ Database seeded successfully with real team profiles and no placeholder emails!');
 }
 
 main()

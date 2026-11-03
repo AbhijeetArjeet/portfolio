@@ -122,9 +122,9 @@ export default function Home() {
               </div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.4rem' }}>Minimal Professional</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.25rem', flex: 1 }}>
-                Clean, spacious typography-led layout tailored for software architects, managers, and consultants.
+                Clean, spacious typography-led layout tailored for software architects, managers, and consultants. As seen on Hritik Kumar's portfolio.
               </p>
-              <Link to="/u/alex-morgan" className="btn btn-outline btn-sm">
+              <Link to="/u/hritik-kumar" className="btn btn-outline btn-sm">
                 Preview Minimal Template &rarr;
               </Link>
             </div>
@@ -145,7 +145,7 @@ export default function Home() {
                 <span className="badge badge-primary" style={{ fontSize: '0.7rem' }}>Popular</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.25rem', flex: 1 }}>
-                Developer terminal window, live status pulses, repository badges, and technical skill matrices.
+                Developer terminal window, live status pulses, repository badges, and technical skill matrices. As seen on Abhijeet Arjeet's portfolio.
               </p>
               <Link to="/u/abhijeet-arjeet" className="btn btn-primary btn-sm">
                 Preview Developer Template &rarr;
@@ -159,9 +159,9 @@ export default function Home() {
               </div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.4rem' }}>Creative Bento</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.25rem', flex: 1 }}>
-                Bento-grid showcase with dynamic card spans, media previews, and eye-catching portfolio visuals.
+                Bento-grid showcase with dynamic card spans, media previews, and eye-catching portfolio visuals. As seen on D. Sri Sarvagna's portfolio.
               </p>
-              <Link to="/u/abhijeet-arjeet" className="btn btn-outline btn-sm">
+              <Link to="/u/dsri-sarvagna" className="btn btn-outline btn-sm">
                 Preview Bento Template &rarr;
               </Link>
             </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { adminService, healthService } from '../services/admin.service';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import {
@@ -19,6 +20,7 @@ import {
 
 export default function AdminDashboard() {
   const { user, isAdmin } = useAuth();
+  const { success, error: toastError } = useToast();
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [portfolios, setPortfolios] = useState([]);
@@ -83,18 +85,20 @@ export default function AdminDashboard() {
     const nextStatus = currentStatus === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE';
     try {
       await adminService.updateUserStatus(userId, nextStatus);
+      success(`User account status updated to ${nextStatus}.`);
       fetchAllData();
     } catch (err) {
-      alert(err.message || 'Failed to update user status');
+      toastError(err.message || 'Failed to update user status');
     }
   };
 
   const handleTogglePortfolioPublish = async (portfolioId, currentPublished) => {
     try {
       await adminService.togglePublish(portfolioId, !currentPublished);
+      success(`Portfolio publication status changed to ${!currentPublished ? 'Published' : 'Draft'}.`);
       fetchAllData();
     } catch (err) {
-      alert(err.message || 'Failed to update portfolio');
+      toastError(err.message || 'Failed to update portfolio');
     }
   };
 

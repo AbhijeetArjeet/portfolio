@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { portfolioService } from '../../services/portfolio.service';
+import { useToast } from '../../context/ToastContext';
 import { Plus, Trash2 } from 'lucide-react';
 
 export default function SkillsManager({ portfolio, onReload }) {
+  const { success, error: toastError } = useToast();
   const [skillName, setSkillName] = useState('');
   const [category, setCategory] = useState('Technical');
   const [proficiency, setProficiency] = useState(85);
@@ -18,18 +20,20 @@ export default function SkillsManager({ portfolio, onReload }) {
         proficiency: Number(proficiency)
       });
       setSkillName('');
+      success(`Added skill "${skillName.trim()}".`);
       onReload();
     } catch (err) {
-      alert(err.message || 'Failed to add skill.');
+      toastError(err.message || 'Failed to add skill.');
     }
   };
 
   const handleDeleteSkill = async (skillId) => {
     try {
       await portfolioService.deleteSkill(portfolio.id, skillId);
+      success('Skill removed.');
       onReload();
     } catch (err) {
-      alert(err.message || 'Failed to delete skill.');
+      toastError(err.message || 'Failed to delete skill.');
     }
   };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { portfolioService } from '../services/portfolio.service';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import {
@@ -20,6 +21,7 @@ import {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { success, error: toastError } = useToast();
   const [portfolio, setPortfolio] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -45,6 +47,7 @@ export default function Dashboard() {
     const url = `${window.location.origin}/u/${portfolio.slug}`;
     navigator.clipboard.writeText(url);
     setCopied(true);
+    success('Portfolio URL copied to clipboard!');
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -54,12 +57,14 @@ export default function Dashboard() {
     try {
       if (portfolio.isPublished) {
         await portfolioService.unpublish(portfolio.id);
+        success('Portfolio unpublished. It is now a private draft.');
       } else {
         await portfolioService.publish(portfolio.id);
+        success('Congratulations! Your portfolio is now published live to the web.');
       }
       await fetchPortfolio();
     } catch (err) {
-      alert(err.message || 'Operation failed');
+      toastError(err.message || 'Operation failed');
     } finally {
       setActionLoading(false);
     }

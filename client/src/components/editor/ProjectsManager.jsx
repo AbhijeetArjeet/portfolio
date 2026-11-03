@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { portfolioService } from '../../services/portfolio.service';
 import { githubService } from '../../services/github.service';
 import { uploadService } from '../../services/upload.service';
+import { useToast } from '../../context/ToastContext';
 import {
   Plus,
   Trash2,
@@ -14,6 +15,7 @@ import {
 } from 'lucide-react';
 
 export default function ProjectsManager({ portfolio, onReload }) {
+  const { success, error: toastError, warning } = useToast();
   const [showAddForm, setShowAddForm] = useState(false);
   const [ghUsername, setGhUsername] = useState(portfolio.user?.githubUsername || '');
   const [ghRepos, setGhRepos] = useState([]);
@@ -37,8 +39,10 @@ export default function ProjectsManager({ portfolio, onReload }) {
     try {
       const data = await githubService.getUserRepos(ghUsername.trim());
       setGhRepos(data.repositories || []);
+      success(`Found ${data.repositories?.length || 0} repositories from GitHub.`);
     } catch (err) {
       setGhError(err.message || 'Could not fetch repositories for this username.');
+      toastError(err.message || 'Could not fetch repositories.');
     } finally {
       setGhLoading(false);
     }
@@ -54,16 +58,17 @@ export default function ProjectsManager({ portfolio, onReload }) {
         demoUrl: repo.demoUrl !== repo.repositoryUrl ? repo.demoUrl : '',
         featured: repo.stars > 0
       });
+      success(`Imported "${repo.title}" from GitHub.`);
       onReload();
     } catch (err) {
-      alert(err.message || 'Failed to import repository.');
+      toastError(err.message || 'Failed to import repository.');
     }
   };
 
   const handleCreateProject = async (e) => {
     e.preventDefault();
     if (!form.title || !form.description) {
-      alert('Title and description are required.');
+      warning('Title and description are required.');
       return;
     }
     try {
@@ -78,9 +83,10 @@ export default function ProjectsManager({ portfolio, onReload }) {
         featured: false
       });
       setShowAddForm(false);
+      success('Project added successfully.');
       onReload();
     } catch (err) {
-      alert(err.message || 'Failed to add project.');
+      toastError(err.message || 'Failed to add project.');
     }
   };
 
@@ -88,9 +94,10 @@ export default function ProjectsManager({ portfolio, onReload }) {
     if (!confirm('Are you sure you want to delete this project?')) return;
     try {
       await portfolioService.deleteProject(portfolio.id, id);
+      success('Project deleted.');
       onReload();
     } catch (err) {
-      alert(err.message || 'Failed to delete project.');
+      toastError(err.message || 'Failed to delete project.');
     }
   };
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { portfolioService } from '../services/portfolio.service';
+import { useToast } from '../context/ToastContext';
 import PersonalInfoSection from '../components/editor/PersonalInfoSection';
 import ProjectsManager from '../components/editor/ProjectsManager';
 import SkillsManager from '../components/editor/SkillsManager';
@@ -32,6 +33,7 @@ export default function PortfolioEditor() {
   const [saveStatus, setSaveStatus] = useState('saved'); // 'saved', 'saving', 'error'
   const [previewDevice, setPreviewDevice] = useState('desktop'); // 'desktop', 'tablet', 'mobile'
   const [showPreviewMobile, setShowPreviewMobile] = useState(false);
+  const { success, error: toastError } = useToast();
 
   const saveTimeoutRef = useRef(null);
 
@@ -50,6 +52,28 @@ export default function PortfolioEditor() {
     fetchPortfolio();
   }, []);
 
+  // Keyboard shortcut Ctrl+S / Cmd+S for explicit save feedback
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        if (portfolio) {
+          portfolioService.updatePortfolio(portfolio.id, portfolio)
+            .then(() => {
+              setSaveStatus('saved');
+              success('Changes saved (Ctrl+S)!');
+            })
+            .catch((err) => {
+              setSaveStatus('error');
+              toastError(err.message || 'Save failed');
+            });
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [portfolio, success, toastError]);
+
   // Debounced auto-save for field updates
   const handlePortfolioUpdate = (patch) => {
     setPortfolio((prev) => {
@@ -67,6 +91,7 @@ export default function PortfolioEditor() {
         } catch (err) {
           console.error('Autosave error:', err);
           setSaveStatus('error');
+          toastError('Autosave failed: ' + (err.message || 'Network error'));
         }
       }, 700);
 
@@ -79,12 +104,14 @@ export default function PortfolioEditor() {
     try {
       if (portfolio.isPublished) {
         await portfolioService.unpublish(portfolio.id);
+        success('Portfolio unpublished and reverted to private draft.');
       } else {
         await portfolioService.publish(portfolio.id);
+        success('Portfolio is now live and published to the web!');
       }
       fetchPortfolio();
     } catch (err) {
-      alert(err.message || 'Operation failed');
+      toastError(err.message || 'Operation failed');
     }
   };
 
