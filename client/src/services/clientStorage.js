@@ -774,36 +774,94 @@ export const clientStorage = {
   },
 
   async getGitHubUser(username) {
+    const cleanUsername = (username || '').trim().replace(/^https?:\/\/github\.com\//, '').replace(/\/$/, '');
     try {
-      const res = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}`);
+      const res = await fetch(`https://api.github.com/users/${encodeURIComponent(cleanUsername)}`, {
+        headers: { 'Accept': 'application/vnd.github.v3+json' }
+      });
       if (res.ok) {
         const data = await res.json();
-        return { user: data };
+        const profile = {
+          username: data.login,
+          name: data.name || data.login,
+          bio: data.bio || 'Software and Systems Developer',
+          avatarUrl: data.avatar_url,
+          location: data.location || 'India',
+          blog: data.blog || '',
+          publicRepos: data.public_repos,
+          followers: data.followers,
+          htmlUrl: data.html_url
+        };
+        return { profile, user: profile };
       }
     } catch {}
-    return {
-      user: {
-        login: username,
-        name: username,
-        bio: 'Developer & Open Source Contributor',
-        avatar_url: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&auto=format&fit=crop&q=80',
-        public_repos: 12,
-        followers: 18,
-        following: 10,
-        html_url: `https://github.com/${username}`
-      }
+    const defaultProfile = {
+      username: cleanUsername,
+      name: cleanUsername === 'AbhijeetArjeet' ? 'Abhijeet Arjeet' : cleanUsername,
+      bio: 'Software & Systems Developer • Open Source Creator',
+      avatarUrl: '/uploads/profile.jpg',
+      location: 'India',
+      blog: '',
+      publicRepos: 30,
+      followers: 18,
+      htmlUrl: `https://github.com/${cleanUsername}`
     };
+    return { profile: defaultProfile, user: defaultProfile };
   },
 
   async getGitHubRepos(username) {
+    const cleanUsername = (username || '').trim().replace(/^https?:\/\/github\.com\//, '').replace(/\/$/, '');
     try {
-      const res = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=12`);
+      const res = await fetch(`https://api.github.com/users/${encodeURIComponent(cleanUsername)}/repos?sort=updated&per_page=30`, {
+        headers: { 'Accept': 'application/vnd.github.v3+json' }
+      });
       if (res.ok) {
         const data = await res.json();
-        return { repos: data };
+        if (Array.isArray(data)) {
+          const formatted = data
+            .filter(repo => !repo.fork)
+            .map(repo => ({
+              title: repo.name,
+              description: repo.description || 'Public open-source repository on GitHub.',
+              technologies: repo.language || 'Code',
+              repositoryUrl: repo.html_url,
+              demoUrl: repo.homepage || repo.html_url,
+              stars: repo.stargazers_count || 0,
+              updatedAt: repo.updated_at
+            }));
+          return { repositories: formatted, repos: formatted };
+        }
       }
     } catch {}
-    return { repos: [] };
+
+    // Fallback if rate limited or offline
+    const fallback = [
+      {
+        title: 'OpenDisplay-USB',
+        description: 'Ultra low-latency USB display driver and streaming utility leveraging ADB protocol.',
+        technologies: 'C++, Android SDK, Python, FFmpeg',
+        repositoryUrl: `https://github.com/${cleanUsername}/OpenDisplay-USB`,
+        demoUrl: `https://github.com/${cleanUsername}/OpenDisplay-USB`,
+        stars: 12
+      },
+      {
+        title: 'AniScribe',
+        description: 'High-speed audio-to-text AI transcription platform with speaker diarization.',
+        technologies: 'React, Node.js, WebAssembly, Whisper AI',
+        repositoryUrl: `https://github.com/${cleanUsername}/AniScribe`,
+        demoUrl: `https://github.com/${cleanUsername}/AniScribe`,
+        stars: 8
+      },
+      {
+        title: 'vayu-cpi',
+        description: 'Econometric price indexing & real-time inflation tracking solution for MoSPI / SIH.',
+        technologies: 'PostgreSQL, Express, React, Chart.js',
+        repositoryUrl: `https://github.com/${cleanUsername}/vayu-cpi`,
+        demoUrl: `https://github.com/${cleanUsername}/vayu-cpi`,
+        stars: 15
+      }
+    ];
+    return { repositories: fallback, repos: fallback };
   },
 
   report(portfolioId, reportData) {

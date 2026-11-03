@@ -38,8 +38,21 @@ export default function ProjectsManager({ portfolio, onReload }) {
     setGhError('');
     try {
       const data = await githubService.getUserRepos(ghUsername.trim());
-      setGhRepos(data.repositories || []);
-      success(`Found ${data.repositories?.length || 0} repositories from GitHub.`);
+      const rawList = data.repositories || data.repos || (Array.isArray(data) ? data : []);
+      const formatted = rawList.map(r => ({
+        title: r.title || r.name,
+        description: r.description || 'Public open-source repository on GitHub.',
+        technologies: r.technologies || r.language || 'Code',
+        repositoryUrl: r.repositoryUrl || r.html_url,
+        demoUrl: r.demoUrl || r.homepage || r.repositoryUrl || r.html_url,
+        stars: r.stars ?? r.stargazers_count ?? 0
+      }));
+      setGhRepos(formatted);
+      if (formatted.length > 0) {
+        success(`Found ${formatted.length} repositories from GitHub.`);
+      } else {
+        warning(`No public repositories found for @${ghUsername.trim()}.`);
+      }
     } catch (err) {
       setGhError(err.message || 'Could not fetch repositories for this username.');
       toastError(err.message || 'Could not fetch repositories.');
