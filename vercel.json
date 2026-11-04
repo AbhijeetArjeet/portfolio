@@ -5,8 +5,12 @@
   "framework": "vite",
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "https://portfolio-paxa.onrender.com/api/$1"
+    },
+    {
       "source": "/uploads/(.*)",
-      "destination": "/uploads/$1"
+      "destination": "https://portfolio-paxa.onrender.com/uploads/$1"
     },
     {
       "source": "/((?!api/|uploads/).*)",

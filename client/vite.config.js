@@ -7,11 +7,11 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: process.env.VITE_API_URL || 'https://portfolio-paxa.onrender.com',
         changeOrigin: true
       },
       '/uploads': {
-        target: 'http://localhost:5000',
+        target: process.env.VITE_API_URL || 'https://portfolio-paxa.onrender.com',
         changeOrigin: true
       }
     }

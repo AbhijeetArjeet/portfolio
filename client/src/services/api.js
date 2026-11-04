@@ -12,7 +12,7 @@
 
 import { clientStorage } from './clientStorage';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://portfolio-paxa.onrender.com' : '');
 
 // Cold start state subscribers
 let coldStartListeners = [];
