@@ -1,4 +1,4 @@
-name: Render Backend Keep-Alive (14-min interval)
+name: Render & Neon Backend Keep-Alive (14-min interval)
 
 on:
   schedule:
@@ -10,19 +10,25 @@ on:
 
 jobs:
   health-check:
-    name: Ping Health Endpoint
+    name: Ping Health and Database Readiness Endpoints
     runs-on: ubuntu-latest
     steps:
-      - name: Send GET Request to /api/health
+      - name: Ping Render and Neon
         env:
           BACKEND_URL: ${{ secrets.RENDER_EXTERNAL_URL || 'https://your-service.onrender.com' }}
         run: |
-          echo "Pinging Render Health Endpoint at: $BACKEND_URL/api/health"
-          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}s\n" "$BACKEND_URL/api/health" || true)
-          echo "$RESPONSE"
+          echo "Pinging Render Liveness Endpoint at: $BACKEND_URL/api/health"
+          LIVENESS=$(curl -s -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}s\n" "$BACKEND_URL/api/health" || true)
+          echo "$LIVENESS"
           
-          if echo "$RESPONSE" | grep -q "HTTP_STATUS:200"; then
-            echo "✅ Render backend is active and healthy!"
+          echo "Pinging Database Readiness Endpoint (keeps Neon PostgreSQL warm) at: $BACKEND_URL/api/health/ready"
+          READINESS=$(curl -s -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}s\n" "$BACKEND_URL/api/health/ready" || true)
+          echo "$READINESS"
+          
+          if echo "$READINESS" | grep -q "HTTP_STATUS:200"; then
+            echo "✅ Render backend and Neon PostgreSQL database are active, warm, and healthy!"
+          elif echo "$LIVENESS" | grep -q "HTTP_STATUS:200"; then
+            echo "⚠️ Render backend is active, but database readiness check returned non-200 (Neon may be waking up)."
           else
             echo "⚠️ Health check returned non-200 or timed out. (Instance may be waking up)"
           fi

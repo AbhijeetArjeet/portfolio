@@ -70,6 +70,19 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Serve static uploaded files
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
+// Root status endpoint for browser checks
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'PortfolioForge API is running successfully on Render',
+    status: 'online',
+    endpoints: {
+      health: '/api/health',
+      ready: '/api/health/ready',
+      api: '/api/v1'
+    }
+  });
+});
+
 // 1. Health Monitoring Endpoints (Liveness & Readiness)
 // Dedicated /api/health and alias /health for maximum Render compatibility
 app.use('/api/health', healthRoutes);
