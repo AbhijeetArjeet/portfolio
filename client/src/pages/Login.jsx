@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { Sparkles, ShieldCheck, ArrowRight, AlertCircle, UserCheck } from 'lucide-react';
+import { Sparkles, ShieldCheck, ArrowRight, AlertCircle } from 'lucide-react';
+
+const loginSchema = z.object({
+  emailOrUsername: z.string().min(2, 'Username or Email is required'),
+  password: z.string().min(1, 'Password is required')
+});
 
 export default function Login() {
-  const [emailOrUsername, setEmailOrUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [serverError, setServerError] = useState('');
   const { login } = useAuth();
   const { success, error: toastError } = useToast();
   const navigate = useNavigate();
@@ -16,25 +22,38 @@ export default function Login() {
 
   const redirectPath = location.state?.from?.pathname;
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors }
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    mode: 'onTouched',
+    defaultValues: {
+      emailOrUsername: '',
+      password: ''
+    }
+  });
+
+  const onSubmit = async (data) => {
+    setServerError('');
     setLoading(true);
 
     try {
-      const data = await login(emailOrUsername, password);
-      success(`Welcome back, ${data.user?.name || 'Developer'}!`);
+      const res = await login(data.emailOrUsername, data.password);
+      success(`Welcome back, ${res.user?.name || 'Developer'}!`);
       
       if (redirectPath) {
         navigate(redirectPath, { replace: true });
-      } else if (data.user?.role === 'ADMIN') {
+      } else if (res.user?.role === 'ADMIN') {
         navigate('/admin');
       } else {
         navigate('/dashboard');
       }
     } catch (err) {
       const msg = err.message || 'Login failed. Please check your credentials.';
-      setError(msg);
+      setServerError(msg);
       toastError(msg);
     } finally {
       setLoading(false);
@@ -42,21 +61,21 @@ export default function Login() {
   };
 
   const autofillFaculty = () => {
-    setEmailOrUsername('Suneetha Mam');
-    setPassword('12345');
-    setError('');
+    setValue('emailOrUsername', 'Suneetha Mam');
+    setValue('password', '12345');
+    setServerError('');
   };
 
   const autofillAbhijeet = () => {
-    setEmailOrUsername('tathagattanmayall@gmail.com');
-    setPassword('password123');
-    setError('');
+    setValue('emailOrUsername', 'tathagattanmayall@gmail.com');
+    setValue('password', 'password123');
+    setServerError('');
   };
 
   const autofillHritik = () => {
-    setEmailOrUsername('hroy50750@gmail.com');
-    setPassword('password123');
-    setError('');
+    setValue('emailOrUsername', 'hroy50750@gmail.com');
+    setValue('password', 'password123');
+    setServerError('');
   };
 
   return (
@@ -96,10 +115,10 @@ export default function Login() {
           }}
         >
           <div style={{ fontWeight: 600, color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.4rem' }}>
-            <ShieldCheck size={16} /> Quick Evaluator &amp; Student Credentials
+            <ShieldCheck size={16} /> Quick Demo Accounts (1-Click Test)
           </div>
           <div style={{ color: 'var(--text-secondary)', marginBottom: '0.6rem', fontSize: '0.82rem' }}>
-            Click any button below to autofill verified project accounts:
+            Click any button below to autofill live accounts:
           </div>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             <button
@@ -108,7 +127,7 @@ export default function Login() {
               className="btn btn-primary btn-sm"
               style={{ fontSize: '0.75rem', padding: '4px 9px' }}
             >
-              🎓 Faculty Admin (Suneetha)
+              🛡️ Admin Demo
             </button>
             <button
               type="button"
@@ -116,7 +135,7 @@ export default function Login() {
               className="btn btn-secondary btn-sm"
               style={{ fontSize: '0.75rem', padding: '4px 9px' }}
             >
-              👨‍💻 Student (Abhijeet)
+              👨‍💻 Full-Stack Dev (Abhijeet)
             </button>
             <button
               type="button"
@@ -124,13 +143,14 @@ export default function Login() {
               className="btn btn-secondary btn-sm"
               style={{ fontSize: '0.75rem', padding: '4px 9px' }}
             >
-              👨‍💻 Student (Hritik)
+              💼 Minimal Pro (Hritik)
             </button>
           </div>
         </div>
 
-        {error && (
+        {serverError && (
           <div
+            role="alert"
             style={{
               background: 'var(--danger-bg)',
               border: '1px solid var(--danger-border)',
@@ -144,33 +164,45 @@ export default function Login() {
               marginBottom: '1.25rem'
             }}
           >
-            <AlertCircle size={16} /> {error}
+            <AlertCircle size={16} /> {serverError}
           </div>
         )}
 
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="form-group">
-            <label className="form-label">Email or Username</label>
+            <label className="form-label" htmlFor="login-username">Email or Username</label>
             <input
+              id="login-username"
               type="text"
               className="form-input"
-              required
               placeholder="e.g. Abhijeet Arjeet or tathagattanmayall@gmail.com"
-              value={emailOrUsername}
-              onChange={(e) => setEmailOrUsername(e.target.value)}
+              aria-invalid={!!errors.emailOrUsername}
+              aria-describedby={errors.emailOrUsername ? 'login-user-error' : undefined}
+              {...register('emailOrUsername')}
             />
+            {errors.emailOrUsername && (
+              <span id="login-user-error" className="form-error-msg" role="alert">
+                <AlertCircle size={13} /> {errors.emailOrUsername.message}
+              </span>
+            )}
           </div>
 
           <div className="form-group">
-            <label className="form-label">Password</label>
+            <label className="form-label" htmlFor="login-password">Password</label>
             <input
+              id="login-password"
               type="password"
               className="form-input"
-              required
               placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              aria-invalid={!!errors.password}
+              aria-describedby={errors.password ? 'login-pwd-error' : undefined}
+              {...register('password')}
             />
+            {errors.password && (
+              <span id="login-pwd-error" className="form-error-msg" role="alert">
+                <AlertCircle size={13} /> {errors.password.message}
+              </span>
+            )}
           </div>
 
           <button

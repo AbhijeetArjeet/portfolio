@@ -222,7 +222,7 @@ export default function Dashboard() {
               3
             </div>
             <div>
-              <strong>Publish &amp; Share:</strong> Provide your unique URL to recruiters, classmates and faculty evaluators.
+              <strong>Publish &amp; Share:</strong> Provide your unique URL to recruiters, clients, and collaborators.
             </div>
           </div>
         </div>

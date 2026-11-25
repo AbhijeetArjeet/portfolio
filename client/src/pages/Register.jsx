@@ -1,37 +1,58 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { Sparkles, ArrowRight, AlertCircle } from 'lucide-react';
+import { Sparkles, ArrowRight, AlertCircle, CheckCircle2 } from 'lucide-react';
+
+// Zod Schema for Registration validation (CO5 compliance)
+const registerSchema = z.object({
+  name: z.string().min(2, 'Full name must be at least 2 characters').max(70, 'Name is too long'),
+  email: z.string().email('Please enter a valid email address'),
+  githubUsername: z.string().optional(),
+  password: z.string().min(6, 'Password must be at least 6 characters')
+});
 
 export default function Register() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [githubUsername, setGithubUsername] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const { register } = useAuth();
+  const [serverError, setServerError] = useState('');
+  const { register: registerAuth } = useAuth();
   const { success, error: toastError } = useToast();
   const navigate = useNavigate();
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setError('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid }
+  } = useForm({
+    resolver: zodResolver(registerSchema),
+    mode: 'onTouched',
+    defaultValues: {
+      name: '',
+      email: '',
+      githubUsername: '',
+      password: ''
+    }
+  });
+
+  const onSubmit = async (data) => {
+    setServerError('');
     setLoading(true);
 
     try {
-      await register({
-        name,
-        email,
-        password,
-        githubUsername: githubUsername ? githubUsername.trim() : undefined
+      await registerAuth({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        githubUsername: data.githubUsername ? data.githubUsername.trim() : undefined
       });
-      success(`Welcome to PortfolioForge, ${name}! Your portfolio space is ready.`);
+      success(`Welcome to PortfolioForge, ${data.name}! Your portfolio space is ready.`);
       navigate('/dashboard');
     } catch (err) {
       const msg = err.message || 'Registration failed. Please check the details entered.';
-      setError(msg);
+      setServerError(msg);
       toastError(msg);
     } finally {
       setLoading(false);
@@ -63,8 +84,9 @@ export default function Register() {
           </p>
         </div>
 
-        {error && (
+        {serverError && (
           <div
+            role="alert"
             style={{
               background: 'var(--danger-bg)',
               border: '1px solid var(--danger-border)',
@@ -78,57 +100,78 @@ export default function Register() {
               marginBottom: '1.25rem'
             }}
           >
-            <AlertCircle size={16} /> {error}
+            <AlertCircle size={16} /> {serverError}
           </div>
         )}
 
-        <form onSubmit={handleRegister}>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          {/* Full Name */}
           <div className="form-group">
-            <label className="form-label">Full Name *</label>
+            <label className="form-label" htmlFor="register-name">Full Name *</label>
             <input
+              id="register-name"
               type="text"
               className="form-input"
-              required
               placeholder="e.g. Abhijeet Arjeet"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              aria-invalid={!!errors.name}
+              aria-describedby={errors.name ? 'name-error' : undefined}
+              {...register('name')}
             />
+            {errors.name && (
+              <span id="name-error" className="form-error-msg" role="alert">
+                <AlertCircle size={13} /> {errors.name.message}
+              </span>
+            )}
           </div>
 
+          {/* Email */}
           <div className="form-group">
-            <label className="form-label">Email Address *</label>
+            <label className="form-label" htmlFor="register-email">Email Address *</label>
             <input
+              id="register-email"
               type="email"
               className="form-input"
-              required
               placeholder="e.g. yourname@gmail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              aria-invalid={!!errors.email}
+              aria-describedby={errors.email ? 'email-error' : undefined}
+              {...register('email')}
             />
+            {errors.email && (
+              <span id="email-error" className="form-error-msg" role="alert">
+                <AlertCircle size={13} /> {errors.email.message}
+              </span>
+            )}
           </div>
 
+          {/* GitHub Username */}
           <div className="form-group">
-            <label className="form-label">GitHub Username (Optional)</label>
+            <label className="form-label" htmlFor="register-github">GitHub Username (Optional)</label>
             <input
+              id="register-github"
               type="text"
               className="form-input"
               placeholder="e.g. your-github-handle (for 1-click repo sync)"
-              value={githubUsername}
-              onChange={(e) => setGithubUsername(e.target.value)}
+              {...register('githubUsername')}
             />
           </div>
 
+          {/* Password */}
           <div className="form-group">
-            <label className="form-label">Password * (Min 6 characters)</label>
+            <label className="form-label" htmlFor="register-password">Password * (Min 6 characters)</label>
             <input
+              id="register-password"
               type="password"
               className="form-input"
-              required
-              minLength={6}
               placeholder="Choose a secure password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              aria-invalid={!!errors.password}
+              aria-describedby={errors.password ? 'password-error' : undefined}
+              {...register('password')}
             />
+            {errors.password && (
+              <span id="password-error" className="form-error-msg" role="alert">
+                <AlertCircle size={13} /> {errors.password.message}
+              </span>
+            )}
           </div>
 
           <button

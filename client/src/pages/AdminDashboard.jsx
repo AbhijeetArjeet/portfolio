@@ -107,14 +107,14 @@ export default function AdminDashboard() {
       <div className="container" style={{ padding: '6rem 1rem', textAlign: 'center' }}>
         <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--danger)' }}>Access Denied</h2>
         <p style={{ marginTop: '0.5rem', color: 'var(--text-muted)' }}>
-          Administrator privileges are required to view the Faculty Evaluation Portal.
+          Administrator privileges are required to view the Platform Administration Portal.
         </p>
       </div>
     );
   }
 
   if (loading) {
-    return <LoadingSpinner text="Loading Faculty Admin Dashboard..." />;
+    return <LoadingSpinner text="Loading Admin Dashboard..." />;
   }
 
   return (
@@ -124,14 +124,14 @@ export default function AdminDashboard() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span className="badge badge-success" style={{ padding: '4px 10px' }}>
-              <ShieldCheck size={14} /> Faculty Evaluation Portal
+              <ShieldCheck size={14} /> Platform Administration Portal
             </span>
           </div>
           <h1 style={{ fontSize: '2rem', fontWeight: 800, marginTop: '0.4rem' }}>
             System &amp; Portfolio Administration
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-            Logged in as <strong>{user.name}</strong> (Evaluator / Admin)
+            Logged in as <strong>{user.name}</strong> (Platform Admin)
           </p>
         </div>
 

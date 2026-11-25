@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Shield, Activity, GraduationCap } from 'lucide-react';
+import { Sparkles, Shield, Activity, Globe } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -63,30 +63,27 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Quick Access */}
+          {/* Platform Access */}
           <div>
             <h4 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-muted)', marginBottom: '1rem', fontWeight: 700 }}>
-              Access &amp; Evaluation
+              Platform Navigation
             </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.88rem' }}>
-              <li><Link to="/login" style={{ color: 'var(--text-secondary)' }}>Evaluator Sign In</Link></li>
-              <li><Link to="/register" style={{ color: 'var(--text-secondary)' }}>Student Registration</Link></li>
-              <li><Link to="/admin" style={{ color: 'var(--text-secondary)' }}>Evaluation Admin Portal</Link></li>
+              <li><Link to="/login" style={{ color: 'var(--text-secondary)' }}>Sign In to Account</Link></li>
+              <li><Link to="/register" style={{ color: 'var(--text-secondary)' }}>Create Your Portfolio</Link></li>
               <li><Link to="/dashboard" style={{ color: 'var(--text-secondary)' }}>Creator Dashboard</Link></li>
+              <li><Link to="/editor" style={{ color: 'var(--text-secondary)' }}>Live Studio Editor</Link></li>
             </ul>
           </div>
 
-          {/* University Project Accreditation */}
+          {/* Platform Mission & SEO Overview */}
           <div>
             <h4 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-muted)', marginBottom: '1rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <GraduationCap size={15} /> Academic Project
+              <Globe size={15} /> Personal Portfolio Platform
             </h4>
-            <p style={{ fontSize: '0.84rem', color: 'var(--text-muted)', lineHeight: 1.5, marginBottom: '0.75rem' }}>
-              KL University (KLU) Engineering Project. Evaluated under Course Outcomes CO-1 (Semantic HTML5, Git) &amp; CO-2 (CSS Grid, Flexbox, Async JavaScript, REST APIs).
+            <p style={{ fontSize: '0.84rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '0.75rem' }}>
+              A personal portfolio website helps individuals showcase their skills, projects, and achievements. The platform includes features like project galleries, blogs, and contact forms. It is optimized for SEO to increase visibility, making it ideal for professionals to present their work to potential employers or clients.
             </p>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-              Faculty Evaluator: <strong>Suneetha Mam</strong>
-            </div>
           </div>
         </div>
 

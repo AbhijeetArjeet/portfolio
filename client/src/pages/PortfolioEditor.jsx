@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { portfolioService } from '../services/portfolio.service';
 import { useToast } from '../context/ToastContext';
 import PersonalInfoSection from '../components/editor/PersonalInfoSection';
@@ -6,20 +6,22 @@ import ProjectsManager from '../components/editor/ProjectsManager';
 import SkillsManager from '../components/editor/SkillsManager';
 import ExperienceManager from '../components/editor/ExperienceManager';
 import ThemeCustomizer from '../components/editor/ThemeCustomizer';
-import TemplateMinimal from '../components/portfolio/TemplateMinimal';
-import TemplateDeveloper from '../components/portfolio/TemplateDeveloper';
-import TemplateCreative from '../components/portfolio/TemplateCreative';
-import TemplateAuraLime from '../components/portfolio/TemplateAuraLime';
-import TemplateVibrantCard from '../components/portfolio/TemplateVibrantCard';
-import TemplateWarmSpotlight from '../components/portfolio/TemplateWarmSpotlight';
-import TemplateCyberNeon from '../components/portfolio/TemplateCyberNeon';
-import TemplateCrimsonBold from '../components/portfolio/TemplateCrimsonBold';
-import TemplateEditorialMono from '../components/portfolio/TemplateEditorialMono';
-import TemplateBrutalistTech from '../components/portfolio/TemplateBrutalistTech';
-import TemplateWarmPlayful from '../components/portfolio/TemplateWarmPlayful';
-import TemplateExecutiveCV from '../components/portfolio/TemplateExecutiveCV';
-import TemplateGlassSlate from '../components/portfolio/TemplateGlassSlate';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+
+// Code Splitting: Lazy-load individual template architectures
+const TemplateMinimal = lazy(() => import('../components/portfolio/TemplateMinimal'));
+const TemplateDeveloper = lazy(() => import('../components/portfolio/TemplateDeveloper'));
+const TemplateCreative = lazy(() => import('../components/portfolio/TemplateCreative'));
+const TemplateAuraLime = lazy(() => import('../components/portfolio/TemplateAuraLime'));
+const TemplateVibrantCard = lazy(() => import('../components/portfolio/TemplateVibrantCard'));
+const TemplateWarmSpotlight = lazy(() => import('../components/portfolio/TemplateWarmSpotlight'));
+const TemplateCyberNeon = lazy(() => import('../components/portfolio/TemplateCyberNeon'));
+const TemplateCrimsonBold = lazy(() => import('../components/portfolio/TemplateCrimsonBold'));
+const TemplateEditorialMono = lazy(() => import('../components/portfolio/TemplateEditorialMono'));
+const TemplateBrutalistTech = lazy(() => import('../components/portfolio/TemplateBrutalistTech'));
+const TemplateWarmPlayful = lazy(() => import('../components/portfolio/TemplateWarmPlayful'));
+const TemplateExecutiveCV = lazy(() => import('../components/portfolio/TemplateExecutiveCV'));
+const TemplateGlassSlate = lazy(() => import('../components/portfolio/TemplateGlassSlate'));
 import {
   User,
   GitBranch,
@@ -442,7 +444,13 @@ export default function PortfolioEditor() {
               transition: 'width var(--transition-normal)'
             }}
           >
-            {renderTemplate()}
+            <Suspense fallback={
+              <div style={{ padding: '4rem 1rem', display: 'flex', justifyContent: 'center' }}>
+                <LoadingSpinner text="Rendering live preview..." />
+              </div>
+            }>
+              {renderTemplate()}
+            </Suspense>
           </div>
         </div>
       </div>

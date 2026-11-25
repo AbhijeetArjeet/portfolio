@@ -126,7 +126,7 @@ export default function Navbar() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               {isAdmin && (
                 <Link to="/admin" className="btn btn-sm" style={{ background: 'var(--success-bg)', color: 'var(--success-text)', border: '1px solid var(--success-border)' }}>
-                  <ShieldCheck size={14} /> Faculty Admin
+                  <ShieldCheck size={14} /> Admin Portal
                 </Link>
               )}
               <Link to="/dashboard" className="btn btn-secondary btn-sm">
@@ -239,7 +239,7 @@ export default function Navbar() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingTop: '0.5rem' }}>
               {isAdmin && (
                 <Link to="/admin" onClick={closeMobileMenu} className="btn btn-sm" style={{ background: 'var(--success-bg)', color: 'var(--success-text)', border: '1px solid var(--success-border)', justifyContent: 'flex-start' }}>
-                  <ShieldCheck size={16} /> Faculty Admin Portal
+                  <ShieldCheck size={16} /> Admin Portal
                 </Link>
               )}
               <Link to="/dashboard" onClick={closeMobileMenu} className="btn btn-secondary btn-sm" style={{ justifyContent: 'flex-start' }}>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { portfolioService } from '../../services/portfolio.service';
 import { githubService } from '../../services/github.service';
 import { uploadService } from '../../services/upload.service';
+import { aiService } from '../../services/ai.service';
 import { useToast } from '../../context/ToastContext';
 import {
   Plus,
@@ -11,13 +12,15 @@ import {
   ExternalLink,
   Upload,
   CheckCircle,
-  Sparkles
+  Sparkles,
+  Wand2
 } from 'lucide-react';
 
 export default function ProjectsManager({ portfolio, onReload }) {
   const { success, error: toastError, warning } = useToast();
   const [showAddForm, setShowAddForm] = useState(false);
   const [ghUsername, setGhUsername] = useState(portfolio.user?.githubUsername || '');
+  const [enhancingAi, setEnhancingAi] = useState(false);
   const [ghRepos, setGhRepos] = useState([]);
   const [ghLoading, setGhLoading] = useState(false);
   const [ghError, setGhError] = useState('');
@@ -31,6 +34,27 @@ export default function ProjectsManager({ portfolio, onReload }) {
     imageUrl: '',
     featured: false
   });
+
+  const handleEnhanceDescriptionWithAi = async () => {
+    if (!form.title) {
+      warning('Please enter a project title first.');
+      return;
+    }
+    setEnhancingAi(true);
+    try {
+      const enhanced = await aiService.enhanceProjectDescription({
+        title: form.title,
+        technologies: form.technologies,
+        rawNotes: form.description
+      });
+      setForm((prev) => ({ ...prev, description: enhanced }));
+      success('AI enhanced your project description (STAR method)!');
+    } catch (err) {
+      toastError('Failed to enhance description with AI.');
+    } finally {
+      setEnhancingAi(false);
+    }
+  };
 
   const handleFetchGithubRepos = async () => {
     if (!ghUsername.trim()) return;
@@ -224,14 +248,26 @@ export default function ProjectsManager({ portfolio, onReload }) {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Description *</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+              <label className="form-label" style={{ margin: 0 }}>Description *</label>
+              <button
+                type="button"
+                onClick={handleEnhanceDescriptionWithAi}
+                disabled={enhancingAi}
+                className="btn btn-sm"
+                style={{ fontSize: '0.75rem', padding: '2px 9px', background: 'linear-gradient(135deg, #6366f1, #a855f7)', color: '#ffffff', border: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                title="Polish description using STAR method"
+              >
+                <Sparkles size={12} /> {enhancingAi ? 'Enhancing...' : '✨ Polish with AI (STAR)'}
+              </button>
+            </div>
             <textarea
               className="form-textarea"
               required
               rows={3}
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              placeholder="Describe the problem solved, tech stack, and performance metrics..."
+              placeholder="Describe the problem solved, tech stack, and performance metrics, or click 'Polish with AI'..."
             />
           </div>
 

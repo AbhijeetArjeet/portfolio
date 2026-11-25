@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { portfolioService } from '../services/portfolio.service';
 import { useToast } from '../context/ToastContext';
-import TemplateMinimal from '../components/portfolio/TemplateMinimal';
-import TemplateDeveloper from '../components/portfolio/TemplateDeveloper';
-import TemplateCreative from '../components/portfolio/TemplateCreative';
-import TemplateAuraLime from '../components/portfolio/TemplateAuraLime';
-import TemplateVibrantCard from '../components/portfolio/TemplateVibrantCard';
-import TemplateWarmSpotlight from '../components/portfolio/TemplateWarmSpotlight';
-import TemplateCyberNeon from '../components/portfolio/TemplateCyberNeon';
-import TemplateCrimsonBold from '../components/portfolio/TemplateCrimsonBold';
-import TemplateEditorialMono from '../components/portfolio/TemplateEditorialMono';
-import TemplateBrutalistTech from '../components/portfolio/TemplateBrutalistTech';
-import TemplateWarmPlayful from '../components/portfolio/TemplateWarmPlayful';
-import TemplateExecutiveCV from '../components/portfolio/TemplateExecutiveCV';
-import TemplateGlassSlate from '../components/portfolio/TemplateGlassSlate';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+
+// Lazy-loaded Template Chunks for High Performance & Bundle Code Splitting
+const TemplateMinimal = lazy(() => import('../components/portfolio/TemplateMinimal'));
+const TemplateDeveloper = lazy(() => import('../components/portfolio/TemplateDeveloper'));
+const TemplateCreative = lazy(() => import('../components/portfolio/TemplateCreative'));
+const TemplateAuraLime = lazy(() => import('../components/portfolio/TemplateAuraLime'));
+const TemplateVibrantCard = lazy(() => import('../components/portfolio/TemplateVibrantCard'));
+const TemplateWarmSpotlight = lazy(() => import('../components/portfolio/TemplateWarmSpotlight'));
+const TemplateCyberNeon = lazy(() => import('../components/portfolio/TemplateCyberNeon'));
+const TemplateCrimsonBold = lazy(() => import('../components/portfolio/TemplateCrimsonBold'));
+const TemplateEditorialMono = lazy(() => import('../components/portfolio/TemplateEditorialMono'));
+const TemplateBrutalistTech = lazy(() => import('../components/portfolio/TemplateBrutalistTech'));
+const TemplateWarmPlayful = lazy(() => import('../components/portfolio/TemplateWarmPlayful'));
+const TemplateExecutiveCV = lazy(() => import('../components/portfolio/TemplateExecutiveCV'));
+const TemplateGlassSlate = lazy(() => import('../components/portfolio/TemplateGlassSlate'));
 import {
   Sparkles,
   Flag,
@@ -166,8 +168,16 @@ export default function PublicPortfolio() {
         </div>
       )}
 
-      {/* Render Selected Portfolio Template */}
-      <main>{renderTemplate()}</main>
+      {/* Render Selected Portfolio Template with Lazy Suspense */}
+      <main>
+        <Suspense fallback={
+          <div style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <LoadingSpinner text="Rendering portfolio template..." />
+          </div>
+        }>
+          {renderTemplate()}
+        </Suspense>
+      </main>
 
       {/* Floating Bottom Bar: Built with PortfolioForge + Share + Report */}
       <div

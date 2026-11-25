@@ -65,7 +65,7 @@ export default function Home() {
               margin: '0 auto 2.5rem'
             }}
           >
-            Import your GitHub repositories, customize responsive Grid or Flexbox layouts, select curated templates, and publish your permanent public portfolio link in seconds.
+            A personal portfolio website helps individuals showcase their skills, projects, and achievements. The platform includes features like project galleries, blogs, and contact forms. It is optimized for SEO to increase visibility, making it ideal for professionals to present their work to potential employers or clients.
           </p>
 
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
@@ -73,29 +73,34 @@ export default function Home() {
               Create Your Portfolio <ArrowRight size={18} />
             </Link>
             <Link to="/u/abhijeet-arjeet" className="btn btn-secondary btn-lg">
-              Explore Live Student Portfolio <ExternalLink size={16} />
+              Explore Live Portfolio <ExternalLink size={16} />
             </Link>
           </div>
 
-          {/* Quick Evaluator Access Hint */}
+          {/* Key Feature Highlights */}
           <div
             style={{
               marginTop: '2.5rem',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.75rem',
+              gap: '1rem',
               background: 'var(--bg-secondary)',
               border: '1px solid var(--border-color)',
-              padding: '0.6rem 1.25rem',
+              padding: '0.65rem 1.5rem',
               borderRadius: 'var(--radius-full)',
-              fontSize: '0.85rem',
-              color: 'var(--text-secondary)'
+              fontSize: '0.88rem',
+              color: 'var(--text-secondary)',
+              flexWrap: 'wrap',
+              justifyContent: 'center'
             }}
           >
-            <span>🎓 Faculty Evaluator?</span>
-            <Link to="/login" style={{ fontWeight: 600, color: 'var(--primary)', textDecoration: 'underline' }}>
-              Autofill Suneetha Mam / 12345 to test Admin Portal &rarr;
-            </Link>
+            <span>✨ <strong>Project Galleries</strong></span>
+            <span>&bull;</span>
+            <span>📝 <strong>Blogs &amp; Insights</strong></span>
+            <span>&bull;</span>
+            <span>📬 <strong>Contact Forms</strong></span>
+            <span>&bull;</span>
+            <span>🔍 <strong>SEO Optimized</strong></span>
           </div>
         </div>
       </section>
@@ -315,10 +320,10 @@ export default function Home() {
         <div className="container">
           <div style={{ textAlign: 'center', maxWidth: 650, margin: '0 auto 3rem' }}>
             <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem' }}>
-              Built for Students, Engineers &amp; Faculty
+              Built for Creators, Engineers &amp; Professionals
             </h2>
             <p style={{ color: 'var(--text-muted)' }}>
-              Everything needed to build, host, and monitor custom web portfolios with complete security.
+              Everything needed to build, host, and publish high-converting personal portfolios with complete privacy and SEO.
             </p>
           </div>
 
@@ -343,7 +348,7 @@ export default function Home() {
               <ShieldCheck size={28} color="var(--primary)" style={{ marginBottom: '1rem' }} />
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>Role-Based Access Control</h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6 }}>
-                Users only have privileges to edit their own portfolios. Faculty evaluators access a moderation portal.
+                Users only have privileges to edit their own portfolios. Platform administrators access a moderation portal.
               </p>
             </div>
 
