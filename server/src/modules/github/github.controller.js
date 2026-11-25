@@ -32,18 +32,25 @@ exports.fetchGitHubProfile = async (req, res, next) => {
         return res.status(404).json({ error: `GitHub user "${cleanUsername}" was not found.` });
       }
       if (response.status === 403) {
-        return res.json({
-          profile: {
-            username: cleanUsername,
-            name: cleanUsername === 'AbhijeetArjeet' ? 'Abhijeet Arjeet' : cleanUsername,
-            bio: 'Software & Systems Developer • Open Source Creator',
-            avatarUrl: '/uploads/profile.jpg',
-            location: 'India',
-            blog: '',
-            publicRepos: 30,
-            followers: 18,
-            htmlUrl: `https://github.com/${cleanUsername}`
-          }
+        if (cleanUsername.toLowerCase() === 'abhijeetarjeet') {
+          return res.json({
+            profile: {
+              username: 'AbhijeetArjeet',
+              name: 'Abhijeet Arjeet',
+              bio: 'Software & Systems Developer • Open Source Creator',
+              avatarUrl: '/uploads/profile.jpg',
+              location: 'India',
+              blog: '',
+              publicRepos: 30,
+              followers: 18,
+              htmlUrl: 'https://github.com/AbhijeetArjeet'
+            }
+          });
+        }
+        return res.status(403).json({
+          error: 'GitHub API rate limit exceeded on shared server. Please verify username or retry directly.',
+          isRateLimited: true,
+          username: cleanUsername
         });
       }
       return res.status(response.status).json({ error: 'GitHub API returned an error.' });
@@ -85,34 +92,41 @@ exports.fetchGitHubRepos = async (req, res, next) => {
 
     if (!response.ok) {
       if (response.status === 403) {
-        // Return default curated repos if GitHub rate-limits the hosting IP
-        const fallback = [
-          {
-            title: 'OpenDisplay-USB',
-            description: 'Ultra low-latency USB display driver and streaming utility leveraging ADB protocol.',
-            technologies: 'C++, Android SDK, Python, FFmpeg',
-            repositoryUrl: `https://github.com/${cleanUsername}/OpenDisplay-USB`,
-            demoUrl: `https://github.com/${cleanUsername}/OpenDisplay-USB`,
-            stars: 12
-          },
-          {
-            title: 'AniScribe',
-            description: 'High-speed audio-to-text AI transcription platform with speaker diarization.',
-            technologies: 'React, Node.js, WebAssembly, Whisper AI',
-            repositoryUrl: `https://github.com/${cleanUsername}/AniScribe`,
-            demoUrl: `https://github.com/${cleanUsername}/AniScribe`,
-            stars: 8
-          },
-          {
-            title: 'vayu-cpi',
-            description: 'Econometric price indexing & real-time inflation tracking solution for MoSPI / SIH.',
-            technologies: 'PostgreSQL, Express, React, Chart.js',
-            repositoryUrl: `https://github.com/${cleanUsername}/vayu-cpi`,
-            demoUrl: `https://github.com/${cleanUsername}/vayu-cpi`,
-            stars: 15
-          }
-        ];
-        return res.json({ repositories: fallback });
+        if (cleanUsername.toLowerCase() === 'abhijeetarjeet') {
+          const fallback = [
+            {
+              title: 'OpenDisplay-USB',
+              description: 'Ultra low-latency USB display driver and streaming utility leveraging ADB protocol.',
+              technologies: 'C++, Android SDK, Python, FFmpeg',
+              repositoryUrl: `https://github.com/${cleanUsername}/OpenDisplay-USB`,
+              demoUrl: `https://github.com/${cleanUsername}/OpenDisplay-USB`,
+              stars: 12
+            },
+            {
+              title: 'AniScribe',
+              description: 'High-speed audio-to-text AI transcription platform with speaker diarization.',
+              technologies: 'React, Node.js, WebAssembly, Whisper AI',
+              repositoryUrl: `https://github.com/${cleanUsername}/AniScribe`,
+              demoUrl: `https://github.com/${cleanUsername}/AniScribe`,
+              stars: 8
+            },
+            {
+              title: 'vayu-cpi',
+              description: 'Econometric price indexing & real-time inflation tracking solution for MoSPI / SIH.',
+              technologies: 'PostgreSQL, Express, React, Chart.js',
+              repositoryUrl: `https://github.com/${cleanUsername}/vayu-cpi`,
+              demoUrl: `https://github.com/${cleanUsername}/vayu-cpi`,
+              stars: 15
+            }
+          ];
+          return res.json({ repositories: fallback });
+        }
+        return res.status(403).json({
+          error: 'GitHub API rate limit exceeded on shared server IP. You can fetch directly via browser.',
+          isRateLimited: true,
+          username: cleanUsername,
+          repositories: []
+        });
       }
       return res.status(response.status).json({ error: 'Could not fetch GitHub repositories.' });
     }

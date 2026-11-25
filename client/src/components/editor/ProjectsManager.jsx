@@ -13,7 +13,11 @@ import {
   Upload,
   CheckCircle,
   Sparkles,
-  Wand2
+  Wand2,
+  Check,
+  X,
+  ShieldCheck,
+  CheckCircle2
 } from 'lucide-react';
 
 export default function ProjectsManager({ portfolio, onReload }) {
@@ -22,6 +26,10 @@ export default function ProjectsManager({ portfolio, onReload }) {
   const [ghUsername, setGhUsername] = useState(portfolio.user?.githubUsername || '');
   const [enhancingAi, setEnhancingAi] = useState(false);
   const [ghRepos, setGhRepos] = useState([]);
+  const [ghProfile, setGhProfile] = useState(null);
+  const [ghVerified, setGhVerified] = useState(false);
+  const [selectedRepos, setSelectedRepos] = useState({});
+  const [bulkImporting, setBulkImporting] = useState(false);
   const [ghLoading, setGhLoading] = useState(false);
   const [ghError, setGhError] = useState('');
 
@@ -60,9 +68,22 @@ export default function ProjectsManager({ portfolio, onReload }) {
     if (!ghUsername.trim()) return;
     setGhLoading(true);
     setGhError('');
+    setGhProfile(null);
+    setGhVerified(false);
+    setGhRepos([]);
+
     try {
-      const data = await githubService.getUserRepos(ghUsername.trim());
-      const rawList = data.repositories || data.repos || (Array.isArray(data) ? data : []);
+      const clean = githubService.cleanUsername(ghUsername);
+      // Fetch profile first for verification
+      try {
+        const profile = await githubService.getUserProfile(clean);
+        setGhProfile(profile);
+      } catch (pErr) {
+        console.warn('Profile lookup failed:', pErr);
+      }
+
+      // Fetch repos
+      const rawList = await githubService.getUserRepos(clean);
       const formatted = rawList.map(r => ({
         title: r.title || r.name,
         description: r.description || 'Public open-source repository on GitHub.',
@@ -72,16 +93,50 @@ export default function ProjectsManager({ portfolio, onReload }) {
         stars: r.stars ?? r.stargazers_count ?? 0
       }));
       setGhRepos(formatted);
+
+      const initialSelected = {};
+      formatted.slice(0, 6).forEach((_, i) => (initialSelected[i] = true));
+      setSelectedRepos(initialSelected);
+
       if (formatted.length > 0) {
-        success(`Found ${formatted.length} repositories from GitHub.`);
+        success(`Found ${formatted.length} repositories. Please verify your account identity below.`);
       } else {
-        warning(`No public repositories found for @${ghUsername.trim()}.`);
+        warning(`No public repositories found for @${clean}.`);
       }
     } catch (err) {
       setGhError(err.message || 'Could not fetch repositories for this username.');
       toastError(err.message || 'Could not fetch repositories.');
     } finally {
       setGhLoading(false);
+    }
+  };
+
+  const handleBulkImportRepos = async () => {
+    const toImport = ghRepos.filter((_, i) => selectedRepos[i]);
+    if (toImport.length === 0) {
+      warning('Please select at least one repository to import.');
+      return;
+    }
+    setBulkImporting(true);
+    let count = 0;
+    try {
+      for (const repo of toImport) {
+        await portfolioService.addProject(portfolio.id, {
+          title: repo.title,
+          description: repo.description,
+          technologies: repo.technologies,
+          repositoryUrl: repo.repositoryUrl,
+          demoUrl: repo.demoUrl !== repo.repositoryUrl ? repo.demoUrl : '',
+          featured: repo.stars > 0
+        });
+        count++;
+      }
+      success(`Imported ${count} repositories into your portfolio!`);
+      onReload();
+    } catch (err) {
+      toastError('Failed during import: ' + err.message);
+    } finally {
+      setBulkImporting(false);
     }
   };
 
@@ -189,43 +244,146 @@ export default function ProjectsManager({ portfolio, onReload }) {
 
         {ghError && <div style={{ fontSize: '0.82rem', color: 'var(--danger)', marginBottom: '0.5rem' }}>{ghError}</div>}
 
-        {ghRepos.length > 0 && (
+        {/* Profile Verification Card */}
+        {ghProfile && (
           <div
             style={{
-              maxHeight: 220,
-              overflowY: 'auto',
-              border: '1px solid var(--border-color)',
-              borderRadius: 'var(--radius-sm)',
-              background: 'var(--bg-primary)',
-              marginTop: '0.5rem'
+              border: ghVerified ? '2px solid #10b981' : '2px dashed var(--primary)',
+              borderRadius: 'var(--radius-md)',
+              padding: '0.85rem 1rem',
+              background: 'var(--bg-card)',
+              marginTop: '0.75rem',
+              marginBottom: '0.75rem'
             }}
           >
-            {ghRepos.map((repo, i) => (
-              <div
-                key={i}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '0.6rem 0.9rem',
-                  borderBottom: '1px solid var(--border-color)',
-                  fontSize: '0.85rem'
-                }}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: ghVerified ? '#10b981' : 'var(--primary)', textTransform: 'uppercase' }}>
+                {ghVerified ? '✓ Identity Verified' : '⚠️ Profile Verification'}
+              </span>
+              <a
+                href={ghProfile.htmlUrl}
+                target="_blank"
+                rel="noreferrer"
+                style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '3px' }}
               >
-                <div>
-                  <strong>{repo.title}</strong>
-                  <span style={{ color: 'var(--text-muted)', marginLeft: '0.5rem' }}>({repo.technologies})</span>
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-outline btn-sm"
-                  style={{ padding: '2px 8px', fontSize: '0.75rem' }}
-                  onClick={() => handleImportRepo(repo)}
-                >
-                  + Import
-                </button>
+                Open GitHub <ExternalLink size={11} />
+              </a>
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+              <img
+                src={ghProfile.avatarUrl || '/uploads/profile.jpg'}
+                alt={ghProfile.name}
+                style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover' }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100';
+                }}
+              />
+              <div style={{ minWidth: 0 }}>
+                <strong style={{ fontSize: '0.92rem', display: 'block' }}>
+                  {ghProfile.name} <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 400 }}>@{ghProfile.username}</span>
+                </strong>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: '2px 0' }}>
+                  {ghProfile.bio || 'Public GitHub Developer'}
+                </p>
               </div>
-            ))}
+            </div>
+
+            {!ghVerified ? (
+              <div style={{ marginTop: '0.65rem', paddingTop: '0.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-primary)', fontWeight: 600 }}>
+                  Is this your GitHub account?
+                </span>
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setGhProfile(null);
+                      setGhRepos([]);
+                    }}
+                    className="btn btn-outline btn-sm"
+                    style={{ fontSize: '0.72rem', padding: '2px 7px' }}
+                  >
+                    <X size={12} /> Not Me
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setGhVerified(true)}
+                    className="btn btn-primary btn-sm"
+                    style={{ fontSize: '0.72rem', padding: '2px 7px' }}
+                  >
+                    <Check size={12} /> Yes, That's Me!
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div style={{ marginTop: '0.4rem', fontSize: '0.78rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <CheckCircle2 size={13} /> Account confirmed. Select repositories below to import.
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Repositories List with Checkboxes */}
+        {ghRepos.length > 0 && (
+          <div style={{ marginTop: '0.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', fontSize: '0.8rem' }}>
+              <span>Select repositories to import:</span>
+              <button
+                type="button"
+                onClick={handleBulkImportRepos}
+                disabled={bulkImporting}
+                className="btn btn-primary btn-sm"
+                style={{ fontSize: '0.75rem', padding: '3px 8px' }}
+              >
+                {bulkImporting ? 'Importing...' : `Import Selected (${Object.values(selectedRepos).filter(Boolean).length})`}
+              </button>
+            </div>
+
+            <div
+              style={{
+                maxHeight: 220,
+                overflowY: 'auto',
+                border: '1px solid var(--border-color)',
+                borderRadius: 'var(--radius-sm)',
+                background: 'var(--bg-primary)'
+              }}
+            >
+              {ghRepos.map((repo, i) => (
+                <div
+                  key={i}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '0.5rem 0.8rem',
+                    borderBottom: '1px solid var(--border-color)',
+                    fontSize: '0.82rem'
+                  }}
+                >
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', minWidth: 0 }}>
+                    <input
+                      type="checkbox"
+                      checked={!!selectedRepos[i]}
+                      onChange={() => setSelectedRepos((prev) => ({ ...prev, [i]: !prev[i] }))}
+                    />
+                    <div style={{ minWidth: 0 }}>
+                      <strong style={{ display: 'block' }}>{repo.title}</strong>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{repo.technologies}</span>
+                    </div>
+                  </label>
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-sm"
+                    style={{ padding: '2px 8px', fontSize: '0.72rem', flexShrink: 0 }}
+                    onClick={() => handleImportRepo(repo)}
+                  >
+                    + Import
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

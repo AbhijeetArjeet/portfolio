@@ -14,7 +14,8 @@ import {
   Code2,
   Mail,
   CheckCircle,
-  ExternalLink
+  ExternalLink,
+  MessageCircle
 } from 'lucide-react';
 
 export default function SocialLinksManager({ portfolio, onChange }) {
@@ -234,6 +235,48 @@ export default function SocialLinksManager({ portfolio, onChange }) {
             onChange={(e) => onChange({ linkedinUrl: e.target.value })}
           />
         </div>
+
+        {/* WhatsApp Click-to-Chat */}
+        <div className="form-group">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <MessageCircle size={15} color="#25d366" /> WhatsApp Chat (with Country Code)
+            </label>
+            {themeConfig.whatsappNumber && (
+              <a
+                href={`https://wa.me/${themeConfig.whatsappNumber.replace(/[^\d]/g, '')}${themeConfig.whatsappMessage ? `?text=${encodeURIComponent(themeConfig.whatsappMessage)}` : ''}`}
+                target="_blank"
+                rel="noreferrer"
+                style={{ fontSize: '0.75rem', color: '#16a34a', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+              >
+                Test Chat <ExternalLink size={11} />
+              </a>
+            )}
+          </div>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="e.g. 919876543210 (include country code, no + or spaces)"
+            value={themeConfig.whatsappNumber || ''}
+            onChange={(e) => handleConfigUpdate('whatsappNumber', e.target.value)}
+          />
+        </div>
+
+        {/* WhatsApp Greeting Message */}
+        {themeConfig.whatsappNumber && (
+          <div className="form-group">
+            <label className="form-label" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+              WhatsApp Pre-filled Message (Optional)
+            </label>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Hi! I came across your portfolio and would like to connect."
+              value={themeConfig.whatsappMessage || ''}
+              onChange={(e) => handleConfigUpdate('whatsappMessage', e.target.value)}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

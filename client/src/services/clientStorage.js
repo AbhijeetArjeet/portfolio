@@ -795,18 +795,27 @@ export const clientStorage = {
         return { profile, user: profile };
       }
     } catch {}
-    const defaultProfile = {
-      username: cleanUsername,
-      name: cleanUsername === 'AbhijeetArjeet' ? 'Abhijeet Arjeet' : cleanUsername,
-      bio: 'Software & Systems Developer • Open Source Creator',
-      avatarUrl: '/uploads/profile.jpg',
-      location: 'India',
-      blog: '',
-      publicRepos: 30,
-      followers: 18,
-      htmlUrl: `https://github.com/${cleanUsername}`
+
+    if (cleanUsername.toLowerCase() === 'abhijeetarjeet') {
+      const defaultProfile = {
+        username: 'AbhijeetArjeet',
+        name: 'Abhijeet Arjeet',
+        bio: 'Software & Systems Developer • Open Source Creator',
+        avatarUrl: '/uploads/profile.jpg',
+        location: 'India',
+        blog: '',
+        publicRepos: 30,
+        followers: 18,
+        htmlUrl: 'https://github.com/AbhijeetArjeet'
+      };
+      return { profile: defaultProfile, user: defaultProfile };
+    }
+
+    return {
+      profile: null,
+      error: `Could not fetch GitHub profile for "${cleanUsername}". Check the username or network limit.`,
+      isRateLimited: true
     };
-    return { profile: defaultProfile, user: defaultProfile };
   },
 
   async getGitHubRepos(username) {
@@ -834,34 +843,43 @@ export const clientStorage = {
       }
     } catch {}
 
-    // Fallback if rate limited or offline
-    const fallback = [
-      {
-        title: 'OpenDisplay-USB',
-        description: 'Ultra low-latency USB display driver and streaming utility leveraging ADB protocol.',
-        technologies: 'C++, Android SDK, Python, FFmpeg',
-        repositoryUrl: `https://github.com/${cleanUsername}/OpenDisplay-USB`,
-        demoUrl: `https://github.com/${cleanUsername}/OpenDisplay-USB`,
-        stars: 12
-      },
-      {
-        title: 'AniScribe',
-        description: 'High-speed audio-to-text AI transcription platform with speaker diarization.',
-        technologies: 'React, Node.js, WebAssembly, Whisper AI',
-        repositoryUrl: `https://github.com/${cleanUsername}/AniScribe`,
-        demoUrl: `https://github.com/${cleanUsername}/AniScribe`,
-        stars: 8
-      },
-      {
-        title: 'vayu-cpi',
-        description: 'Econometric price indexing & real-time inflation tracking solution for MoSPI / SIH.',
-        technologies: 'PostgreSQL, Express, React, Chart.js',
-        repositoryUrl: `https://github.com/${cleanUsername}/vayu-cpi`,
-        demoUrl: `https://github.com/${cleanUsername}/vayu-cpi`,
-        stars: 15
-      }
-    ];
-    return { repositories: fallback, repos: fallback };
+    // Only return mock repositories for the seeded Abhijeet demo account
+    if (cleanUsername.toLowerCase() === 'abhijeetarjeet') {
+      const fallback = [
+        {
+          title: 'OpenDisplay-USB',
+          description: 'Ultra low-latency USB display driver and streaming utility leveraging ADB protocol.',
+          technologies: 'C++, Android SDK, Python, FFmpeg',
+          repositoryUrl: `https://github.com/${cleanUsername}/OpenDisplay-USB`,
+          demoUrl: `https://github.com/${cleanUsername}/OpenDisplay-USB`,
+          stars: 12
+        },
+        {
+          title: 'AniScribe',
+          description: 'High-speed audio-to-text AI transcription platform with speaker diarization.',
+          technologies: 'React, Node.js, WebAssembly, Whisper AI',
+          repositoryUrl: `https://github.com/${cleanUsername}/AniScribe`,
+          demoUrl: `https://github.com/${cleanUsername}/AniScribe`,
+          stars: 8
+        },
+        {
+          title: 'vayu-cpi',
+          description: 'Econometric price indexing & real-time inflation tracking solution for MoSPI / SIH.',
+          technologies: 'PostgreSQL, Express, React, Chart.js',
+          repositoryUrl: `https://github.com/${cleanUsername}/vayu-cpi`,
+          demoUrl: `https://github.com/${cleanUsername}/vayu-cpi`,
+          stars: 15
+        }
+      ];
+      return { repositories: fallback, repos: fallback };
+    }
+
+    return {
+      repositories: [],
+      repos: [],
+      error: `No public repositories found or rate limit reached for "${cleanUsername}".`,
+      isRateLimited: true
+    };
   },
 
   report(portfolioId, reportData) {

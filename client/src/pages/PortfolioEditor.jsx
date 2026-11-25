@@ -10,6 +10,7 @@ import ThemeCustomizer from '../components/editor/ThemeCustomizer';
 import TemplatesSelector from '../components/editor/TemplatesSelector';
 import SocialLinksManager from '../components/editor/SocialLinksManager';
 import CertificatesManager from '../components/editor/CertificatesManager';
+import DataConnectorsManager from '../components/editor/DataConnectorsManager';
 import AiPortfolioModal from '../components/editor/AiPortfolioModal';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 
@@ -44,7 +45,8 @@ import {
   Layout,
   Share2,
   Award,
-  Sparkles
+  Sparkles,
+  Zap
 } from 'lucide-react';
 
 export default function PortfolioEditor() {
@@ -283,6 +285,16 @@ export default function PortfolioEditor() {
             }}
           >
             <Sparkles size={14} /> AI Portfolio Creator
+          </button>
+
+          {/* Multi-Platform Importer Button */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('connectors')}
+            className={`btn btn-sm ${activeTab === 'connectors' ? 'btn-primary' : 'btn-outline'}`}
+            style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
+          >
+            <Zap size={14} /> Import &amp; Sync
           </button>
 
           {/* Responsive viewport simulator */}
@@ -538,12 +550,38 @@ export default function PortfolioEditor() {
             >
               <Palette size={14} /> Themes
             </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('connectors')}
+              style={{
+                flex: 1,
+                padding: '0.75rem 0.5rem',
+                border: 'none',
+                background: activeTab === 'connectors' ? 'var(--bg-card)' : 'transparent',
+                borderBottom: activeTab === 'connectors' ? '2px solid var(--primary)' : 'none',
+                fontWeight: activeTab === 'connectors' ? 700 : 500,
+                color: activeTab === 'connectors' ? 'var(--primary)' : 'var(--text-secondary)',
+                cursor: 'pointer',
+                fontSize: '0.82rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              <Zap size={14} /> Import
+            </button>
           </div>
 
           {/* Tab Content Panel */}
           <div style={{ flex: 1, overflowY: 'auto', padding: '1.25rem' }}>
             {activeTab === 'templates' && (
               <TemplatesSelector portfolio={portfolio} onChange={handlePortfolioUpdate} />
+            )}
+            {activeTab === 'connectors' && (
+              <DataConnectorsManager portfolio={portfolio} onChange={handlePortfolioUpdate} onReload={fetchPortfolio} />
             )}
             {activeTab === 'profile' && (
               <PersonalInfoSection portfolio={portfolio} onChange={handlePortfolioUpdate} />

@@ -9,7 +9,9 @@ import {
   Globe,
   Github,
   Linkedin,
-  Download
+  Download,
+  MessageCircle,
+  Mail
 } from 'lucide-react';
 
 export default function SocialAndResumeBar({ portfolio, style = {} }) {
@@ -27,6 +29,7 @@ export default function SocialAndResumeBar({ portfolio, style = {} }) {
 
   const hasSocials =
     themeConfig.resumeUrl ||
+    themeConfig.whatsappNumber ||
     themeConfig.instagramUrl ||
     themeConfig.facebookUrl ||
     themeConfig.twitterUrl ||
@@ -74,6 +77,25 @@ export default function SocialAndResumeBar({ portfolio, style = {} }) {
           }}
         >
           <FileText size={15} /> Download Resume
+        </a>
+      )}
+
+      {/* WhatsApp Click-to-Chat Button */}
+      {themeConfig.whatsappNumber && (
+        <a
+          href={`https://wa.me/${themeConfig.whatsappNumber.replace(/[^\d]/g, '')}${themeConfig.whatsappMessage ? `?text=${encodeURIComponent(themeConfig.whatsappMessage)}` : ''}`}
+          target="_blank"
+          rel="noreferrer"
+          title="Chat on WhatsApp"
+          style={{
+            ...socialIconStyle('#25d366'),
+            background: '#25d366',
+            color: '#ffffff',
+            boxShadow: '0 2px 6px rgba(37, 211, 102, 0.35)',
+            border: 'none'
+          }}
+        >
+          <MessageCircle size={15} />
         </a>
       )}
 
