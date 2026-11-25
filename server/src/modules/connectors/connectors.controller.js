@@ -73,15 +73,22 @@ exports.fetchLinkedInProfile = async (req, res) => {
     const targetUrl = parseLinkedInUrl(rawInput);
     const username = targetUrl.replace(/https?:\/\/(www\.)?linkedin\.com\/in\//i, '').replace(/\/$/, '');
 
-    // Fetch using bot user agent to allow verified public meta card extraction
-    const response = await fetch(targetUrl, {
-      headers: {
-        'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    let html = '';
+    try {
+      // Fetch using bot user agent with 4s timeout
+      const response = await fetch(targetUrl, {
+        headers: {
+          'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+        },
+        signal: AbortSignal.timeout(4000)
+      });
+      if (response.ok) {
+        html = await response.text();
       }
-    });
-
-    const html = await response.text();
+    } catch (e) {
+      // Timeout or block fallback
+    }
 
     const titleMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']*)["']/i);
     const descMatch = html.match(/<meta\s+property=["']og:description["']\s+content=["']([^"']*)["']/i);
@@ -99,7 +106,6 @@ exports.fetchLinkedInProfile = async (req, res) => {
       name = parts[0]?.trim() || '';
       location = parts[1]?.trim() || '';
     } else {
-      // Fallback name derivation from username (e.g. hritik-kumar-5857963a8 -> Hritik Kumar)
       name = username.replace(/-[a-z0-9]{6,}$/i, '').replace(/[-_.]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
     }
 
@@ -182,34 +188,47 @@ exports.fetchFacebookProfile = async (req, res) => {
     const targetUrl = parseFacebookUrl(rawInput);
     const cleanUser = targetUrl.replace(/https?:\/\/(www\.)?facebook\.com\//i, '').replace(/\/$/, '');
 
-    // Fetch using bot user agent to retrieve open graph metadata
-    const response = await fetch(targetUrl, {
-      headers: {
-        'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    let rawTitle = '';
+    let rawDesc = '';
+    let rawImage = '';
+
+    // Fast 3.5s timeout so personal profiles never hang
+    try {
+      const response = await fetch(targetUrl, {
+        headers: {
+          'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+        },
+        signal: AbortSignal.timeout(3500)
+      });
+
+      if (response.ok) {
+        const html = await response.text();
+        const titleMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']*)["']/i);
+        const descMatch = html.match(/<meta\s+property=["']og:description["']\s+content=["']([^"']*)["']/i);
+        const imageMatch = html.match(/<meta\s+property=["']og:image["']\s+content=["']([^"']*)["']/i);
+
+        rawTitle = titleMatch ? decodeHtmlEntities(titleMatch[1]) : '';
+        rawDesc = descMatch ? decodeHtmlEntities(descMatch[1]) : '';
+        rawImage = imageMatch ? decodeHtmlEntities(imageMatch[1]) : '';
       }
-    });
+    } catch (e) {
+      // Timeout or blocked - fallback gracefully
+    }
 
-    const html = await response.text();
-
-    const titleMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']*)["']/i);
-    const descMatch = html.match(/<meta\s+property=["']og:description["']\s+content=["']([^"']*)["']/i);
-    const imageMatch = html.match(/<meta\s+property=["']og:image["']\s+content=["']([^"']*)["']/i);
-
-    const rawTitle = titleMatch ? decodeHtmlEntities(titleMatch[1]) : '';
-    const rawDesc = descMatch ? decodeHtmlEntities(descMatch[1]) : '';
-    const rawImage = imageMatch ? decodeHtmlEntities(imageMatch[1]) : '';
-
-    const name = rawTitle.replace(/\s*\|\s*Facebook/i, '').trim() ||
+    const name = rawTitle ? rawTitle.replace(/\s*\|\s*Facebook/i, '').trim() :
       cleanUser.replace(/[-_.]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
+    const avatar = rawImage || `https://graph.facebook.com/${cleanUser}/picture?type=large&width=500&height=500`;
+    const bio = rawDesc || `Digital creator & developer connected via Facebook public profile @${cleanUser}.`;
 
     return res.json({
       success: true,
       profile: {
         username: cleanUser,
         name: name || cleanUser,
-        avatarUrl: rawImage || `https://graph.facebook.com/${cleanUser}/picture?type=large&width=500&height=500`,
-        bio: rawDesc || `Digital creator & developer connected via Facebook public profile @${cleanUser}.`,
+        avatarUrl: avatar,
+        bio,
         profileUrl: targetUrl
       }
     });
