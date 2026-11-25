@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { githubService } from '../../services/github.service';
 import { portfolioService } from '../../services/portfolio.service';
+import { connectorsService } from '../../services/connectors.service';
 import { aiService } from '../../services/ai.service';
 import { useToast } from '../../context/ToastContext';
 import {
@@ -157,68 +158,53 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
   const [liParsedData, setLiParsedData] = useState(null);
   const [liSelectedExp, setLiSelectedExp] = useState({});
   const [liSelectedSkills, setLiSelectedSkills] = useState({});
+  const [liPreviewPhoto, setLiPreviewPhoto] = useState(portfolio.avatarUrl || '');
 
-  const handleParseLinkedIn = async (e) => {
+  const handleFetchAndVerifyLinkedIn = async (e) => {
     if (e) e.preventDefault();
-    if (!liUrl.trim() && !liRawText.trim()) {
-      warning('Please enter your LinkedIn profile URL or paste your summary text.');
+    const input = liUrl.trim();
+    if (!input && !liRawText.trim()) {
+      warning('Please enter your LinkedIn profile URL or handle (e.g. www.linkedin.com/in/hritik-kumar-5857963a8).');
       return;
     }
 
     setLiParsing(true);
     try {
-      // Smart LinkedIn parser using regex & heuristics
-      const lines = liRawText.split('\n').map((l) => l.trim()).filter(Boolean);
+      let fetched = null;
+      if (input) {
+        fetched = await connectorsService.fetchLinkedInProfile(input);
+      }
 
-      // Extract details
+      const customLines = liRawText.split('\n').map((l) => l.trim()).filter(Boolean);
+
       const parsed = {
-        linkedinUrl: liUrl.trim(),
-        name: portfolio.title || 'Professional Creator',
-        headline: '',
-        bio: '',
-        experiences: [],
-        skills: []
+        linkedinUrl: fetched?.profileUrl || input,
+        name: fetched?.name || portfolio.title || 'Professional Creator',
+        headline: fetched?.headline || '',
+        location: fetched?.location || '',
+        bio: fetched?.bio || '',
+        avatarUrl: fetched?.avatarUrl || liPreviewPhoto,
+        experiences: fetched?.experiences || [],
+        skills: fetched?.skills || []
       };
 
-      // Heuristic extraction from pasted text
-      if (lines.length > 0) {
-        parsed.bio = lines.slice(0, 3).join(' ');
-        // Find potential job lines
-        lines.forEach((line) => {
-          if (line.match(/(engineer|developer|manager|lead|intern|designer|architect|consultant|student)/i)) {
-            parsed.experiences.push({
-              role: line.slice(0, 40),
-              company: 'Company / Organization',
-              startDate: '2023',
-              endDate: 'Present',
-              description: 'Key contributor to core initiatives and web technologies.'
-            });
-          }
+      if (customLines.length > 0) {
+        const extraBio = customLines.slice(0, 3).join(' ');
+        parsed.bio = parsed.bio ? `${parsed.bio} • ${extraBio}` : extraBio;
+        customLines.forEach((line) => {
           if (line.match(/(react|javascript|typescript|python|java|c\+\+|node|aws|docker|sql)/i)) {
             line.split(/[,•|]/).forEach((sk) => {
-              const clean = sk.trim();
-              if (clean && clean.length < 25) {
-                parsed.skills.push(clean);
+              const cleanSk = sk.trim();
+              if (cleanSk && !parsed.skills.includes(cleanSk)) {
+                parsed.skills.push(cleanSk);
               }
             });
           }
         });
       }
 
-      if (parsed.experiences.length === 0) {
-        parsed.experiences = [
-          {
-            role: 'Software Developer / Engineer',
-            company: 'Tech Organization',
-            startDate: '2023',
-            endDate: 'Present',
-            description: 'Engineering resilient applications, collaborating on product roadmaps, and optimizing performance.'
-          }
-        ];
-      }
-
-      if (parsed.skills.length === 0) {
-        parsed.skills = ['JavaScript', 'React', 'Problem Solving', 'Git', 'Full-Stack Development'];
+      if (parsed.avatarUrl) {
+        setLiPreviewPhoto(parsed.avatarUrl);
       }
 
       setLiParsedData(parsed);
@@ -231,12 +217,22 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
       parsed.skills.forEach((_, i) => (skillSel[i] = true));
       setLiSelectedSkills(skillSel);
 
-      success('LinkedIn details parsed! Please verify your information below.');
+      success(`Successfully fetched & verified LinkedIn profile for ${parsed.name}!`);
     } catch (err) {
-      toastError('Could not parse LinkedIn information: ' + err.message);
+      toastError('Could not fetch LinkedIn profile: ' + err.message);
     } finally {
       setLiParsing(false);
     }
+  };
+
+  const handleApplyLinkedInPhoto = () => {
+    const photoToApply = liPreviewPhoto || liParsedData?.avatarUrl;
+    if (!photoToApply) {
+      warning('No photo available to set.');
+      return;
+    }
+    onChange({ avatarUrl: photoToApply });
+    success('LinkedIn photo set as your portfolio avatar!');
   };
 
   const handleApplyLinkedInData = async () => {
@@ -247,11 +243,17 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
       if (liParsedData.linkedinUrl) {
         patch.linkedinUrl = liParsedData.linkedinUrl;
       }
-      if (liParsedData.headline && !portfolio.headline) {
+      if (liParsedData.name && (!portfolio.title || portfolio.title === 'My Portfolio')) {
+        patch.title = liParsedData.name;
+      }
+      if (liParsedData.headline) {
         patch.headline = liParsedData.headline;
       }
-      if (liParsedData.bio && !portfolio.bio) {
+      if (liParsedData.bio) {
         patch.bio = liParsedData.bio;
+      }
+      if (liParsedData.avatarUrl) {
+        patch.avatarUrl = liParsedData.avatarUrl;
       }
 
       if (Object.keys(patch).length > 0) {
@@ -277,52 +279,15 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
         await portfolioService.addSkill(portfolio.id, {
           name: sk,
           category: 'Core Competency',
-          proficiency: 85
+          proficiency: 90
         });
       }
 
       if (onReload) onReload();
-      success('Verified LinkedIn profile and experience imported successfully!');
+      success('Verified LinkedIn profile, photo, experience, and skills imported successfully!');
     } catch (err) {
       toastError('Error applying LinkedIn data: ' + err.message);
     }
-  };
-
-  // LinkedIn Profile Photo Fetcher State
-  const [liPhotoInput, setLiPhotoInput] = useState('');
-  const [liPreviewPhoto, setLiPreviewPhoto] = useState(portfolio.avatarUrl || '');
-  const [liPhotoFetching, setLiPhotoFetching] = useState(false);
-
-  const handleFetchLinkedInPhoto = (e) => {
-    if (e) e.preventDefault();
-    const clean = liPhotoInput.trim();
-    if (!clean) {
-      warning('Please enter a LinkedIn profile URL or photo image link.');
-      return;
-    }
-    setLiPhotoFetching(true);
-    // If it's a direct image URL (e.g. licdn.com or any image extension)
-    if (clean.match(/\.(jpeg|jpg|gif|png|webp)($|\?)/i) || clean.includes('licdn.com') || clean.includes('media-exp')) {
-      setLiPreviewPhoto(clean);
-      success('LinkedIn photo loaded! Click "Set as Portfolio Photo" to apply.');
-      setLiPhotoFetching(false);
-      return;
-    }
-    const username = clean.replace(/https?:\/\/(www\.)?linkedin\.com\/in\//i, '').replace(/\/$/, '').trim();
-    // Default high-resolution professional portrait avatar representation
-    const resolvedAvatar = `https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80`;
-    setLiPreviewPhoto(clean.startsWith('http') ? clean : resolvedAvatar);
-    success(`Profile identity linked for "${username || clean}". Click "Set as Portfolio Photo" to apply.`);
-    setLiPhotoFetching(false);
-  };
-
-  const handleApplyLinkedInPhoto = () => {
-    if (!liPreviewPhoto) {
-      warning('No photo available to set.');
-      return;
-    }
-    onChange({ avatarUrl: liPreviewPhoto });
-    success('LinkedIn photo set as your portfolio avatar!');
   };
 
   const handleUploadLocalPhoto = (e) => {
@@ -407,11 +372,11 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
   const [fbToken, setFbToken] = useState('');
   const [fbTokenConnected, setFbTokenConnected] = useState(false);
 
-  const handleFetchPublicFacebook = (e) => {
+  const handleFetchPublicFacebook = async (e) => {
     if (e) e.preventDefault();
     const raw = fbInput.trim() || fbUrl.trim();
     if (!raw) {
-      warning('Please enter a Facebook profile or page handle/URL.');
+      warning('Please enter a Facebook profile, page URL, or username (e.g. zuck or https://facebook.com/zuck).');
       return;
     }
     setFbFetching(true);
@@ -419,21 +384,10 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
     setFbVerified(false);
 
     try {
-      const cleanUser = raw.replace(/https?:\/\/(www\.)?facebook\.com\//i, '').replace(/\/$/, '').trim();
-      const fbAvatar = `https://graph.facebook.com/${cleanUser}/picture?type=large&width=500&height=500`;
-      const cleanProfileUrl = `https://facebook.com/${cleanUser}`;
-
-      const profile = {
-        username: cleanUser,
-        name: cleanUser.replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
-        avatarUrl: fbAvatar,
-        profileUrl: cleanProfileUrl,
-        bio: `Digital creator & developer connected via Facebook public profile @${cleanUser}.`
-      };
-
+      const profile = await connectorsService.fetchFacebookProfile(raw);
       setFbProfile(profile);
-      setFbUrl(cleanProfileUrl);
-      success(`Found public Facebook account for @${cleanUser}. Please verify below!`);
+      setFbUrl(profile.profileUrl);
+      success(`Found public Facebook account for ${profile.name} (@${profile.username}). Please verify below!`);
     } catch (err) {
       toastError('Could not process Facebook profile: ' + err.message);
     } finally {
@@ -805,18 +759,47 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
       {/* ======================================= */}
       {activeTab === 'linkedin' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          {/* Section A: Photo Fetcher & Avatar Sync */}
+          {/* Main Verified LinkedIn Fetcher Bar */}
+          <div>
+            <label className="form-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span>LinkedIn Profile URL or Handle</span>
+              <span style={{ fontSize: '0.75rem', color: '#0a66c2', fontWeight: 600 }}>Auto-sync Photo &amp; Experience</span>
+            </label>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="e.g. www.linkedin.com/in/hritik-kumar-5857963a8 or hritik-kumar-5857963a8"
+                value={liUrl}
+                onChange={(e) => setLiUrl(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={handleFetchAndVerifyLinkedIn}
+                disabled={liParsing}
+                className="btn btn-primary"
+                style={{ background: '#0a66c2', borderColor: '#0a66c2', whiteSpace: 'nowrap' }}
+              >
+                {liParsing ? <RefreshCw size={14} className="spin" /> : <Linkedin size={14} />} Fetch &amp; Verify Profile
+              </button>
+            </div>
+            <small style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              Supports handles, full links (<code>www.linkedin.com/in/...</code>), and auto-resolves profile picture &amp; education.
+            </small>
+          </div>
+
+          {/* Photo & Identity Preview Box */}
           <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Camera size={16} color="#0a66c2" />
-                <strong style={{ fontSize: '0.9rem', color: '#0a66c2' }}>Fetch &amp; Sync LinkedIn Profile Photo</strong>
+                <strong style={{ fontSize: '0.9rem', color: '#0a66c2' }}>LinkedIn Profile Photo &amp; Avatar Sync</strong>
               </div>
               <span className="badge badge-secondary" style={{ fontSize: '0.72rem' }}>Avatar Sync</span>
             </div>
 
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <div style={{ position: 'relative', width: 68, height: 68, flexShrink: 0 }}>
+              <div style={{ position: 'relative', width: 72, height: 72, flexShrink: 0 }}>
                 <img
                   src={liPreviewPhoto || portfolio.avatarUrl || '/uploads/profile.jpg'}
                   alt="LinkedIn Preview"
@@ -832,90 +815,72 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
               </div>
 
               <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder="Enter LinkedIn profile link or photo URL..."
-                    value={liPhotoInput}
-                    onChange={(e) => setLiPhotoInput(e.target.value)}
-                    style={{ fontSize: '0.82rem' }}
-                  />
-                  <button
-                    type="button"
-                    onClick={handleFetchLinkedInPhoto}
-                    disabled={liPhotoFetching}
-                    className="btn btn-outline btn-sm"
-                    style={{ whiteSpace: 'nowrap' }}
-                  >
-                    {liPhotoFetching ? <RefreshCw size={13} className="spin" /> : <Camera size={13} />} Fetch Photo
-                  </button>
-                </div>
-
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center', marginTop: '0.2rem' }}>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
                   <button
                     type="button"
                     onClick={handleApplyLinkedInPhoto}
                     className="btn btn-primary btn-sm"
-                    style={{ fontSize: '0.75rem', padding: '4px 10px', background: '#0a66c2', borderColor: '#0a66c2' }}
+                    style={{ fontSize: '0.78rem', padding: '5px 12px', background: '#0a66c2', borderColor: '#0a66c2' }}
                   >
-                    <Check size={12} /> Set as Portfolio Avatar Photo
+                    <Check size={13} /> Set as Portfolio Avatar Photo
                   </button>
-                  <label className="btn btn-outline btn-sm" style={{ fontSize: '0.75rem', padding: '4px 10px', cursor: 'pointer', margin: 0 }}>
-                    <Upload size={12} /> Upload File
+                  <label className="btn btn-outline btn-sm" style={{ fontSize: '0.78rem', padding: '5px 12px', cursor: 'pointer', margin: 0 }}>
+                    <Upload size={13} /> Upload From Device
                     <input type="file" accept="image/*" onChange={handleUploadLocalPhoto} style={{ display: 'none' }} />
                   </label>
-                  {portfolio.avatarUrl && (
-                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                      Active: {portfolio.avatarUrl.slice(0, 24)}...
-                    </span>
-                  )}
                 </div>
+                {portfolio.avatarUrl && (
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                    Current Avatar: {portfolio.avatarUrl.slice(0, 36)}...
+                  </span>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Section B: Profile Data & Experience Parser */}
+          {/* Optional summary text import */}
           <div>
-            <label className="form-label">LinkedIn Public Profile URL</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="https://linkedin.com/in/your-profile"
-              value={liUrl}
-              onChange={(e) => setLiUrl(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <label className="form-label">
-              Paste LinkedIn &quot;About / Experience&quot; text (Optional, for instant resume import)
+            <label className="form-label" style={{ fontSize: '0.82rem' }}>
+              Paste Additional LinkedIn &quot;About / Experience&quot; (Optional)
             </label>
             <textarea
               className="form-input"
-              rows={3}
-              placeholder="Copy and paste text from your LinkedIn About section or job history..."
+              rows={2}
+              placeholder="Paste any extra text to append to your bio and skills..."
               value={liRawText}
               onChange={(e) => setLiRawText(e.target.value)}
             />
           </div>
 
-          <button
-            type="button"
-            onClick={handleParseLinkedIn}
-            disabled={liParsing}
-            className="btn btn-primary"
-            style={{ background: '#0a66c2', borderColor: '#0a66c2' }}
-          >
-            {liParsing ? <RefreshCw size={14} className="spin" /> : <Linkedin size={14} />} Parse &amp; Verify LinkedIn Data
-          </button>
-
           {/* Parsed Verification Card */}
           {liParsedData && (
-            <div style={{ border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '1rem', background: 'var(--bg-secondary)', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div style={{ border: '2px solid #0a66c2', borderRadius: 'var(--radius-md)', padding: '1.25rem', background: 'var(--bg-secondary)', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <strong style={{ fontSize: '0.95rem', color: '#0a66c2' }}>LinkedIn Verification &amp; Import Preview</strong>
-                <span className="badge badge-primary">Parsed successfully</span>
+                <strong style={{ fontSize: '1rem', color: '#0a66c2' }}>✓ LinkedIn Verified Identity</strong>
+                <span className="badge badge-primary" style={{ background: '#0a66c2' }}>Verified</span>
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <img
+                  src={liParsedData.avatarUrl || liPreviewPhoto}
+                  alt={liParsedData.name}
+                  style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', border: '2px solid #0a66c2' }}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300';
+                  }}
+                />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <strong style={{ fontSize: '1.1rem', display: 'block', color: 'var(--text-primary)' }}>
+                    {liParsedData.name}
+                  </strong>
+                  <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: '0.2rem 0' }}>
+                    {liParsedData.headline || liParsedData.bio}
+                  </p>
+                  {liParsedData.location && (
+                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>📍 {liParsedData.location}</span>
+                  )}
+                </div>
               </div>
 
               {liParsedData.experiences.length > 0 && (
@@ -967,14 +932,23 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
                 </div>
               )}
 
-              <button
-                type="button"
-                onClick={handleApplyLinkedInData}
-                className="btn btn-primary"
-                style={{ marginTop: '0.5rem', background: '#0a66c2', borderColor: '#0a66c2' }}
-              >
-                <Check size={14} /> Apply Verified LinkedIn Data to Portfolio
-              </button>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+                <button
+                  type="button"
+                  onClick={handleApplyLinkedInData}
+                  className="btn btn-primary"
+                  style={{ background: '#0a66c2', borderColor: '#0a66c2' }}
+                >
+                  <Check size={14} /> Apply Verified LinkedIn Data to Portfolio
+                </button>
+                <button
+                  type="button"
+                  onClick={handleApplyLinkedInPhoto}
+                  className="btn btn-outline"
+                >
+                  <Camera size={14} /> Apply Photo Only
+                </button>
+              </div>
             </div>
           )}
         </div>
