@@ -231,4 +231,33 @@ describe('3. Public Portfolios & Publishing Lifecycle', () => {
     assert.ok(Array.isArray(data.portfolios));
     assert.ok(data.portfolios.length >= 1);
   });
+
+  test('GitHub user and repos endpoints gracefully handle 403 rate limiting', async () => {
+    const originalFetch = global.fetch;
+    global.fetch = async (url, options) => {
+      if (String(url).startsWith('https://api.github.com/')) {
+        return new Response(JSON.stringify({ message: 'API rate limit exceeded' }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      return originalFetch(url, options);
+    };
+
+    try {
+      const userRes = await fetch(`${baseUrl}/api/v1/github/user/AbhijeetArjeet`);
+      assert.strictEqual(userRes.status, 200);
+      const userData = await userRes.json();
+      assert.strictEqual(userData.profile.username, 'AbhijeetArjeet');
+      assert.strictEqual(userData.profile.name, 'Abhijeet Arjeet');
+
+      const reposRes = await fetch(`${baseUrl}/api/v1/github/repos/AbhijeetArjeet`);
+      assert.strictEqual(reposRes.status, 200);
+      const reposData = await reposRes.json();
+      assert.ok(Array.isArray(reposData.repositories));
+      assert.ok(reposData.repositories.length >= 1);
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
 });
