@@ -1,4 +1,6 @@
 import React from 'react';
+import SocialAndResumeBar from './SocialAndResumeBar';
+import CertificatesSection from './CertificatesSection';
 import {
   Github,
   Linkedin,
@@ -80,6 +82,8 @@ export default function TemplateCyberNeon({ portfolio }) {
                 </a>
               )}
             </div>
+
+            <SocialAndResumeBar portfolio={portfolio} />
           </div>
 
           {/* Metric Stats Cards */}
@@ -215,6 +219,9 @@ export default function TemplateCyberNeon({ portfolio }) {
             </div>
           </section>
         )}
+
+        {/* Verified Certificates & Achievements */}
+        <CertificatesSection portfolio={portfolio} />
       </div>
     </div>
   );

@@ -1,4 +1,6 @@
 import React from 'react';
+import SocialAndResumeBar from './SocialAndResumeBar';
+import CertificatesSection from './CertificatesSection';
 import {
   Github,
   Linkedin,
@@ -46,24 +48,8 @@ export default function TemplateMinimal({ portfolio }) {
             )}
           </div>
 
-          {/* Social Links */}
-          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.25rem' }}>
-            {portfolio.githubUrl && (
-              <a href={portfolio.githubUrl} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm">
-                <Github size={15} /> GitHub
-              </a>
-            )}
-            {portfolio.linkedinUrl && (
-              <a href={portfolio.linkedinUrl} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm">
-                <Linkedin size={15} /> LinkedIn
-              </a>
-            )}
-            {portfolio.websiteUrl && (
-              <a href={portfolio.websiteUrl} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm">
-                <Globe size={15} /> Website
-              </a>
-            )}
-          </div>
+          {/* Social Links & Download Resume */}
+          <SocialAndResumeBar portfolio={portfolio} />
         </div>
       </section>
 
@@ -193,6 +179,9 @@ export default function TemplateMinimal({ portfolio }) {
           )}
         </div>
       )}
+
+      {/* Verified Certificates & Achievements */}
+      <CertificatesSection portfolio={portfolio} />
     </div>
   );
 }

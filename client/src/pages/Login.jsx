@@ -20,7 +20,9 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const redirectPath = location.state?.from?.pathname;
+  const queryParams = new URLSearchParams(location.search);
+  const redirectFromQuery = queryParams.get('redirect');
+  const redirectPath = redirectFromQuery || location.state?.from?.pathname;
 
   const {
     register,
@@ -60,8 +62,8 @@ export default function Login() {
     }
   };
 
-  const autofillFaculty = () => {
-    setValue('emailOrUsername', 'Suneetha Mam');
+  const autofillAdmin = () => {
+    setValue('emailOrUsername', 'suneetha@university.edu');
     setValue('password', '12345');
     setServerError('');
   };
@@ -123,7 +125,7 @@ export default function Login() {
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             <button
               type="button"
-              onClick={autofillFaculty}
+              onClick={autofillAdmin}
               className="btn btn-primary btn-sm"
               style={{ fontSize: '0.75rem', padding: '4px 9px' }}
             >

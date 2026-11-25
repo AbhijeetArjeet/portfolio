@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { portfolioService } from '../services/portfolio.service';
 import {
   Sparkles,
@@ -16,8 +17,16 @@ import {
 } from 'lucide-react';
 
 export default function Home() {
+  const { user } = useAuth();
   const [gallery, setGallery] = useState([]);
   const [activeTab, setActiveTab] = useState('developer');
+
+  const getTemplateLink = (templateId) => {
+    if (user) {
+      return `/editor?template=${templateId}`;
+    }
+    return `/login?redirect=${encodeURIComponent(`/editor?template=${templateId}`)}`;
+  };
 
   useEffect(() => {
     portfolioService.getPublicGallery().then(data => {
@@ -129,7 +138,7 @@ export default function Home() {
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.25rem', flex: 1 }}>
                 Luminous lime aura hero, award laurel badge, trusted brand ticker strip, and dark pill action buttons.
               </p>
-              <Link to="/register" className="btn btn-outline btn-sm">
+              <Link to={getTemplateLink('aura-lime')} className="btn btn-outline btn-sm">
                 Use Aura Lime &rarr;
               </Link>
             </div>
@@ -144,7 +153,7 @@ export default function Home() {
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.25rem', flex: 1 }}>
                 Floating white card on purple aura, internal top bar, framed portrait card, and vibrant gradient buttons.
               </p>
-              <Link to="/register" className="btn btn-outline btn-sm">
+              <Link to={getTemplateLink('vibrant-card')} className="btn btn-outline btn-sm">
                 Use Vibrant Pastel &rarr;
               </Link>
             </div>
@@ -159,7 +168,7 @@ export default function Home() {
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.25rem', flex: 1 }}>
                 Obsidian dark theme with ambient burnt orange spotlight aura, bold creative director typography.
               </p>
-              <Link to="/register" className="btn btn-outline btn-sm">
+              <Link to={getTemplateLink('warm-spotlight')} className="btn btn-outline btn-sm">
                 Use Warm Spotlight &rarr;
               </Link>
             </div>
@@ -174,7 +183,7 @@ export default function Home() {
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.25rem', flex: 1 }}>
                 Glowing cyan ring portrait, developer stats counter strip, terminal logs, and high-tech cards.
               </p>
-              <Link to="/register" className="btn btn-outline btn-sm">
+              <Link to={getTemplateLink('cyber-neon')} className="btn btn-outline btn-sm">
                 Use Cyber Neon &rarr;
               </Link>
             </div>
@@ -189,7 +198,7 @@ export default function Home() {
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.25rem', flex: 1 }}>
                 Pure jet OLED canvas with electric scarlet highlights, stat callouts, and high-energy styling.
               </p>
-              <Link to="/register" className="btn btn-outline btn-sm">
+              <Link to={getTemplateLink('crimson-bold')} className="btn btn-outline btn-sm">
                 Use Crimson Bold &rarr;
               </Link>
             </div>
@@ -204,7 +213,7 @@ export default function Home() {
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.25rem', flex: 1 }}>
                 High-fashion monochrome magazine styling, oversized outlined display headers, and lookbook layout.
               </p>
-              <Link to="/register" className="btn btn-outline btn-sm">
+              <Link to={getTemplateLink('editorial-mono')} className="btn btn-outline btn-sm">
                 Use Editorial Mono &rarr;
               </Link>
             </div>
@@ -219,7 +228,7 @@ export default function Home() {
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.25rem', flex: 1 }}>
                 Industrial technical blueprint grid, monospaced typography, sharp black borders, and neon yellow accents.
               </p>
-              <Link to="/register" className="btn btn-outline btn-sm">
+              <Link to={getTemplateLink('brutalist-tech')} className="btn btn-outline btn-sm">
                 Use Neo-Brutalist &rarr;
               </Link>
             </div>
@@ -234,7 +243,7 @@ export default function Home() {
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.25rem', flex: 1 }}>
                 Sunny golden yellow accents, welcoming organic curves, sticker tags, and friendly portfolio cards.
               </p>
-              <Link to="/register" className="btn btn-outline btn-sm">
+              <Link to={getTemplateLink('warm-playful')} className="btn btn-outline btn-sm">
                 Use Warm Playful &rarr;
               </Link>
             </div>
@@ -249,7 +258,7 @@ export default function Home() {
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.25rem', flex: 1 }}>
                 Structured 2-column dossier, sage emerald banner, executive summary, and comprehensive timeline.
               </p>
-              <Link to="/register" className="btn btn-outline btn-sm">
+              <Link to={getTemplateLink('executive-cv')} className="btn btn-outline btn-sm">
                 Use Executive CV &rarr;
               </Link>
             </div>
@@ -264,7 +273,7 @@ export default function Home() {
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.25rem', flex: 1 }}>
                 Frosted glassmorphism over deep slate canvas, ambient purple & cyan glows, floating tech cards.
               </p>
-              <Link to="/register" className="btn btn-outline btn-sm">
+              <Link to={getTemplateLink('glass-slate')} className="btn btn-outline btn-sm">
                 Use Glass Slate &rarr;
               </Link>
             </div>
@@ -278,8 +287,8 @@ export default function Home() {
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.25rem', flex: 1 }}>
                 Clean, spacious typography-led layout tailored for software architects, managers, and consultants.
               </p>
-              <Link to="/u/hritik-kumar" className="btn btn-outline btn-sm">
-                Preview Minimal &rarr;
+              <Link to={getTemplateLink('minimal')} className="btn btn-outline btn-sm">
+                Use Minimal &rarr;
               </Link>
             </div>
 
@@ -293,8 +302,8 @@ export default function Home() {
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.25rem', flex: 1 }}>
                 Developer terminal window, live status pulses, repository badges, and technical skill matrices.
               </p>
-              <Link to="/u/abhijeet-arjeet" className="btn btn-primary btn-sm">
-                Preview Developer &rarr;
+              <Link to={getTemplateLink('developer')} className="btn btn-primary btn-sm">
+                Use Developer &rarr;
               </Link>
             </div>
 
@@ -307,8 +316,8 @@ export default function Home() {
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1.25rem', flex: 1 }}>
                 Bento-grid showcase with dynamic card spans, media previews, and eye-catching portfolio visuals.
               </p>
-              <Link to="/u/dsri-sarvagna" className="btn btn-outline btn-sm">
-                Preview Bento &rarr;
+              <Link to={getTemplateLink('creative')} className="btn btn-outline btn-sm">
+                Use Creative Bento &rarr;
               </Link>
             </div>
           </div>

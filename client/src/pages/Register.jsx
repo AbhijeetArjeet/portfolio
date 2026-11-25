@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { Sparkles, ArrowRight, AlertCircle, CheckCircle2 } from 'lucide-react';
 
-// Zod Schema for Registration validation (CO5 compliance)
+// Zod Schema for Registration validation
 const registerSchema = z.object({
   name: z.string().min(2, 'Full name must be at least 2 characters').max(70, 'Name is too long'),
   email: z.string().email('Please enter a valid email address'),
@@ -21,6 +21,10 @@ export default function Register() {
   const { register: registerAuth } = useAuth();
   const { success, error: toastError } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const redirectPath = queryParams.get('redirect') || '/dashboard';
 
   const {
     register,
@@ -49,7 +53,7 @@ export default function Register() {
         githubUsername: data.githubUsername ? data.githubUsername.trim() : undefined
       });
       success(`Welcome to PortfolioForge, ${data.name}! Your portfolio space is ready.`);
-      navigate('/dashboard');
+      navigate(redirectPath);
     } catch (err) {
       const msg = err.message || 'Registration failed. Please check the details entered.';
       setServerError(msg);

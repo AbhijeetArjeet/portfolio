@@ -1,4 +1,6 @@
 import React from 'react';
+import SocialAndResumeBar from './SocialAndResumeBar';
+import CertificatesSection from './CertificatesSection';
 import {
   Github,
   Linkedin,
@@ -99,6 +101,8 @@ export default function TemplateAuraLime({ portfolio }) {
                 </a>
               )}
             </div>
+
+            <SocialAndResumeBar portfolio={portfolio} />
           </div>
         </div>
 
@@ -247,6 +251,9 @@ export default function TemplateAuraLime({ portfolio }) {
           </div>
         </section>
       )}
+
+      {/* Verified Certificates & Achievements */}
+      <CertificatesSection portfolio={portfolio} />
     </div>
   );
 }
