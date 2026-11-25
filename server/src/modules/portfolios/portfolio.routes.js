@@ -20,6 +20,8 @@ router.get('/public/:slug', optionalAuthenticate, portfolioController.getPublicP
 
 // --- Authenticated User Routes ---
 router.get('/me', authenticate, portfolioController.getMyPortfolio);
+router.get('/me/all', authenticate, portfolioController.getAllMyPortfolios);
+router.post('/', authenticate, portfolioController.createPortfolio);
 
 // Specific portfolio routes (requires ownership or admin)
 router.get('/:id', authenticate, requirePortfolioOwnership, portfolioController.getPortfolioById);

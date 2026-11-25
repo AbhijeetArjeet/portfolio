@@ -51,6 +51,52 @@ exports.getMyPortfolio = async (req, res, next) => {
   }
 };
 
+exports.getAllMyPortfolios = async (req, res, next) => {
+  try {
+    const portfolios = await prisma.portfolio.findMany({
+      where: { userId: req.user.id },
+      include: portfolioIncludes,
+      orderBy: { createdAt: 'desc' }
+    });
+
+    res.json({ portfolios });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.createPortfolio = async (req, res, next) => {
+  try {
+    const { title, templateId = 'minimal', headline = 'Developer & Creator' } = req.body;
+    const baseSlug = (title || req.user.name).toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'portfolio';
+    const uniqueSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`;
+
+    const portfolio = await prisma.portfolio.create({
+      data: {
+        userId: req.user.id,
+        slug: uniqueSlug,
+        title: title || `${req.user.name} | Portfolio`,
+        headline,
+        contactEmail: req.user.email,
+        templateId,
+        layoutType: 'grid',
+        isPublished: false,
+        themeConfig: JSON.stringify({
+          primaryColor: '#2563eb',
+          darkTheme: false,
+          fontFamily: 'inter',
+          projectLayout: 'grid'
+        })
+      },
+      include: portfolioIncludes
+    });
+
+    res.status(201).json({ message: 'New portfolio created successfully!', portfolio });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.getPublicPortfolio = async (req, res, next) => {
   try {
     const { slug } = req.params;

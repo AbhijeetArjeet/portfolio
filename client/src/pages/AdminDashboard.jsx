@@ -102,6 +102,19 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeletePortfolio = async (portfolioId, title) => {
+    if (!window.confirm(`Are you sure you want to permanently delete "${title}"? This cannot be undone.`)) {
+      return;
+    }
+    try {
+      await adminService.deletePortfolio(portfolioId);
+      success(`Portfolio "${title}" was permanently removed.`);
+      fetchAllData();
+    } catch (err) {
+      toastError(err.message || 'Failed to delete portfolio');
+    }
+  };
+
   if (!isAdmin) {
     return (
       <div className="container" style={{ padding: '6rem 1rem', textAlign: 'center' }}>
@@ -343,8 +356,9 @@ export default function AdminDashboard() {
                 <th style={{ padding: '0.85rem 1rem' }}>Title &amp; Author</th>
                 <th style={{ padding: '0.85rem 1rem' }}>Public URL</th>
                 <th style={{ padding: '0.85rem 1rem' }}>Template</th>
+                <th style={{ padding: '0.85rem 1rem' }}>Metrics</th>
                 <th style={{ padding: '0.85rem 1rem' }}>Status</th>
-                <th style={{ padding: '0.85rem 1rem' }}>Moderation Action</th>
+                <th style={{ padding: '0.85rem 1rem' }}>Admin Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -352,10 +366,12 @@ export default function AdminDashboard() {
                 <tr key={p.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
                   <td style={{ padding: '0.85rem 1rem' }}>
                     <div style={{ fontWeight: 700 }}>{p.title}</div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>By: {p.user?.name}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                      Author: <strong>{p.user?.name || 'Unknown'}</strong> ({p.user?.email || 'No email'})
+                    </div>
                   </td>
                   <td style={{ padding: '0.85rem 1rem' }}>
-                    <a href={`/u/${p.slug}`} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '4px', textDecoration: 'underline' }}>
+                    <a href={`/u/${p.slug}`} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', textDecoration: 'underline', color: 'var(--primary)' }}>
                       /u/{p.slug} <ExternalLink size={12} />
                     </a>
                   </td>
@@ -363,19 +379,45 @@ export default function AdminDashboard() {
                     <span className="badge badge-primary">{p.templateId}</span>
                   </td>
                   <td style={{ padding: '0.85rem 1rem' }}>
+                    <div style={{ fontSize: '0.82rem' }}>
+                      <strong>{p.views || 0}</strong> views
+                    </div>
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                      {p._count?.projects ?? p.projects?.length ?? 0} projects
+                    </div>
+                  </td>
+                  <td style={{ padding: '0.85rem 1rem' }}>
                     <span className={`badge ${p.isPublished ? 'badge-success' : 'badge-warning'}`}>
                       {p.isPublished ? 'Published' : 'Draft'}
                     </span>
                   </td>
                   <td style={{ padding: '0.85rem 1rem' }}>
-                    <button
-                      type="button"
-                      onClick={() => handleTogglePortfolioPublish(p.id, p.isPublished)}
-                      className={`btn btn-sm ${p.isPublished ? 'btn-outline' : 'btn-primary'}`}
-                      style={{ padding: '3px 8px', fontSize: '0.78rem' }}
-                    >
-                      {p.isPublished ? 'Force Unpublish' : 'Publish'}
-                    </button>
+                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                      <a
+                        href={`/editor?id=${p.id}`}
+                        className="btn btn-secondary btn-sm"
+                        style={{ padding: '3px 8px', fontSize: '0.78rem' }}
+                      >
+                        Inspect
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => handleTogglePortfolioPublish(p.id, p.isPublished)}
+                        className={`btn btn-sm ${p.isPublished ? 'btn-outline' : 'btn-primary'}`}
+                        style={{ padding: '3px 8px', fontSize: '0.78rem' }}
+                      >
+                        {p.isPublished ? 'Unpublish' : 'Publish'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeletePortfolio(p.id, p.title)}
+                        className="btn btn-sm btn-danger"
+                        style={{ padding: '3px 8px', fontSize: '0.78rem' }}
+                        title="Permanently delete this portfolio"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

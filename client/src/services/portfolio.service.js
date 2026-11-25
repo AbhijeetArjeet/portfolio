@@ -5,6 +5,27 @@ export const portfolioService = {
     return apiRequest('/api/v1/portfolios/me');
   },
 
+  async getMyPortfolios() {
+    return apiRequest('/api/v1/portfolios/me/all');
+  },
+
+  async createPortfolio(data = {}) {
+    return apiRequest('/api/v1/portfolios', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  async getPortfolioById(id) {
+    return apiRequest(`/api/v1/portfolios/${id}`);
+  },
+
+  async deletePortfolio(id) {
+    return apiRequest(`/api/v1/portfolios/${id}`, {
+      method: 'DELETE'
+    });
+  },
+
   async getPublicPortfolio(slug) {
     return apiRequest(`/api/v1/portfolios/public/${slug}`);
   },

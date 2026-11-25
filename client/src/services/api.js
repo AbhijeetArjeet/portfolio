@@ -98,6 +98,10 @@ async function handleClientFallback(endpoint, options = {}) {
   if (cleanEndpoint === '/api/v1/admin/portfolios') {
     return clientStorage.getAdminPortfolios();
   }
+  const adminPortfolioDeleteMatch = cleanEndpoint.match(/^\/api\/v1\/admin\/portfolios\/([^/]+)$/);
+  if (adminPortfolioDeleteMatch && method === 'DELETE') {
+    return clientStorage.deletePortfolio(adminPortfolioDeleteMatch[1]);
+  }
   const adminPortfolioPublishMatch = cleanEndpoint.match(/^\/api\/v1\/admin\/portfolios\/([^/]+)\/publish$/);
   if (adminPortfolioPublishMatch && method === 'PATCH') {
     return clientStorage.togglePublish(adminPortfolioPublishMatch[1], body.isPublished);
@@ -112,6 +116,12 @@ async function handleClientFallback(endpoint, options = {}) {
   // Portfolio routes
   if (cleanEndpoint === '/api/v1/portfolios/me') {
     return clientStorage.getMyPortfolio();
+  }
+  if (cleanEndpoint === '/api/v1/portfolios/me/all') {
+    return clientStorage.getMyPortfolios();
+  }
+  if (cleanEndpoint === '/api/v1/portfolios' && method === 'POST') {
+    return clientStorage.createPortfolio(body);
   }
   if (cleanEndpoint === '/api/v1/portfolios/public/gallery') {
     return clientStorage.getPublicGallery();
@@ -192,9 +202,17 @@ async function handleClientFallback(endpoint, options = {}) {
   if (unpublishMatch && method === 'POST') {
     return clientStorage.unpublish(unpublishMatch[1]);
   }
-  const portfolioUpdateMatch = cleanEndpoint.match(/^\/api\/v1\/portfolios\/([^/]+)$/);
-  if (portfolioUpdateMatch && (method === 'PATCH' || method === 'PUT')) {
-    return clientStorage.updatePortfolio(portfolioUpdateMatch[1], body);
+  const portfolioItemMatch = cleanEndpoint.match(/^\/api\/v1\/portfolios\/([^/]+)$/);
+  if (portfolioItemMatch) {
+    if (method === 'GET') {
+      return clientStorage.getPortfolioById(portfolioItemMatch[1]);
+    }
+    if (method === 'PATCH' || method === 'PUT') {
+      return clientStorage.updatePortfolio(portfolioItemMatch[1], body);
+    }
+    if (method === 'DELETE') {
+      return clientStorage.deletePortfolio(portfolioItemMatch[1]);
+    }
   }
 
   throw new Error(`Endpoint not found: ${endpoint}`);

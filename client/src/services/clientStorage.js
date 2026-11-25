@@ -463,6 +463,79 @@ export const clientStorage = {
     return { portfolio };
   },
 
+  getMyPortfolios() {
+    const currentUser = this.getCurrentUser().user;
+    if (!currentUser) throw new Error('Not authenticated');
+
+    const portfolios = getPortfolios();
+    const myPortfolios = portfolios.filter(p => p.userId === currentUser.id);
+
+    if (myPortfolios.length === 0 && portfolios.length > 0) {
+      return { portfolios: [portfolios[0]] };
+    }
+
+    return { portfolios: myPortfolios };
+  },
+
+  getPortfolioById(id) {
+    const portfolios = getPortfolios();
+    const portfolio = portfolios.find(p => p.id === id);
+    if (!portfolio) throw new Error('Portfolio not found.');
+    return { portfolio };
+  },
+
+  createPortfolio(data = {}) {
+    const currentUser = this.getCurrentUser().user;
+    if (!currentUser) throw new Error('Not authenticated');
+
+    const portfolios = getPortfolios();
+    const title = data.title || `${currentUser.name} | Portfolio`;
+    const templateId = data.templateId || 'minimal';
+    const headline = data.headline || 'Developer & Creator';
+    const baseSlug = title.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'portfolio';
+    const uniqueSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`;
+
+    const newPortfolio = {
+      id: 'portfolio-' + Date.now(),
+      userId: currentUser.id,
+      slug: uniqueSlug,
+      title,
+      headline,
+      bio: 'Welcome to my interactive portfolio showcasing my latest engineering and creative projects.',
+      location: 'India',
+      contactEmail: currentUser.email,
+      avatarUrl: currentUser.avatarUrl || '/uploads/profile.jpg',
+      templateId,
+      layoutType: 'grid',
+      themeConfig: JSON.stringify({
+        primaryColor: '#2563eb',
+        darkTheme: false,
+        fontFamily: 'inter',
+        projectLayout: 'grid'
+      }),
+      isPublished: false,
+      publishedAt: null,
+      views: 0,
+      projects: [],
+      skills: [],
+      education: [],
+      experience: [],
+      socialLinks: []
+    };
+
+    portfolios.unshift(newPortfolio);
+    savePortfolios(portfolios);
+
+    return { message: 'Portfolio created successfully!', portfolio: newPortfolio };
+  },
+
+  deletePortfolio(id) {
+    let portfolios = getPortfolios();
+    portfolios = portfolios.filter(p => p.id !== id);
+    savePortfolios(portfolios);
+    return { message: 'Portfolio deleted successfully' };
+  },
+
   getPublicPortfolio(slug) {
     const clean = (slug || '').toLowerCase().trim();
     const portfolios = getPortfolios();

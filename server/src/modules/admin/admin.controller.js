@@ -147,6 +147,37 @@ exports.togglePortfolioPublish = async (req, res, next) => {
   }
 };
 
+exports.deletePortfolio = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const portfolio = await prisma.portfolio.findUnique({
+      where: { id },
+      select: { id: true, title: true, slug: true }
+    });
+
+    if (!portfolio) {
+      return res.status(404).json({ error: 'Portfolio not found' });
+    }
+
+    await prisma.portfolio.delete({ where: { id } });
+
+    await prisma.auditLog.create({
+      data: {
+        userId: req.user.id,
+        action: 'ADMIN_DELETED_PORTFOLIO',
+        targetType: 'PORTFOLIO',
+        targetId: id,
+        details: `Admin deleted portfolio "${portfolio.title}" (/u/${portfolio.slug})`,
+        ipAddress: req.ip
+      }
+    });
+
+    res.json({ message: 'Portfolio permanently deleted by admin', id });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.getAuditLogs = async (req, res, next) => {
   try {
     const logs = await prisma.auditLog.findMany({

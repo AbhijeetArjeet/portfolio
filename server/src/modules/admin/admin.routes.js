@@ -12,6 +12,7 @@ router.get('/users', adminController.getUsers);
 router.patch('/users/:id/status', adminController.updateUserStatus);
 router.get('/portfolios', adminController.getPortfolios);
 router.patch('/portfolios/:id/publish', adminController.togglePortfolioPublish);
+router.delete('/portfolios/:id', adminController.deletePortfolio);
 router.get('/reports', adminController.getReports);
 router.patch('/reports/:id', adminController.updateReportStatus);
 router.get('/audit-logs', adminController.getAuditLogs);

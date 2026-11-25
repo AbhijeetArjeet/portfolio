@@ -316,8 +316,9 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
   );
 
   const cleanWaNumber = waNumber.replace(/[^\d]/g, '');
+  const effectiveWaMessage = waMessage.trim() || 'Hello! I saw your portfolio and would love to connect.';
   const waChatLink = cleanWaNumber
-    ? `https://wa.me/${cleanWaNumber}?text=${encodeURIComponent(waMessage)}`
+    ? `https://api.whatsapp.com/send?phone=${cleanWaNumber}&text=${encodeURIComponent(effectiveWaMessage)}`
     : '';
 
   const handleSaveWhatsApp = () => {
@@ -782,8 +783,11 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
               className="form-input"
               value={waMessage}
               onChange={(e) => setWaMessage(e.target.value)}
-              placeholder="Hi! I saw your portfolio and would love to chat."
+              placeholder="Hello! I saw your portfolio and would love to connect."
             />
+            <small style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>
+              ℹ️ WhatsApp will open a conversation with this message pre-filled. Tap <strong>Send</strong> inside WhatsApp to dispatch.
+            </small>
           </div>
 
           {cleanWaNumber && (

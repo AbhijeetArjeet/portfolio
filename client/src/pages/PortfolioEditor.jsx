@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { portfolioService } from '../services/portfolio.service';
 import { useToast } from '../context/ToastContext';
 import PersonalInfoSection from '../components/editor/PersonalInfoSection';
@@ -51,6 +51,7 @@ import {
 
 export default function PortfolioEditor() {
   const [portfolio, setPortfolio] = useState(null);
+  const [userPortfolios, setUserPortfolios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('templates');
   const [saveStatus, setSaveStatus] = useState('saved'); // 'saved', 'saving', 'error'
@@ -58,16 +59,34 @@ export default function PortfolioEditor() {
   const [showPreviewMobile, setShowPreviewMobile] = useState(false);
   const [showAiModal, setShowAiModal] = useState(false);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { success, error: toastError } = useToast();
 
   const saveTimeoutRef = useRef(null);
+  const portfolioId = searchParams.get('id');
 
   const fetchPortfolio = async () => {
     try {
-      const data = await portfolioService.getMyPortfolio();
-      setPortfolio(data.portfolio);
+      setLoading(true);
+      let data;
+      if (portfolioId) {
+        data = await portfolioService.getPortfolioById(portfolioId);
+      } else {
+        data = await portfolioService.getMyPortfolio();
+      }
+      setPortfolio(data?.portfolio);
+
+      try {
+        const stackData = await portfolioService.getMyPortfolios();
+        if (stackData?.portfolios) {
+          setUserPortfolios(stackData.portfolios);
+        }
+      } catch (e) {
+        // Ignore fallback error
+      }
     } catch (err) {
       console.error(err);
+      toastError('Could not load portfolio: ' + (err.message || 'Error'));
     } finally {
       setLoading(false);
     }
@@ -75,7 +94,7 @@ export default function PortfolioEditor() {
 
   useEffect(() => {
     fetchPortfolio();
-  }, []);
+  }, [portfolioId]);
 
   // Listen to ?template= query parameter from homepage selection
   useEffect(() => {
@@ -242,8 +261,37 @@ export default function PortfolioEditor() {
           zIndex: 20
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flexWrap: 'wrap' }}>
           <h2 style={{ fontSize: '1.15rem', fontWeight: 800 }}>Portfolio Visual Editor</h2>
+
+          {userPortfolios.length > 1 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 600 }}>Stack:</span>
+              <select
+                value={portfolio.id}
+                onChange={(e) => navigate(`/editor?id=${e.target.value}`)}
+                style={{
+                  padding: '3px 8px',
+                  fontSize: '0.82rem',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid var(--border-color)',
+                  background: 'var(--bg-secondary)',
+                  color: 'var(--text-primary)',
+                  fontWeight: 600,
+                  maxWidth: '200px',
+                  cursor: 'pointer'
+                }}
+                title="Switch active portfolio in your stack"
+              >
+                {userPortfolios.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.title} ({item.templateId})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
             Slug: <code>/u/{portfolio.slug}</code>
           </span>

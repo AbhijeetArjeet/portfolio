@@ -48,6 +48,12 @@ export const adminService = {
     });
   },
 
+  async deletePortfolio(portfolioId) {
+    return apiRequest(`/api/v1/admin/portfolios/${portfolioId}`, {
+      method: 'DELETE'
+    });
+  },
+
   async getReports() {
     return apiRequest('/api/v1/admin/reports');
   },

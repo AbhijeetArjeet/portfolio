@@ -244,12 +244,12 @@ export default function SocialLinksManager({ portfolio, onChange }) {
             </label>
             {themeConfig.whatsappNumber && (
               <a
-                href={`https://wa.me/${themeConfig.whatsappNumber.replace(/[^\d]/g, '')}${themeConfig.whatsappMessage ? `?text=${encodeURIComponent(themeConfig.whatsappMessage)}` : ''}`}
+                href={`https://api.whatsapp.com/send?phone=${themeConfig.whatsappNumber.replace(/[^\d]/g, '')}&text=${encodeURIComponent(themeConfig.whatsappMessage || 'Hello! I saw your portfolio and would like to connect.')}`}
                 target="_blank"
                 rel="noreferrer"
-                style={{ fontSize: '0.75rem', color: '#16a34a', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                style={{ fontSize: '0.75rem', color: '#16a34a', display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}
               >
-                Test Chat <ExternalLink size={11} />
+                Test Chat ↗
               </a>
             )}
           </div>
@@ -266,15 +266,18 @@ export default function SocialLinksManager({ portfolio, onChange }) {
         {themeConfig.whatsappNumber && (
           <div className="form-group">
             <label className="form-label" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              WhatsApp Pre-filled Message (Optional)
+              WhatsApp Pre-filled Message
             </label>
             <input
               type="text"
               className="form-input"
-              placeholder="Hi! I came across your portfolio and would like to connect."
+              placeholder="Hello! I saw your portfolio and would like to connect."
               value={themeConfig.whatsappMessage || ''}
               onChange={(e) => handleConfigUpdate('whatsappMessage', e.target.value)}
             />
+            <small style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>
+              ℹ️ WhatsApp will open a conversation with this message pre-filled. Tap <strong>Send</strong> inside WhatsApp to dispatch.
+            </small>
           </div>
         )}
       </div>

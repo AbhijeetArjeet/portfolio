@@ -83,7 +83,7 @@ export default function SocialAndResumeBar({ portfolio, style = {} }) {
       {/* WhatsApp Click-to-Chat Button */}
       {themeConfig.whatsappNumber && (
         <a
-          href={`https://wa.me/${themeConfig.whatsappNumber.replace(/[^\d]/g, '')}${themeConfig.whatsappMessage ? `?text=${encodeURIComponent(themeConfig.whatsappMessage)}` : ''}`}
+          href={`https://api.whatsapp.com/send?phone=${themeConfig.whatsappNumber.replace(/[^\d]/g, '')}&text=${encodeURIComponent(themeConfig.whatsappMessage || 'Hello! I saw your portfolio and would like to connect.')}`}
           target="_blank"
           rel="noreferrer"
           title="Chat on WhatsApp"
