@@ -6,6 +6,7 @@ const path = require('path');
 const config = require('./config/env');
 const healthRoutes = require('./routes/health.routes');
 const apiRoutes = require('./routes/index');
+const connectorsRoutes = require('./modules/connectors/connectors.routes');
 const { errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
@@ -87,6 +88,9 @@ app.get('/', (req, res) => {
 // Dedicated /api/health and alias /health for maximum Render compatibility
 app.use('/api/health', healthRoutes);
 app.use('/health', healthRoutes);
+
+// Dedicated Social Connectors alias
+app.use('/api/connectors', connectorsRoutes);
 
 // 2. Versioned REST API
 app.use('/api/v1', apiRoutes);

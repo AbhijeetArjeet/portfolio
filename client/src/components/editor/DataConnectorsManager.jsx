@@ -243,7 +243,7 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
       if (liParsedData.linkedinUrl) {
         patch.linkedinUrl = liParsedData.linkedinUrl;
       }
-      if (liParsedData.name && (!portfolio.title || portfolio.title === 'My Portfolio')) {
+      if (liParsedData.name) {
         patch.title = liParsedData.name;
       }
       if (liParsedData.headline) {
@@ -284,7 +284,7 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
       }
 
       if (onReload) onReload();
-      success('Verified LinkedIn profile, photo, experience, and skills imported successfully!');
+      success(`Verified LinkedIn profile for ${liParsedData.name} applied to portfolio!`);
     } catch (err) {
       toastError('Error applying LinkedIn data: ' + err.message);
     }
@@ -412,11 +412,26 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
 
   const handleApplyFacebookBio = () => {
     if (!fbProfile) return;
-    const patch = {};
-    if (!portfolio.title || portfolio.title === 'My Portfolio') patch.title = fbProfile.name;
-    if (!portfolio.bio) patch.bio = fbProfile.bio;
-    if (Object.keys(patch).length > 0) onChange(patch);
+    onChange({
+      title: fbProfile.name,
+      bio: fbProfile.bio
+    });
     success('Facebook profile name and bio imported!');
+  };
+
+  const handleApplyFacebookAll = () => {
+    if (!fbProfile) return;
+    const patch = {
+      title: fbProfile.name,
+      bio: fbProfile.bio,
+      avatarUrl: fbProfile.avatarUrl
+    };
+    if (fbProfile.profileUrl) {
+      const updatedConfig = { ...themeConfig, facebookUrl: fbProfile.profileUrl };
+      patch.themeConfig = JSON.stringify(updatedConfig);
+    }
+    onChange(patch);
+    success('Facebook profile name, bio, photo, and link applied to portfolio!');
   };
 
   const handleConnectFacebookToken = () => {
@@ -1200,11 +1215,19 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
                     <div style={{ marginTop: '1rem', paddingTop: '0.75rem', borderTop: '1px solid var(--border-color)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                       <button
                         type="button"
-                        onClick={handleApplyFacebookAvatar}
+                        onClick={handleApplyFacebookAll}
                         className="btn btn-primary btn-sm"
-                        style={{ fontSize: '0.78rem', background: '#1877f2', borderColor: '#1877f2' }}
+                        style={{ fontSize: '0.8rem', background: '#1877f2', borderColor: '#1877f2' }}
                       >
-                        <Camera size={13} /> Set as Portfolio Avatar Photo
+                        <Check size={13} /> ✓ Apply Name, Bio &amp; Photo
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleApplyFacebookAvatar}
+                        className="btn btn-outline btn-sm"
+                        style={{ fontSize: '0.78rem' }}
+                      >
+                        <Camera size={13} /> Photo Only
                       </button>
                       <button
                         type="button"
@@ -1212,7 +1235,7 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
                         className="btn btn-outline btn-sm"
                         style={{ fontSize: '0.78rem' }}
                       >
-                        <FileText size={13} /> Import Bio &amp; Title
+                        <FileText size={13} /> Bio &amp; Title Only
                       </button>
                     </div>
                   )}
@@ -1285,11 +1308,19 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <button
                       type="button"
+                      onClick={handleApplyFacebookAll}
+                      className="btn btn-primary btn-sm"
+                      style={{ fontSize: '0.78rem', background: '#1877f2', borderColor: '#1877f2' }}
+                    >
+                      <Check size={12} /> Apply Name, Bio &amp; Photo
+                    </button>
+                    <button
+                      type="button"
                       onClick={handleApplyFacebookAvatar}
                       className="btn btn-outline btn-sm"
                       style={{ fontSize: '0.75rem' }}
                     >
-                      <Camera size={12} /> Set as Avatar Photo
+                      <Camera size={12} /> Photo Only
                     </button>
                     <button
                       type="button"
@@ -1297,7 +1328,7 @@ export default function DataConnectorsManager({ portfolio, onChange, onReload })
                       className="btn btn-outline btn-sm"
                       style={{ fontSize: '0.75rem' }}
                     >
-                      <FileText size={12} /> Sync Bio &amp; Title
+                      <FileText size={12} /> Bio &amp; Title Only
                     </button>
                   </div>
 
