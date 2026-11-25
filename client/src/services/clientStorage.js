@@ -831,12 +831,19 @@ export const clientStorage = {
   async uploadImage(file) {
     if (file && typeof window !== 'undefined') {
       try {
-        const url = URL.createObjectURL(file);
-        return {
-          message: 'Image uploaded successfully',
-          url,
-          filename: file.name
-        };
+        const base64Url = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => resolve(null);
+          reader.readAsDataURL(file);
+        });
+        if (base64Url) {
+          return {
+            message: 'Image uploaded successfully',
+            url: base64Url,
+            filename: file.name
+          };
+        }
       } catch {}
     }
     return {

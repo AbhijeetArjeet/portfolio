@@ -10,12 +10,28 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     async function loadUser() {
       try {
+        const cached = typeof localStorage !== 'undefined' ? localStorage.getItem('auth_user') : null;
+        if (cached) {
+          setUser(JSON.parse(cached));
+        }
+      } catch {}
+
+      try {
         const data = await authService.getMe();
         if (data && data.user) {
           setUser(data.user);
+          if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('auth_user', JSON.stringify(data.user));
+          }
         }
       } catch (err) {
-        setUser(null);
+        if (err.message && (err.message.includes('401') || err.message.includes('Unauthorized'))) {
+          if (typeof localStorage !== 'undefined') {
+            localStorage.removeItem('auth_user');
+            localStorage.removeItem('auth_token');
+          }
+          setUser(null);
+        }
       } finally {
         setLoading(false);
       }
@@ -26,12 +42,18 @@ export function AuthProvider({ children }) {
   const login = async (emailOrUsername, password) => {
     const data = await authService.login(emailOrUsername, password);
     setUser(data.user);
+    if (data.user && typeof localStorage !== 'undefined') {
+      localStorage.setItem('auth_user', JSON.stringify(data.user));
+    }
     return data;
   };
 
   const register = async (userData) => {
     const data = await authService.register(userData);
     setUser(data.user);
+    if (data.user && typeof localStorage !== 'undefined') {
+      localStorage.setItem('auth_user', JSON.stringify(data.user));
+    }
     return data;
   };
 
@@ -39,6 +61,10 @@ export function AuthProvider({ children }) {
     try {
       await authService.logout();
     } finally {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem('auth_user');
+        localStorage.removeItem('auth_token');
+      }
       setUser(null);
     }
   };

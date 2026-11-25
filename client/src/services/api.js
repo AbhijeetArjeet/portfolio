@@ -243,10 +243,14 @@ export async function apiRequest(endpoint, options = {}) {
     }, timeoutMs);
 
     try {
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('auth_token') : null;
+      const authHeaders = token ? { 'Authorization': `Bearer ${token}` } : {};
+
       const fetchOptions = {
         ...options,
         method,
         headers: {
+          ...authHeaders,
           'Content-Type': 'application/json',
           ...(options.headers || {})
         },
