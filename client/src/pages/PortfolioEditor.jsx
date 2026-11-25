@@ -28,6 +28,10 @@ const TemplateBrutalistTech = lazy(() => import('../components/portfolio/Templat
 const TemplateWarmPlayful = lazy(() => import('../components/portfolio/TemplateWarmPlayful'));
 const TemplateExecutiveCV = lazy(() => import('../components/portfolio/TemplateExecutiveCV'));
 const TemplateGlassSlate = lazy(() => import('../components/portfolio/TemplateGlassSlate'));
+const TemplateUxCaseStudy = lazy(() => import('../components/portfolio/TemplateUxCaseStudy'));
+const TemplateProductDesigner = lazy(() => import('../components/portfolio/TemplateProductDesigner'));
+const TemplateSplitMono = lazy(() => import('../components/portfolio/TemplateSplitMono'));
+const TemplateDesignAgency = lazy(() => import('../components/portfolio/TemplateDesignAgency'));
 import {
   User,
   GitBranch,
@@ -233,6 +237,14 @@ export default function PortfolioEditor() {
         return <TemplateExecutiveCV portfolio={portfolio} />;
       case 'glass-slate':
         return <TemplateGlassSlate portfolio={portfolio} />;
+      case 'ux-case-study':
+        return <TemplateUxCaseStudy portfolio={portfolio} />;
+      case 'product-designer':
+        return <TemplateProductDesigner portfolio={portfolio} />;
+      case 'split-mono':
+        return <TemplateSplitMono portfolio={portfolio} />;
+      case 'design-agency':
+        return <TemplateDesignAgency portfolio={portfolio} />;
       case 'minimal':
       default:
         return <TemplateMinimal portfolio={portfolio} />;

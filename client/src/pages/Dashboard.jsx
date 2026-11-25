@@ -20,22 +20,7 @@ import {
   ArrowRight,
   Monitor
 } from 'lucide-react';
-
-const AVAILABLE_TEMPLATES = [
-  { id: 'aura-lime', name: 'Aura Lime (Modern High Impact)', desc: 'Luminous lime aura with award badges and dark pill CTAs' },
-  { id: 'cyber-neon', name: 'Cyber Neon (Terminal & Stats)', desc: 'Glowing cyan cybernetic styling with live terminal logs' },
-  { id: 'crimson-bold', name: 'Crimson Bold (OLED Canvas)', desc: 'Pure jet dark OLED with electric scarlet accents' },
-  { id: 'vibrant-card', name: 'Vibrant Card (Framed Portrait)', desc: 'Floating white card on vibrant purple-indigo backdrop' },
-  { id: 'warm-spotlight', name: 'Warm Spotlight (Creative Director)', desc: 'Obsidian dark canvas with ambient burnt orange glow' },
-  { id: 'brutalist-tech', name: 'Neo-Brutalist Tech (Industrial)', desc: 'Architectural blueprint grid, bold borders & neon yellow' },
-  { id: 'warm-playful', name: 'Warm Playful (Friendly Creator)', desc: 'Sunny golden stickers, organic curves and friendly badges' },
-  { id: 'glass-slate', name: 'Glass Slate (Frosted Glass)', desc: 'Ultra-modern frosted backdrop with translucent glass cards' },
-  { id: 'editorial-mono', name: 'Editorial Mono (High Fashion)', desc: 'Oversized serif headlines, monochrome typography & lookbook' },
-  { id: 'executive-cv', name: 'Executive CV (Dossier Layout)', desc: 'Emerald green executive styling with timeline and credential links' },
-  { id: 'developer', name: 'Developer (Code & Architecture)', desc: 'Tech stack highlights, terminal widgets and repo sync' },
-  { id: 'creative', name: 'Creative (Visual Showcase)', desc: 'Bold typography and dynamic media-centric showcase' },
-  { id: 'minimal', name: 'Minimal (Clean Professional)', desc: 'Timeless typography and distraction-free portfolio layout' }
-];
+import { TEMPLATES_CATALOG } from '../data/templatesCatalog';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -458,9 +443,9 @@ export default function Dashboard() {
                   value={newPortfolio.templateId}
                   onChange={(e) => setNewPortfolio({ ...newPortfolio, templateId: e.target.value })}
                 >
-                  {AVAILABLE_TEMPLATES.map((t) => (
+                  {TEMPLATES_CATALOG.map((t) => (
                     <option key={t.id} value={t.id}>
-                      {t.name}
+                      {t.name} ({t.categories?.join(', ') || 'Custom'})
                     </option>
                   ))}
                 </select>
