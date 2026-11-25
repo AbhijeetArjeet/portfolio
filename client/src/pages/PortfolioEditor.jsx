@@ -9,6 +9,16 @@ import ThemeCustomizer from '../components/editor/ThemeCustomizer';
 import TemplateMinimal from '../components/portfolio/TemplateMinimal';
 import TemplateDeveloper from '../components/portfolio/TemplateDeveloper';
 import TemplateCreative from '../components/portfolio/TemplateCreative';
+import TemplateAuraLime from '../components/portfolio/TemplateAuraLime';
+import TemplateVibrantCard from '../components/portfolio/TemplateVibrantCard';
+import TemplateWarmSpotlight from '../components/portfolio/TemplateWarmSpotlight';
+import TemplateCyberNeon from '../components/portfolio/TemplateCyberNeon';
+import TemplateCrimsonBold from '../components/portfolio/TemplateCrimsonBold';
+import TemplateEditorialMono from '../components/portfolio/TemplateEditorialMono';
+import TemplateBrutalistTech from '../components/portfolio/TemplateBrutalistTech';
+import TemplateWarmPlayful from '../components/portfolio/TemplateWarmPlayful';
+import TemplateExecutiveCV from '../components/portfolio/TemplateExecutiveCV';
+import TemplateGlassSlate from '../components/portfolio/TemplateGlassSlate';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import {
   User,
@@ -129,6 +139,26 @@ export default function PortfolioEditor() {
         return <TemplateDeveloper portfolio={portfolio} />;
       case 'creative':
         return <TemplateCreative portfolio={portfolio} />;
+      case 'aura-lime':
+        return <TemplateAuraLime portfolio={portfolio} />;
+      case 'vibrant-card':
+        return <TemplateVibrantCard portfolio={portfolio} />;
+      case 'warm-spotlight':
+        return <TemplateWarmSpotlight portfolio={portfolio} />;
+      case 'cyber-neon':
+        return <TemplateCyberNeon portfolio={portfolio} />;
+      case 'crimson-bold':
+        return <TemplateCrimsonBold portfolio={portfolio} />;
+      case 'editorial-mono':
+        return <TemplateEditorialMono portfolio={portfolio} />;
+      case 'brutalist-tech':
+        return <TemplateBrutalistTech portfolio={portfolio} />;
+      case 'warm-playful':
+        return <TemplateWarmPlayful portfolio={portfolio} />;
+      case 'executive-cv':
+        return <TemplateExecutiveCV portfolio={portfolio} />;
+      case 'glass-slate':
+        return <TemplateGlassSlate portfolio={portfolio} />;
       case 'minimal':
       default:
         return <TemplateMinimal portfolio={portfolio} />;

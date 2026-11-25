@@ -12,7 +12,21 @@ const portfolioUpdateSchema = z.object({
   linkedinUrl: z.string().max(1000).optional().nullable().or(z.literal('')),
   websiteUrl: z.string().max(1000).optional().nullable().or(z.literal('')),
   slug: z.string().min(3).max(60).regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens').optional(),
-  templateId: z.enum(['minimal', 'developer', 'creative']).optional(),
+  templateId: z.enum([
+    'minimal',
+    'developer',
+    'creative',
+    'aura-lime',
+    'vibrant-card',
+    'warm-spotlight',
+    'cyber-neon',
+    'crimson-bold',
+    'editorial-mono',
+    'brutalist-tech',
+    'warm-playful',
+    'executive-cv',
+    'glass-slate'
+  ]).optional(),
   layoutType: z.enum(['grid', 'flexbox']).optional(),
   themeConfig: z.string().optional()
 });
